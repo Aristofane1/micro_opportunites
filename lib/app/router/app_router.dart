@@ -5,6 +5,7 @@ import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/app/router/app_routes.dart';
 import 'package:micro_opportunites/app/router/placeholder_page.dart';
 import 'package:micro_opportunites/app/router/role_shell.dart';
+import 'package:micro_opportunites/app/router/routes/entry_routes.dart';
 import 'package:micro_opportunites/app/router/shell_tabs.dart';
 import 'package:micro_opportunites/app/router/worker_routes.dart';
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
@@ -47,6 +48,7 @@ GoRouter appRouter(Ref ref) {
     routes: [
       _roleShell(workerTabs),
       _roleShell(posterTabs),
+      ...entryRoutes,
       ...workerFullScreenRoutes,
     ],
   );

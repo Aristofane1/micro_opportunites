@@ -62,6 +62,7 @@ class _ProfileFormPageState extends ConsumerState<ProfileFormPage> {
         );
       },
     );
+    if (!mounted) return;
 
     if (picked != null && picked != _selectedBirthDate) {
       setState(() {

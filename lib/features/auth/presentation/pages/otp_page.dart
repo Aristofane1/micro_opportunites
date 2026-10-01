@@ -50,12 +50,21 @@ class _OtpPageState extends ConsumerState<OtpPage> {
     }
   }
 
-  Future<void> _resend(String phone) async {
+  Future<void> _resend(String? phone) async {
+    if (phone == null) {
+      context.go(EntryPaths.phone);
+      return;
+    }
     final result = await ref
         .read(authActionsProvider.notifier)
         .requestCode(phone);
     if (!mounted) return;
-    if (result case Success()) showAppToast(context, 'Nouveau code envoyé');
+    switch (result) {
+      case Success():
+        showAppToast(context, 'Nouveau code envoyé');
+      case Err(:final failure):
+        setState(() => _error = failure.message);
+    }
   }
 
   @override
@@ -79,102 +88,120 @@ class _OtpPageState extends ConsumerState<OtpPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Entrez le code reçu',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Envoyé par SMS au ${draft.verification?.maskedPhone ?? ''}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              TextButton(
-                onPressed: () {
-                  if (context.canPop()) {
-                    context.pop();
-                  } else {
-                    context.go(EntryPaths.phone);
-                  }
-                },
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  alignment: Alignment.centerLeft,
-                ),
-                child: const Text(
-                  'Modifier',
-                  style: TextStyle(
-                    color: AppColors.green,
-                    decoration: TextDecoration.underline,
+          child: LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Entrez le code reçu',
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        'Envoyé par SMS au ${draft.verification?.maskedPhone ?? ''}',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          if (context.canPop()) {
+                            context.pop();
+                          } else {
+                            context.go(EntryPaths.phone);
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          alignment: Alignment.centerLeft,
+                        ),
+                        child: const Text(
+                          'Modifier',
+                          style: TextStyle(
+                            color: AppColors.green,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        'Code de démonstration : ${draft.verification?.demoCode ?? ''}',
+                        style: const TextStyle(
+                          color: AppColors.ochreDeep,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      const SizedBox(height: 32),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: List.generate(5, (index) {
+                          return SizedBox(
+                            width: 50,
+                            child: TextField(
+                              key: Key('otp.digit.$index'),
+                              controller: _controllers[index],
+                              textAlign: TextAlign.center,
+                              keyboardType: TextInputType.number,
+                              maxLength: 1,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              decoration: const InputDecoration(
+                                counterText: '',
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 16,
+                                ),
+                              ),
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                              ],
+                              onChanged: (value) {
+                                if (value.length == 1 && index < 4) {
+                                  FocusScope.of(context).nextFocus();
+                                } else if (value.isEmpty && index > 0) {
+                                  FocusScope.of(context).previousFocus();
+                                }
+                              },
+                            ),
+                          );
+                        }),
+                      ),
+                      if (_error != null) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          _error!,
+                          style: const TextStyle(
+                            color: AppColors.red,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 32),
+                      Center(
+                        child: TextButton(
+                          onPressed: ref.watch(authActionsProvider).isLoading
+                              ? null
+                              : () => _resend(draft.phone),
+                          child: const Text(
+                            'Je n\'ai pas reçu le code',
+                            style: TextStyle(color: AppColors.inkSecondary),
+                          ),
+                        ),
+                      ),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: ref.watch(authActionsProvider).isLoading
+                            ? null
+                            : _verify,
+                        child: const Text('Valider'),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              Text(
-                'Code de démonstration : ${draft.verification?.demoCode ?? ''}',
-                style: const TextStyle(
-                  color: AppColors.ochreDeep,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 32),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List.generate(5, (index) {
-                  return SizedBox(
-                    width: 50,
-                    child: TextField(
-                      key: Key('otp.digit.$index'),
-                      controller: _controllers[index],
-                      textAlign: TextAlign.center,
-                      keyboardType: TextInputType.number,
-                      maxLength: 1,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      decoration: const InputDecoration(
-                        counterText: '',
-                        contentPadding: EdgeInsets.symmetric(vertical: 16),
-                      ),
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      onChanged: (value) {
-                        if (value.length == 1 && index < 4) {
-                          FocusScope.of(context).nextFocus();
-                        } else if (value.isEmpty && index > 0) {
-                          FocusScope.of(context).previousFocus();
-                        }
-                      },
-                    ),
-                  );
-                }),
-              ),
-              if (_error != null) ...[
-                const SizedBox(height: 12),
-                Text(
-                  _error!,
-                  style: const TextStyle(color: AppColors.red, fontSize: 13),
-                ),
-              ],
-              const SizedBox(height: 32),
-              Center(
-                child: TextButton(
-                  onPressed: () => _resend(draft.phone ?? ''),
-                  child: const Text(
-                    'Je n\'ai pas reçu le code',
-                    style: TextStyle(color: AppColors.inkSecondary),
-                  ),
-                ),
-              ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: ref.watch(authActionsProvider).isLoading
-                    ? null
-                    : _verify,
-                child: const Text('Valider'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

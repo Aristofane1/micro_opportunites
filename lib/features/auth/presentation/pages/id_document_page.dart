@@ -61,86 +61,101 @@ class _IdDocumentPageState extends ConsumerState<IdDocumentPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Votre pièce d\'identité',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'C\'est une obligation légale pour assurer la sécurité de tous. Personne ne la verra.',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 32),
-              GestureDetector(
-                onTap: _showCountryPicker,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 16,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Row(
+          child: LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _selectedCountry.flagEmoji,
-                        style: const TextStyle(fontSize: 24),
+                        'Votre pièce d\'identité',
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Pays d\'émission',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: AppColors.inkSecondary,
+                      const SizedBox(height: 16),
+                      Text(
+                        'C\'est une obligation légale pour assurer la sécurité de tous. Personne ne la verra.',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 32),
+                      GestureDetector(
+                        onTap: _showCountryPicker,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 16,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                _selectedCountry.flagEmoji,
+                                style: const TextStyle(fontSize: 24),
                               ),
-                            ),
-                            Text(
-                              _selectedCountry.name,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: AppColors.ink,
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      'Pays d\'émission',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: AppColors.inkSecondary,
+                                      ),
+                                    ),
+                                    Text(
+                                      _selectedCountry.name,
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.ink,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              const Icon(
+                                Icons.arrow_drop_down,
+                                color: AppColors.green,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      const Icon(Icons.arrow_drop_down, color: AppColors.green),
+                      const SizedBox(height: 32),
+                      _buildDocumentOption(
+                        title: 'Carte d\'identité (format carte)',
+                        value: 'id_card',
+                      ),
+                      const SizedBox(height: 16),
+                      _buildDocumentOption(
+                        title: 'Passeport',
+                        value: 'passport',
+                      ),
+                      const Spacer(),
+                      ElevatedButton(
+                        onPressed: () {
+                          ref
+                              .read(entryDraftControllerProvider.notifier)
+                              .setDocument(
+                                _selectedDocument,
+                                _selectedCountry.countryCode,
+                              );
+                          context.push(EntryPaths.cameraFront);
+                        },
+                        child: const Text('Photographier le recto'),
+                      ),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
-              _buildDocumentOption(
-                title: 'Carte d\'identité (format carte)',
-                value: 'id_card',
-              ),
-              const SizedBox(height: 16),
-              _buildDocumentOption(title: 'Passeport', value: 'passport'),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  ref
-                      .read(entryDraftControllerProvider.notifier)
-                      .setDocument(
-                        _selectedDocument,
-                        _selectedCountry.countryCode,
-                      );
-                  context.push(EntryPaths.cameraFront);
-                },
-                child: const Text('Photographier le recto'),
-              ),
-            ],
+            ),
           ),
         ),
       ),

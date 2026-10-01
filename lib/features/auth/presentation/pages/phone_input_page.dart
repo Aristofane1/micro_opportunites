@@ -64,64 +64,80 @@ class _PhoneInputPageState extends ConsumerState<PhoneInputPage> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.security, size: 48, color: AppColors.green),
-                const SizedBox(height: 24),
-                Text(
-                  'Votre numéro de\ntéléphone',
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  'Pour sécuriser votre compte, nous vous envoyons un SMS de confirmation.',
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 32),
-                IntlPhoneField(
-                  controller: _phoneController,
-                  initialCountryCode: 'BJ',
-                  languageCode: 'fr',
-                  dropdownIconPosition: IconPosition.trailing,
-                  flagsButtonPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                  ),
-                  decoration: const InputDecoration(
-                    labelText: 'Numéro de mobile',
-                    hintText: '6 12 34 56 78',
-                  ),
-                  pickerDialogStyle: PickerDialogStyle(
-                    searchFieldInputDecoration: const InputDecoration(
-                      labelText: 'Rechercher un pays...',
+          child: LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                child: IntrinsicHeight(
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Icon(
+                          Icons.security,
+                          size: 48,
+                          color: AppColors.green,
+                        ),
+                        const SizedBox(height: 24),
+                        Text(
+                          'Votre numéro de\ntéléphone',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Pour sécuriser votre compte, nous vous envoyons un SMS de confirmation.',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(height: 32),
+                        IntlPhoneField(
+                          controller: _phoneController,
+                          initialCountryCode: 'BJ',
+                          languageCode: 'fr',
+                          dropdownIconPosition: IconPosition.trailing,
+                          flagsButtonPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Numéro de mobile',
+                            hintText: '6 12 34 56 78',
+                          ),
+                          pickerDialogStyle: PickerDialogStyle(
+                            searchFieldInputDecoration: const InputDecoration(
+                              labelText: 'Rechercher un pays...',
+                            ),
+                          ),
+                          invalidNumberMessage: 'Numéro de téléphone invalide',
+                          onChanged: (phone) => setState(() {
+                            _completeNumber = phone.completeNumber;
+                            _error = null;
+                          }),
+                        ),
+                        if (_error != null)
+                          Text(
+                            _error!,
+                            style: const TextStyle(
+                              color: AppColors.red,
+                              fontSize: 13,
+                            ),
+                          ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          'En continuant vous acceptez nos Conditions générales. Il est important que vous les lisiez pour comprendre comment nous gérons vos données.',
+                          style: TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const Spacer(),
+                        ElevatedButton(
+                          onPressed: ref.watch(authActionsProvider).isLoading
+                              ? null
+                              : _send,
+                          child: const Text('Envoyer le code'),
+                        ),
+                      ],
                     ),
                   ),
-                  invalidNumberMessage: 'Numéro de téléphone invalide',
-                  onChanged: (phone) => setState(() {
-                    _completeNumber = phone.completeNumber;
-                    _error = null;
-                  }),
                 ),
-                if (_error != null)
-                  Text(
-                    _error!,
-                    style: const TextStyle(color: AppColors.red, fontSize: 13),
-                  ),
-                const SizedBox(height: 16),
-                const Text(
-                  'En continuant vous acceptez nos Conditions générales. Il est important que vous les lisiez pour comprendre comment nous gérons vos données.',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                const Spacer(),
-                ElevatedButton(
-                  onPressed: ref.watch(authActionsProvider).isLoading
-                      ? null
-                      : _send,
-                  child: const Text('Envoyer le code'),
-                ),
-              ],
+              ),
             ),
           ),
         ),

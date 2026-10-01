@@ -9,13 +9,45 @@ import 'package:go_router/go_router.dart';
 
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class IdCameraPage extends ConsumerWidget {
+class IdCameraPage extends ConsumerStatefulWidget {
   final bool isFront;
 
   const IdCameraPage({super.key, required this.isFront});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<IdCameraPage> createState() => _IdCameraPageState();
+}
+
+class _IdCameraPageState extends ConsumerState<IdCameraPage> {
+  bool _busy = false;
+
+  bool get isFront => widget.isFront;
+
+  Future<void> _onShutter() async {
+    if (_busy || ref.read(authActionsProvider).isLoading) return;
+    _busy = true;
+    ref
+        .read(entryDraftControllerProvider.notifier)
+        .markCaptured(front: isFront);
+    if (isFront) {
+      await context.push(EntryPaths.cameraBack);
+      // Réarme le déclencheur quand on revient de l'étape suivante.
+      if (mounted) _busy = false;
+      return;
+    }
+    final result = await ref.read(authActionsProvider.notifier).submitKyc();
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        context.go(EntryPaths.verificationPending);
+      case Err(:final failure):
+        _busy = false;
+        showAppToast(context, failure.message);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -90,26 +122,7 @@ class IdCameraPage extends ConsumerWidget {
                   const SizedBox(height: 16),
                   GestureDetector(
                     key: const Key('camera.shutter'),
-                    onTap: () async {
-                      final draft = ref.read(
-                        entryDraftControllerProvider.notifier,
-                      );
-                      draft.markCaptured(front: isFront);
-                      if (isFront) {
-                        context.push(EntryPaths.cameraBack);
-                        return;
-                      }
-                      final result = await ref
-                          .read(authActionsProvider.notifier)
-                          .submitKyc();
-                      if (!context.mounted) return;
-                      switch (result) {
-                        case Success():
-                          context.go(EntryPaths.verificationPending);
-                        case Err(:final failure):
-                          showAppToast(context, failure.message);
-                      }
-                    },
+                    onTap: _onShutter,
                     child: Container(
                       width: 72,
                       height: 72,
