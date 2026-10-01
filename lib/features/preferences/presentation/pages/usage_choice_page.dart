@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class UsageChoicePage extends StatelessWidget {
-  const UsageChoicePage({super.key});
+  const UsageChoicePage({
+    super.key,
+    required this.onFindMissions,
+    required this.onPublishMission,
+  });
+
+  /// Choix « Trouver des missions » (profil Exécutant), fourni par l'app.
+  final VoidCallback onFindMissions;
+
+  /// Choix « Publier une mission » (profil Annonceur), fourni par l'app.
+  final VoidCallback onPublishMission;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +45,7 @@ class UsageChoicePage extends StatelessWidget {
                 subtitle:
                     'C\'est l\'aventure ! Je souhaite chercher des missions près de chez moi.',
                 icon: Icons.search,
-                onTap: () => context.go('/preferences/permissions'),
+                onTap: onFindMissions,
               ),
               const SizedBox(height: 24),
               _buildChoiceCard(
@@ -45,7 +54,7 @@ class UsageChoicePage extends StatelessWidget {
                 subtitle:
                     'J\'ai besoin d\'aide. Je cherche quelqu\'un pour me rendre service.',
                 icon: Icons.add_circle_outline,
-                onTap: () => context.go('/preferences/permissions'),
+                onTap: onPublishMission,
               ),
             ],
           ),

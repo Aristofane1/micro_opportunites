@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -33,7 +34,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go('/onboarding');
+              context.go(EntryPaths.onboarding);
             }
           },
         ),
@@ -87,7 +88,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 ElevatedButton(
                   onPressed: () {
                     // Si l'utilisateur a saisi un numéro ou pour le test/simulation
-                    context.push('/auth/otp');
+                    context.push(EntryPaths.otp);
                   },
                   child: const Text('Envoyer le code'),
                 ),

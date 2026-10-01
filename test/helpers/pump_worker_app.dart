@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/app.dart';
 import 'package:micro_opportunites/app/bootstrap.dart';
+import 'package:micro_opportunites/app/router/app_router.dart';
+import 'package:micro_opportunites/core/routing/worker_paths.dart';
 
 import 'test_clock.dart';
 
@@ -13,6 +15,7 @@ ProviderContainer createTestContainer({
   List<Override> overrides = const [],
   Duration latency = Duration.zero,
   DateTime Function()? clock,
+  String initialLocation = WorkerPaths.explore,
 }) {
   final container = ProviderContainer(
     overrides: [
@@ -21,6 +24,7 @@ ProviderContainer createTestContainer({
         clock: clock ?? () => fixedNow,
         mapTiles: false,
       ),
+      initialLocationProvider.overrideWithValue(initialLocation),
       ...overrides,
     ],
     retry: (_, _) => null,
@@ -37,11 +41,16 @@ Future<ProviderContainer> pumpWorkerApp(
   void Function(ProviderContainer container)? beforePump,
   Duration latency = Duration.zero,
   DateTime Function()? clock,
+  String initialLocation = WorkerPaths.explore,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
-  final container = createTestContainer(latency: latency, clock: clock);
+  final container = createTestContainer(
+    latency: latency,
+    clock: clock,
+    initialLocation: initialLocation,
+  );
   beforePump?.call(container);
   await tester.pumpWidget(
     UncontrolledProviderScope(container: container, child: const App()),

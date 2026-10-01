@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 2), () {
       if (mounted) {
-        context.go('/onboarding');
+        context.go(EntryPaths.onboarding);
       }
     });
   }

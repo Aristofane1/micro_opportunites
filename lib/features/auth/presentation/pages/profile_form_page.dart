@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -78,7 +79,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go('/auth/otp');
+              context.go(EntryPaths.otp);
             }
           },
         ),
@@ -194,7 +195,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 ElevatedButton(
                   onPressed: () {
                     // Navigate to ID document step
-                    context.push('/auth/id-document');
+                    context.push(EntryPaths.idDocument);
                   },
                   child: const Text('Continuer'),
                 ),

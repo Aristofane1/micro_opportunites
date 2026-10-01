@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -45,7 +46,7 @@ class VerificationPendingPage extends StatelessWidget {
               const CircularProgressIndicator(color: AppColors.green),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => context.go('/preferences/usage'),
+                onPressed: () => context.go(EntryPaths.usage),
                 child: const Text('Trouver des missions'),
               ),
             ],

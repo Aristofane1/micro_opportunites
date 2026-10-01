@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
@@ -61,7 +62,7 @@ class _IdDocumentPageState extends State<IdDocumentPage> {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go('/auth/profile');
+              context.go(EntryPaths.profile);
             }
           },
         ),
@@ -137,7 +138,7 @@ class _IdDocumentPageState extends State<IdDocumentPage> {
               _buildDocumentOption(title: 'Passeport', value: 'passport'),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => context.push('/auth/camera-front'),
+                onPressed: () => context.push(EntryPaths.cameraFront),
                 child: const Text('Photographier le recto'),
               ),
             ],

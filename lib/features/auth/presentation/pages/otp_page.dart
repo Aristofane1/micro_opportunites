@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +20,7 @@ class OtpPage extends StatelessWidget {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go('/auth/phone');
+              context.go(EntryPaths.phone);
             }
           },
         ),
@@ -44,7 +45,7 @@ class OtpPage extends StatelessWidget {
                   if (context.canPop()) {
                     context.pop();
                   } else {
-                    context.go('/auth/phone');
+                    context.go(EntryPaths.phone);
                   }
                 },
                 style: TextButton.styleFrom(
@@ -101,7 +102,7 @@ class OtpPage extends StatelessWidget {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => context.push('/auth/profile'),
+                onPressed: () => context.push(EntryPaths.profile),
                 child: const Text('Valider'),
               ),
             ],

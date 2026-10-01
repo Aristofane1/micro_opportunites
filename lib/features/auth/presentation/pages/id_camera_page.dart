@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -79,9 +80,9 @@ class IdCameraPage extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       if (isFront) {
-                        context.go('/auth/camera-back');
+                        context.go(EntryPaths.cameraBack);
                       } else {
-                        context.go('/auth/verification-pending');
+                        context.go(EntryPaths.verificationPending);
                       }
                     },
                     child: Container(

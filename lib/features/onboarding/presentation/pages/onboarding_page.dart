@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -46,7 +47,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () => context.go('/auth/phone'),
+                  onPressed: () => context.go(EntryPaths.phone),
                   child: const Text('Passer'),
                 ),
               ),
@@ -123,7 +124,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       curve: Curves.easeInOut,
                     );
                   } else {
-                    context.go('/auth/phone');
+                    context.go(EntryPaths.phone);
                   }
                 },
                 child: Text(

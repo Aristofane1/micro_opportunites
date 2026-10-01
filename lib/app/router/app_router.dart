@@ -7,6 +7,7 @@ import 'package:micro_opportunites/app/router/placeholder_page.dart';
 import 'package:micro_opportunites/app/router/role_shell.dart';
 import 'package:micro_opportunites/app/router/shell_tabs.dart';
 import 'package:micro_opportunites/app/router/worker_routes.dart';
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -27,6 +28,11 @@ String? redirectForRole(String location, ActiveRole role) {
   return null;
 }
 
+/// Écran de départ. Splash par défaut ; les tests du module B le
+/// surchargent pour démarrer directement sur Explorer.
+@Riverpod(keepAlive: true)
+String initialLocation(Ref ref) => EntryPaths.splash;
+
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
   final roleChanges = ValueNotifier<ActiveRole>(ref.read(activeRoleProvider));
@@ -34,15 +40,11 @@ GoRouter appRouter(Ref ref) {
 
   final router = GoRouter(
     navigatorKey: rootNavigatorKey,
-    initialLocation: AppRoutes.homeFor(roleChanges.value),
+    initialLocation: ref.read(initialLocationProvider),
     refreshListenable: roleChanges,
     redirect: (_, state) =>
         redirectForRole(state.uri.path, ref.read(activeRoleProvider)),
     routes: [
-      GoRoute(
-        path: AppRoutes.root,
-        redirect: (_, _) => AppRoutes.homeFor(ref.read(activeRoleProvider)),
-      ),
       _roleShell(workerTabs),
       _roleShell(posterTabs),
       ...workerFullScreenRoutes,

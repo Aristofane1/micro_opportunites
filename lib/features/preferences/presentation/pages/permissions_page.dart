@@ -4,7 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class PermissionsPage extends StatelessWidget {
-  const PermissionsPage({super.key});
+  const PermissionsPage({super.key, required this.onDone});
+
+  /// Fin de l'entrée : ouvre l'accueil du rôle choisi.
+  final VoidCallback onDone;
 
   @override
   Widget build(BuildContext context) {
@@ -48,34 +51,13 @@ class PermissionsPage extends StatelessWidget {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () {
-                  // Finaliser l'onboarding et aller à l'accueil
-                  // context.go('/home'); // à implémenter
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Félicitations'),
-                      content: const Text(
-                        'Le flux d\'inscription est terminé. Bienvenue sur MicroOpportunités !',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            context.go('/');
-                          },
-                          child: const Text('Recommencer'),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                onPressed: onDone,
                 child: const Text('C\'est parti'),
               ),
               const SizedBox(height: 16),
               Center(
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: onDone,
                   child: const Text(
                     'Plus tard',
                     style: TextStyle(color: AppColors.inkSecondary),
