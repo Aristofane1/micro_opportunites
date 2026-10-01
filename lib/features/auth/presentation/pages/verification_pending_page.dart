@@ -1,14 +1,17 @@
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:micro_opportunites/features/auth/domain/entities/auth_entities.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class VerificationPendingPage extends StatelessWidget {
+class VerificationPendingPage extends ConsumerWidget {
   const VerificationPendingPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -40,6 +43,22 @@ class VerificationPendingPage extends StatelessWidget {
               Text(
                 'Vos documents sont en cours de traitement.\nVous pouvez déjà explorer l\'application.',
                 style: Theme.of(context).textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                switch (ref.watch(kycStateProvider)) {
+                  AsyncData(:final value)
+                      when value.status == KycStatus.pending =>
+                    'Dossier envoyé, en attente de validation.',
+                  AsyncData() => 'Aucun dossier envoyé.',
+                  AsyncError() => 'Statut indisponible pour le moment.',
+                  _ => 'Chargement du statut…',
+                },
+                style: const TextStyle(
+                  color: AppColors.inkSecondary,
+                  fontSize: 13,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

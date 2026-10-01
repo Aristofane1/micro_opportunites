@@ -1,17 +1,21 @@
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:micro_opportunites/core/ui/widgets/app_toast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class ProfileFormPage extends StatefulWidget {
+class ProfileFormPage extends ConsumerStatefulWidget {
   const ProfileFormPage({super.key});
 
   @override
-  State<ProfileFormPage> createState() => _ProfileFormPageState();
+  ConsumerState<ProfileFormPage> createState() => _ProfileFormPageState();
 }
 
-class _ProfileFormPageState extends State<ProfileFormPage> {
+class _ProfileFormPageState extends ConsumerState<ProfileFormPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
@@ -34,7 +38,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
     final DateTime initialDate =
         _selectedBirthDate ?? DateTime(now.year - 20, now.month, now.day);
     final DateTime firstDate = DateTime(1920);
-    final DateTime lastDate = DateTime(now.year - 15, now.month, now.day);
+    final DateTime lastDate = DateTime(now.year - 18, now.month, now.day);
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -64,6 +68,34 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
         _selectedBirthDate = picked;
         _birthDateController.text = DateFormat('dd/MM/yyyy').format(picked);
       });
+    }
+  }
+
+  Future<void> _submit() async {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    if (!_acceptTerms) {
+      showAppToast(context, 'Vous devez accepter les conditions générales.');
+      return;
+    }
+    final result = await ref
+        .read(authActionsProvider.notifier)
+        .saveProfile(
+          firstName: _firstNameController.text.trim(),
+          lastName: _lastNameController.text.trim(),
+          birthDate: DateTime.utc(
+            _selectedBirthDate!.year,
+            _selectedBirthDate!.month,
+            _selectedBirthDate!.day,
+          ),
+          acceptTerms: _acceptTerms,
+          acceptNewsletter: _acceptNewsletter,
+        );
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        context.push(EntryPaths.idDocument);
+      case Err(:final failure):
+        showAppToast(context, failure.message);
     }
   }
 
@@ -141,6 +173,7 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  key: const Key('profile.birthDate'),
                   controller: _birthDateController,
                   readOnly: true,
                   onTap: () => _selectDate(context),
@@ -193,10 +226,9 @@ class _ProfileFormPageState extends State<ProfileFormPage> {
                 ),
                 const SizedBox(height: 48),
                 ElevatedButton(
-                  onPressed: () {
-                    // Navigate to ID document step
-                    context.push(EntryPaths.idDocument);
-                  },
+                  onPressed: ref.watch(authActionsProvider).isLoading
+                      ? null
+                      : _submit,
                   child: const Text('Continuer'),
                 ),
               ],

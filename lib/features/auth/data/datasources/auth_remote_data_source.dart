@@ -8,7 +8,8 @@ class AuthRemoteDataSource {
 
   Future<PhoneVerificationModel> requestCode(String phone) async =>
       PhoneVerificationModel.fromJson(
-        await _api.post('/auth/phone', body: {'phone': phone}) as Map<String, dynamic>,
+        await _api.post('/auth/phone', body: {'phone': phone})
+            as Map<String, dynamic>,
       );
 
   Future<void> verifyCode(String requestId, String code) =>
@@ -20,8 +21,11 @@ class AuthRemoteDataSource {
       );
 
   Future<KycStateModel> submitKyc(Map<String, Object?> body) async =>
-      KycStateModel.fromJson(await _api.post('/auth/kyc', body: body) as Map<String, dynamic>);
+      KycStateModel.fromJson(
+        await _api.post('/auth/kyc', body: body) as Map<String, dynamic>,
+      );
 
-  Future<KycStateModel> fetchKycState() async =>
-      KycStateModel.fromJson(await _api.get('/auth/kyc') as Map<String, dynamic>);
+  Future<KycStateModel> fetchKycState() async => KycStateModel.fromJson(
+    await _api.get('/auth/kyc') as Map<String, dynamic>,
+  );
 }

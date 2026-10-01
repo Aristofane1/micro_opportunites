@@ -27,15 +27,22 @@ class AuthActions extends _$AuthActions {
   Future<Result<PhoneVerification>> requestCode(String phone) async {
     final result = await _run(() => _repository.requestCode(phone));
     if (result case Success(:final value)) {
-      ref.read(entryDraftControllerProvider.notifier).setVerification(phone, value);
+      ref
+          .read(entryDraftControllerProvider.notifier)
+          .setVerification(phone, value);
     }
     return result;
   }
 
   Future<Result<void>> verifyCode(String code) {
-    final requestId = ref.read(entryDraftControllerProvider).verification?.requestId;
+    final requestId = ref
+        .read(entryDraftControllerProvider)
+        .verification
+        ?.requestId;
     if (requestId == null) {
-      return Future.value(const Err(ValidationFailure('Demandez d’abord un code.')));
+      return Future.value(
+        const Err(ValidationFailure('Demandez d’abord un code.')),
+      );
     }
     return _run(() => _repository.verifyCode(requestId: requestId, code: code));
   }

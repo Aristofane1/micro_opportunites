@@ -26,12 +26,13 @@ class EntryDraftController extends _$EntryDraftController {
   void setVerification(String phone, PhoneVerification verification) =>
       state = state.copyWith(phone: phone, verification: verification);
 
-  void setDocument(String documentType, String countryCode) => state = state.copyWith(
-    documentType: documentType,
-    countryCode: countryCode,
-    frontCaptured: false,
-    backCaptured: false,
-  );
+  void setDocument(String documentType, String countryCode) =>
+      state = state.copyWith(
+        documentType: documentType,
+        countryCode: countryCode,
+        frontCaptured: false,
+        backCaptured: false,
+      );
 
   void markCaptured({required bool front}) => state = front
       ? state.copyWith(frontCaptured: true)

@@ -1,30 +1,21 @@
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/entry_draft_controller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class IdDocumentPage extends StatefulWidget {
+class IdDocumentPage extends ConsumerStatefulWidget {
   const IdDocumentPage({super.key});
 
   @override
-  State<IdDocumentPage> createState() => _IdDocumentPageState();
+  ConsumerState<IdDocumentPage> createState() => _IdDocumentPageState();
 }
 
-class _IdDocumentPageState extends State<IdDocumentPage> {
+class _IdDocumentPageState extends ConsumerState<IdDocumentPage> {
   String _selectedDocument = 'id_card';
-  Country _selectedCountry = Country(
-    phoneCode: '33',
-    countryCode: 'FR',
-    e164Sc: 0,
-    geographic: true,
-    level: 1,
-    name: 'France',
-    example: '612345678',
-    displayName: 'France (FR) [+33]',
-    displayNameNoCountryCode: 'France (FR)',
-    e164Key: '',
-  );
+  Country _selectedCountry = Country.parse('BJ');
 
   void _showCountryPicker() {
     showCountryPicker(
@@ -37,7 +28,7 @@ class _IdDocumentPageState extends State<IdDocumentPage> {
         ),
         inputDecoration: InputDecoration(
           labelText: 'Rechercher un pays',
-          hintText: 'Ex: France, Belgique, Sénégal...',
+          hintText: 'Ex : Bénin, Togo, Sénégal...',
           prefixIcon: const Icon(Icons.search, color: AppColors.green),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
         ),
@@ -138,7 +129,15 @@ class _IdDocumentPageState extends State<IdDocumentPage> {
               _buildDocumentOption(title: 'Passeport', value: 'passport'),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => context.push(EntryPaths.cameraFront),
+                onPressed: () {
+                  ref
+                      .read(entryDraftControllerProvider.notifier)
+                      .setDocument(
+                        _selectedDocument,
+                        _selectedCountry.countryCode,
+                      );
+                  context.push(EntryPaths.cameraFront);
+                },
                 child: const Text('Photographier le recto'),
               ),
             ],

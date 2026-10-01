@@ -14,8 +14,10 @@ class AuthRepositoryImpl implements AuthRepository {
       guardResult(() async => (await _remote.requestCode(phone)).toEntity());
 
   @override
-  Future<Result<void>> verifyCode({required String requestId, required String code}) =>
-      guardResult(() => _remote.verifyCode(requestId, code));
+  Future<Result<void>> verifyCode({
+    required String requestId,
+    required String code,
+  }) => guardResult(() => _remote.verifyCode(requestId, code));
 
   @override
   Future<Result<UserProfile>> saveProfile({

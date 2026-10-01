@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
@@ -17,7 +18,8 @@ class PermissionsPage extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => context.pop(),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go(EntryPaths.usage),
         ),
       ),
       body: SafeArea(

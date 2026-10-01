@@ -1,16 +1,21 @@
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:micro_opportunites/core/ui/widgets/app_toast.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/entry_draft_controller.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class IdCameraPage extends StatelessWidget {
+class IdCameraPage extends ConsumerWidget {
   final bool isFront;
 
   const IdCameraPage({super.key, required this.isFront});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -47,7 +52,13 @@ class IdCameraPage extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
-                    onPressed: () => context.pop(),
+                    onPressed: () => context.canPop()
+                        ? context.pop()
+                        : context.go(
+                            isFront
+                                ? EntryPaths.idDocument
+                                : EntryPaths.cameraFront,
+                          ),
                   ),
                   Text(
                     isFront ? 'Recto - Etape 1 sur 2' : 'Verso - Etape 2 sur 2',
@@ -78,11 +89,25 @@ class IdCameraPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   GestureDetector(
-                    onTap: () {
+                    key: const Key('camera.shutter'),
+                    onTap: () async {
+                      final draft = ref.read(
+                        entryDraftControllerProvider.notifier,
+                      );
+                      draft.markCaptured(front: isFront);
                       if (isFront) {
-                        context.go(EntryPaths.cameraBack);
-                      } else {
-                        context.go(EntryPaths.verificationPending);
+                        context.push(EntryPaths.cameraBack);
+                        return;
+                      }
+                      final result = await ref
+                          .read(authActionsProvider.notifier)
+                          .submitKyc();
+                      if (!context.mounted) return;
+                      switch (result) {
+                        case Success():
+                          context.go(EntryPaths.verificationPending);
+                        case Err(:final failure):
+                          showAppToast(context, failure.message);
                       }
                     },
                     child: Container(

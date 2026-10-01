@@ -1,20 +1,42 @@
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/auth_controller.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-class PhoneInputPage extends StatefulWidget {
+class PhoneInputPage extends ConsumerStatefulWidget {
   const PhoneInputPage({super.key});
 
   @override
-  State<PhoneInputPage> createState() => _PhoneInputPageState();
+  ConsumerState<PhoneInputPage> createState() => _PhoneInputPageState();
 }
 
-class _PhoneInputPageState extends State<PhoneInputPage> {
+class _PhoneInputPageState extends ConsumerState<PhoneInputPage> {
   final TextEditingController _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String _completeNumber = '';
+  String? _error;
+
+  Future<void> _send() async {
+    if (_completeNumber.replaceAll(RegExp(r'\D'), '').length < 8) {
+      setState(() => _error = 'Saisissez votre numéro.');
+      return;
+    }
+    final result = await ref
+        .read(authActionsProvider.notifier)
+        .requestCode(_completeNumber);
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        context.push(EntryPaths.otp);
+      case Err(:final failure):
+        setState(() => _error = failure.message);
+    }
+  }
 
   @override
   void dispose() {
@@ -61,7 +83,7 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 const SizedBox(height: 32),
                 IntlPhoneField(
                   controller: _phoneController,
-                  initialCountryCode: 'FR',
+                  initialCountryCode: 'BJ',
                   languageCode: 'fr',
                   dropdownIconPosition: IconPosition.trailing,
                   flagsButtonPadding: const EdgeInsets.symmetric(
@@ -77,8 +99,16 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                     ),
                   ),
                   invalidNumberMessage: 'Numéro de téléphone invalide',
-                  onChanged: (phone) {},
+                  onChanged: (phone) => setState(() {
+                    _completeNumber = phone.completeNumber;
+                    _error = null;
+                  }),
                 ),
+                if (_error != null)
+                  Text(
+                    _error!,
+                    style: const TextStyle(color: AppColors.red, fontSize: 13),
+                  ),
                 const SizedBox(height: 16),
                 const Text(
                   'En continuant vous acceptez nos Conditions générales. Il est important que vous les lisiez pour comprendre comment nous gérons vos données.',
@@ -86,10 +116,9 @@ class _PhoneInputPageState extends State<PhoneInputPage> {
                 ),
                 const Spacer(),
                 ElevatedButton(
-                  onPressed: () {
-                    // Si l'utilisateur a saisi un numéro ou pour le test/simulation
-                    context.push(EntryPaths.otp);
-                  },
+                  onPressed: ref.watch(authActionsProvider).isLoading
+                      ? null
+                      : _send,
                   child: const Text('Envoyer le code'),
                 ),
               ],

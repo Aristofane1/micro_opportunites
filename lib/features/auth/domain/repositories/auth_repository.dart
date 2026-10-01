@@ -4,7 +4,10 @@ import 'package:micro_opportunites/features/auth/domain/entities/auth_entities.d
 abstract interface class AuthRepository {
   Future<Result<PhoneVerification>> requestCode(String phone);
 
-  Future<Result<void>> verifyCode({required String requestId, required String code});
+  Future<Result<void>> verifyCode({
+    required String requestId,
+    required String code,
+  });
 
   Future<Result<UserProfile>> saveProfile({
     required String firstName,

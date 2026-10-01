@@ -16,7 +16,8 @@ Object? requestPhoneCode(FakeDatabase db, FakeRequest request) {
   return {
     'requestId': requestId,
     'demoCode': demoSmsCode,
-    'maskedPhone': '${phone.substring(0, 4)} •• •• •• ${phone.substring(phone.length - 2)}',
+    'maskedPhone':
+        '${phone.substring(0, 4)} •• •• •• ${phone.substring(phone.length - 2)}',
   };
 }
 
@@ -38,7 +39,10 @@ Object? saveProfile(FakeDatabase db, FakeRequest request) {
     throw const ApiException(422, 'Prénom et nom sont obligatoires.');
   }
   if (body['acceptTerms'] != true) {
-    throw const ApiException(422, 'Vous devez accepter les conditions générales.');
+    throw const ApiException(
+      422,
+      'Vous devez accepter les conditions générales.',
+    );
   }
   final birthDate = DateTime.tryParse(body['birthDate'] as String? ?? '');
   if (birthDate == null) {
@@ -50,13 +54,19 @@ Object? saveProfile(FakeDatabase db, FakeRequest request) {
       (now.month == birthDate.month && now.day < birthDate.day)) {
     age--;
   }
-  if (age < 18) throw const ApiException(422, 'Vous devez avoir au moins 18 ans.');
+  if (age < 18) {
+    throw const ApiException(422, 'Vous devez avoir au moins 18 ans.');
+  }
   final user = db.currentUser;
   user['firstName'] = firstName;
   user['lastName'] = '${lastName.substring(0, 1).toUpperCase()}.';
   user['birthDate'] = body['birthDate'];
   user['newsletter'] = body['acceptNewsletter'] == true;
-  return {'firstName': firstName, 'lastName': lastName, 'birthDate': body['birthDate']};
+  return {
+    'firstName': firstName,
+    'lastName': lastName,
+    'birthDate': body['birthDate'],
+  };
 }
 
 Object? submitKyc(FakeDatabase db, FakeRequest request) {
