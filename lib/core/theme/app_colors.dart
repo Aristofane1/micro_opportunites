@@ -38,4 +38,8 @@ abstract final class AppColors {
   static const bannerOchreText = Color(0xFF6B3A0B);
   static const bannerRedText = Color(0xFF7A1A12);
   static const notificationDot = Color(0xFFC2410C);
+  static const mapLand = Color(0xFFE9E4D6);
+  static const syncBackground = Color(0xFFEFEBE2);
+  static const syncBorder = Color(0xFFA39C8C);
+  static const scrim = Color(0xFF7D7A72);
 }
