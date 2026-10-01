@@ -11,10 +11,14 @@ class RoleShell extends StatelessWidget {
     super.key,
     required this.navigationShell,
     required this.tabs,
+    this.showHeader = true,
   });
 
   final StatefulNavigationShell navigationShell;
   final List<ShellTab> tabs;
+
+  /// En-tête visible seulement à la racine d'un onglet (B02, B04 n'en ont pas).
+  final bool showHeader;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class RoleShell extends StatelessWidget {
         bottom: false,
         child: Column(
           children: [
-            const RoleHeader(),
+            if (showHeader) const RoleHeader(),
             Expanded(child: navigationShell),
           ],
         ),

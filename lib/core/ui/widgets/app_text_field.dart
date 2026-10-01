@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 import 'package:micro_opportunites/core/theme/app_typography.dart';
 
 /// Champ du design : libellé au-dessus (14/600), 48 px, arrondi 10,
@@ -18,6 +19,7 @@ class AppTextField extends StatelessWidget {
     this.obscureText = false,
     this.enabled = true,
     this.maxLines = 1,
+    this.maxLength,
   });
 
   final String label;
@@ -31,6 +33,7 @@ class AppTextField extends StatelessWidget {
   final bool obscureText;
   final bool enabled;
   final int maxLines;
+  final int? maxLength;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +53,21 @@ class AppTextField extends StatelessWidget {
             obscureText: obscureText,
             enabled: enabled,
             maxLines: maxLines,
+            maxLength: maxLength,
+            buildCounter: maxLength == null
+                ? null
+                : (
+                    _, {
+                    required currentLength,
+                    required isFocused,
+                    maxLength,
+                  }) => Text(
+                    '$currentLength / $maxLength',
+                    style: AppTypography.small.copyWith(
+                      color: AppColors.inkSecondary,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
             style: AppTypography.body,
             decoration: InputDecoration(hintText: hint, errorText: errorText),
           ),

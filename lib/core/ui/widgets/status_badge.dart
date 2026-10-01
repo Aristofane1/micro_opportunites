@@ -38,9 +38,12 @@ enum MissionStatusKind {
 /// `Expanded`) quand il partage une `Row` avec un autre élément : le
 /// libellé se tronque plutôt que de déborder.
 class StatusBadge extends StatelessWidget {
-  const StatusBadge(this.kind, {super.key});
+  const StatusBadge(this.kind, {super.key, this.label});
 
   final MissionStatusKind kind;
+
+  /// Libellé affiché à la place de `kind.label` (ex. « Retirée »).
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +55,7 @@ class StatusBadge extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 5),
         child: Text(
-          kind.label,
+          label ?? kind.label,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: AppTypography.small.copyWith(
