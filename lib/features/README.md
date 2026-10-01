@@ -79,4 +79,7 @@ Page → Contrôleur (@riverpod) → Repository → RemoteDataSource → ApiClie
 | assignments | B10 Confirmée, B11 En cours, B12 Signaler la fin, B13 Attente de validation | fait |
 | earnings | B14 Gains, B15 Reçu | fait |
 | alerts | B16 Mes alertes | fait |
-| onboarding · kyc · profile · publish · payment · chat · reviews · disputes · notifications · safety | modules A, C, D, E | à venir |
+| onboarding | A01 Splash, A02–A04 Présentation | fait (fusion branche onboarding) |
+| auth | A05 Téléphone, A06 Code SMS, A07 Infos, A08 Pièce, A09 Photo (simulée), A11 Vérification | fait (faux serveur) |
+| preferences | A13 Profil de départ, A14 Autorisations (affichage) | fait |
+| A10 selfie · A12 refus KYC · profile · publish · payment · chat · reviews · disputes · notifications · safety | modules A, C, D, E | à venir |

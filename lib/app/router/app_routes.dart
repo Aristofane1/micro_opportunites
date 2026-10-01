@@ -2,6 +2,7 @@ import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
 
 abstract final class AppRoutes {
+  /// Splash : début du parcours d'entrée.
   static const root = '/';
 
   static const workerExplore = WorkerPaths.explore;

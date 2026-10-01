@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 void registerFontLicenses() {
   LicenseRegistry.addLicense(() async* {
     const fonts = [
-      ('Fraunces', 'fraunces'),
-      ('Public Sans', 'publicsans'),
+      ('Lora', 'lora'),
+      ('Inter', 'inter'),
       ('IBM Plex Mono', 'ibmplexmono'),
     ];
     for (final (family, slug) in fonts) {

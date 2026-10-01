@@ -13,6 +13,12 @@ class FakeDatabase {
   final payouts = <String, Json>{};
   final alerts = <String, Json>{};
 
+  /// Demandes de code SMS en cours, par requestId.
+  final authRequests = <String, Json>{};
+
+  /// Dossier KYC de l'utilisateur courant (null tant que rien n'est soumis).
+  Json? kyc;
+
   int _sequence = 100;
 
   Json get currentUser => users[currentUserId]!;

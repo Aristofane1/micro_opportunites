@@ -123,6 +123,20 @@ abstract final class AppTheme {
           side: const BorderSide(color: AppColors.green),
         ),
       ),
+      // Pour les ElevatedButton des écrans d'entrée (branche onboarding).
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.green,
+          foregroundColor: AppColors.white,
+          disabledBackgroundColor: AppColors.disabledBackground,
+          disabledForegroundColor: AppColors.disabledForeground,
+          minimumSize: const Size(double.infinity, AppSizes.buttonHeight),
+          padding: buttonPadding,
+          shape: buttonShape,
+          textStyle: AppTypography.button,
+          elevation: 0,
+        ),
+      ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
           foregroundColor: AppColors.green,

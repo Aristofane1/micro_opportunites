@@ -7,6 +7,7 @@ import 'package:micro_opportunites/dev/fake_api/fake_routing.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/alerts_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/applications_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/assignments_handlers.dart';
+import 'package:micro_opportunites/dev/fake_api/handlers/auth_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/earnings_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/me_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/missions_handlers.dart';
@@ -29,6 +30,11 @@ class FakeApiClient implements ApiClient {
   ApiException? nextError;
 
   static final List<FakeRoute> _routes = [
+    FakeRoute('POST', '/auth/phone', requestPhoneCode),
+    FakeRoute('POST', '/auth/otp', verifyPhoneCode),
+    FakeRoute('POST', '/auth/profile', saveProfile),
+    FakeRoute('POST', '/auth/kyc', submitKyc),
+    FakeRoute('GET', '/auth/kyc', getKyc),
     FakeRoute('GET', '/me', getMe),
     FakeRoute('GET', '/missions', listMissions),
     FakeRoute('GET', '/missions/cities', listCities),

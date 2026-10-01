@@ -8,6 +8,54 @@ part of 'app_router.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// Écran de départ. Splash par défaut ; les tests du module B le
+/// surchargent pour démarrer directement sur Explorer.
+
+@ProviderFor(initialLocation)
+final initialLocationProvider = InitialLocationProvider._();
+
+/// Écran de départ. Splash par défaut ; les tests du module B le
+/// surchargent pour démarrer directement sur Explorer.
+
+final class InitialLocationProvider
+    extends $FunctionalProvider<String, String, String>
+    with $Provider<String> {
+  /// Écran de départ. Splash par défaut ; les tests du module B le
+  /// surchargent pour démarrer directement sur Explorer.
+  InitialLocationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'initialLocationProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$initialLocationHash();
+
+  @$internal
+  @override
+  $ProviderElement<String> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  String create(Ref ref) {
+    return initialLocation(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(String value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<String>(value),
+    );
+  }
+}
+
+String _$initialLocationHash() => r'7f13bbb526d246c4c653440ad7ac6c949300d638';
 
 @ProviderFor(appRouter)
 final appRouterProvider = AppRouterProvider._();
@@ -48,4 +96,4 @@ final class AppRouterProvider
   }
 }
 
-String _$appRouterHash() => r'59615f61ff8902ca076a3beaa8ec19ef9b17b96f';
+String _$appRouterHash() => r'79d7c5f10f2cbff5eb88b66fe95c9bf494604e8a';

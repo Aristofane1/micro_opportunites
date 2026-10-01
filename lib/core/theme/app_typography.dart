@@ -12,6 +12,20 @@ abstract final class AppTypography {
     fontWeight: FontWeight.w700,
     color: AppColors.ink,
   );
+  static const displayLarge = TextStyle(
+    fontFamily: AppFonts.display,
+    fontSize: 32,
+    height: 1.15,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
+  static const displayMedium = TextStyle(
+    fontFamily: AppFonts.display,
+    fontSize: 28,
+    height: 1.2,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
   static const title = TextStyle(
     fontFamily: AppFonts.display,
     fontSize: 28,
@@ -105,6 +119,8 @@ abstract final class AppTypography {
   );
 
   static const textTheme = TextTheme(
+    displayLarge: displayLarge,
+    displayMedium: displayMedium,
     displaySmall: hero,
     headlineMedium: title,
     headlineSmall: heading,
