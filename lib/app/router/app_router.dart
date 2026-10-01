@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/app/role/active_role.dart';
@@ -7,7 +6,7 @@ import 'package:micro_opportunites/app/router/app_routes.dart';
 import 'package:micro_opportunites/app/router/placeholder_page.dart';
 import 'package:micro_opportunites/app/router/role_shell.dart';
 import 'package:micro_opportunites/app/router/shell_tabs.dart';
-import 'package:micro_opportunites/dev/design_system_page.dart';
+import 'package:micro_opportunites/app/router/worker_routes.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -46,12 +45,7 @@ GoRouter appRouter(Ref ref) {
       ),
       _roleShell(workerTabs),
       _roleShell(posterTabs),
-      // Uniquement en debug : cet écran ne fait pas partie du produit livré.
-      if (kDebugMode)
-        GoRoute(
-          path: AppRoutes.designSystem,
-          builder: (_, _) => const DesignSystemPage(),
-        ),
+      ...workerFullScreenRoutes,
     ],
   );
   ref.onDispose(() {
@@ -63,8 +57,11 @@ GoRouter appRouter(Ref ref) {
 
 StatefulShellRoute _roleShell(List<ShellTab> tabs) {
   return StatefulShellRoute.indexedStack(
-    builder: (_, _, navigationShell) =>
-        RoleShell(navigationShell: navigationShell, tabs: tabs),
+    builder: (_, state, navigationShell) => RoleShell(
+      navigationShell: navigationShell,
+      tabs: tabs,
+      showHeader: tabs.any((tab) => tab.path == state.uri.path),
+    ),
     branches: [
       for (final tab in tabs)
         StatefulShellBranch(
@@ -73,10 +70,7 @@ StatefulShellRoute _roleShell(List<ShellTab> tabs) {
               path: tab.path,
               builder: (context, _) =>
                   tab.builder?.call(context) ??
-                  PlaceholderPage(
-                    title: tab.label,
-                    showDesignSystemLink: kDebugMode && tab.isProfile,
-                  ),
+                  PlaceholderPage(title: tab.label),
               routes: tab.routes,
             ),
           ],

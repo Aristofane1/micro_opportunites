@@ -40,7 +40,43 @@ features/<nom>/
   `parentNavigatorKey: rootNavigatorKey`.
 - Après tout changement d'annotation : `dart run build_runner build`.
 
-## Features prévues (design)
+## Données : aujourd'hui fictives, demain l'API
 
-onboarding · kyc · profile · missions · publish · payment · applications ·
-assignments · earnings · chat · reviews · disputes · notifications · safety
+```
+Page → Contrôleur (@riverpod) → Repository → RemoteDataSource → ApiClient
+                                                                 ├─ FakeApiClient (lib/dev/fake_api)
+                                                                 └─ client HTTP (à écrire)
+```
+
+- Chaque source distante appelle des routes REST (`GET /missions`, `POST
+  /applications/:id/confirm`…) et parse du JSON avec des modèles
+  `json_serializable` convertis en entités (`toEntity()`).
+- Le faux serveur (`lib/dev/fake_api`) répond aux mêmes routes avec des
+  données de démonstration et applique les règles (candidature unique,
+  check-in à moins de 200 m, gains…).
+- Brancher l'API : écrire un `HttpApiClient implements ApiClient`, puis le
+  fournir dans `app/bootstrap.dart` à la place de `FakeApiClient`. Rien d'autre
+  ne change. `app/bootstrap.dart` fournit aussi `locationServiceProvider`
+  (position simulée aujourd'hui, geolocator demain).
+- Après une écriture réussie, les contrôleurs d'action incrémentent
+  `dataRevisionProvider` : toutes les listes qui le surveillent se rechargent.
+
+### Dette de contrat API
+
+1. Les photos de check-out sont envoyées comme chemins locaux : la vraie API
+   aura besoin d'une méthode d'upload sur `ApiClient` (ou d'un port média).
+2. Les alertes échangent des chaînes d'affichage françaises pour
+   catégorie/zone/jours : la vraie API exigera des codes structurés (valeur
+   `apiValue` de la catégorie, rayon/ville, ensemble de jours).
+
+## Features
+
+| Feature | Écrans | Statut |
+|---|---|---|
+| account | salutation | fait (données fictives) |
+| missions | B01 Explorer, B02 Carte, B03 Filtres, B04 Recherche, B05 Détail, B17 Profil annonceur | fait |
+| applications | B06 Postuler, B07 Envoyée, B08 Mes candidatures, B09 Offre | fait |
+| assignments | B10 Confirmée, B11 En cours, B12 Signaler la fin, B13 Attente de validation | fait |
+| earnings | B14 Gains, B15 Reçu | fait |
+| alerts | B16 Mes alertes | fait |
+| onboarding · kyc · profile · publish · payment · chat · reviews · disputes · notifications · safety | modules A, C, D, E | à venir |

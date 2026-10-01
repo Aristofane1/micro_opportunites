@@ -1,21 +1,20 @@
 import 'package:micro_opportunites/app/role/active_role.dart';
+import 'package:micro_opportunites/core/routing/worker_paths.dart';
 
 abstract final class AppRoutes {
   static const root = '/';
 
-  static const workerExplore = '/worker/explore';
-  static const workerApplications = '/worker/applications';
-  static const workerEarnings = '/worker/earnings';
-  static const workerMessages = '/worker/messages';
-  static const workerProfile = '/worker/me';
+  static const workerExplore = WorkerPaths.explore;
+  static const workerApplications = WorkerPaths.applications;
+  static const workerEarnings = WorkerPaths.earnings;
+  static const workerMessages = WorkerPaths.messages;
+  static const workerProfile = WorkerPaths.profile;
 
   static const posterMissions = '/poster/missions';
   static const posterPublish = '/poster/publish';
   static const posterPayments = '/poster/payments';
   static const posterMessages = '/poster/messages';
   static const posterProfile = '/poster/me';
-
-  static const designSystem = '/design-system';
 
   static String homeFor(ActiveRole role) => switch (role) {
     ActiveRole.worker => workerExplore,

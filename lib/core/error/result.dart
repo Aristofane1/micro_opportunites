@@ -25,6 +25,15 @@ sealed class Result<T> {
       Err(:final failure) => Err(failure),
     };
   }
+
+  /// Valeur du succès, ou lève la [Failure] (utile dans les providers
+  /// Riverpod : l'erreur devient l'état `AsyncError`).
+  T getOrThrow() {
+    return switch (this) {
+      Success(:final value) => value,
+      Err(:final failure) => throw failure,
+    };
+  }
 }
 
 final class Success<T> extends Result<T> {

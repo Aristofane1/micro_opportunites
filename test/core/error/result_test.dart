@@ -84,4 +84,12 @@ void main() {
       expect(failure.message, isNotEmpty);
     }
   });
+
+  test('getOrThrow renvoie la valeur ou lève la Failure', () {
+    expect(const Success(4).getOrThrow(), 4);
+    expect(
+      () => const Err<int>(NetworkFailure()).getOrThrow(),
+      throwsA(isA<NetworkFailure>()),
+    );
+  });
 }
