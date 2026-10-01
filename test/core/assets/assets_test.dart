@@ -22,16 +22,17 @@ void main() {
 
   test('les polices et leurs licences sont embarquées', () async {
     const files = [
-      'assets/fonts/Fraunces-SemiBold.ttf',
-      'assets/fonts/Fraunces-Bold.ttf',
-      'assets/fonts/PublicSans-Regular.ttf',
-      'assets/fonts/PublicSans-Medium.ttf',
-      'assets/fonts/PublicSans-SemiBold.ttf',
-      'assets/fonts/PublicSans-Bold.ttf',
+      'assets/fonts/Lora-Regular.ttf',
+      'assets/fonts/Lora-SemiBold.ttf',
+      'assets/fonts/Lora-Bold.ttf',
+      'assets/fonts/Inter-Regular.ttf',
+      'assets/fonts/Inter-Medium.ttf',
+      'assets/fonts/Inter-SemiBold.ttf',
+      'assets/fonts/Inter-Bold.ttf',
       'assets/fonts/IBMPlexMono-Regular.ttf',
       'assets/fonts/IBMPlexMono-Medium.ttf',
-      'assets/fonts/licenses/fraunces-OFL.txt',
-      'assets/fonts/licenses/publicsans-OFL.txt',
+      'assets/fonts/licenses/lora-OFL.txt',
+      'assets/fonts/licenses/inter-OFL.txt',
       'assets/fonts/licenses/ibmplexmono-OFL.txt',
     ];
     for (final path in files) {

@@ -20,7 +20,12 @@ void main() {
     expect(theme.scaffoldBackgroundColor, AppColors.ivory);
   });
 
-  test('typographie : Fraunces pour les titres, Public Sans pour le texte', () {
+  test('typographie Lora + Inter', () {
+    expect(AppFonts.display, 'Lora');
+    expect(AppFonts.body, 'Inter');
+  });
+
+  test('typographie : titres en display, texte en body', () {
     expect(theme.textTheme.headlineMedium!.fontFamily, AppFonts.display);
     expect(theme.textTheme.headlineMedium!.fontSize, 28);
     expect(theme.textTheme.bodyMedium!.fontFamily, AppFonts.body);
