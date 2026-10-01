@@ -5,6 +5,7 @@ import 'package:micro_opportunites/core/theme/app_palette.dart';
 import 'package:micro_opportunites/core/theme/app_radius.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
 import 'package:micro_opportunites/core/theme/app_typography.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 /// Thème Material 3 clair. Pas d'ombres : des bordures fines ; seule la
 /// feuille du bas porte une ombre légère.
@@ -186,4 +187,75 @@ abstract final class AppTheme {
       ),
     );
   }
+  static const Color primaryGreen = Color(0xFF1E5B49);
+  static const Color backgroundBeige = Color(0xFFF7F4EF);
+  static const Color accentGold = Color(0xFFC78B45);
+  static const Color textBlack = Color(0xFF1A1A1A);
+  static const Color textGrey = Color(0xFF757575);
+
+  static ThemeData get lightTheme {
+    return ThemeData(
+      scaffoldBackgroundColor: backgroundBeige,
+      primaryColor: primaryGreen,
+      colorScheme: const ColorScheme.light(
+        primary: primaryGreen,
+        secondary: accentGold,
+        surface: Colors.white,
+      ),
+      textTheme: TextTheme(
+        displayLarge: GoogleFonts.lora(
+          color: textBlack,
+          fontSize: 32,
+          fontWeight: FontWeight.bold,
+        ),
+        displayMedium: GoogleFonts.lora(
+          color: textBlack,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        ),
+        headlineMedium: GoogleFonts.lora(
+          color: primaryGreen,
+          fontSize: 24,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyLarge: GoogleFonts.inter(color: textBlack, fontSize: 16),
+        bodyMedium: GoogleFonts.inter(color: textGrey, fontSize: 14),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: primaryGreen,
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 56),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+          textStyle: GoogleFonts.inter(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: Colors.white,
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 18,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: BorderSide(color: Colors.grey.shade300),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(color: primaryGreen, width: 2),
+        ),
+      ),
+    );
+  }
 }
+
