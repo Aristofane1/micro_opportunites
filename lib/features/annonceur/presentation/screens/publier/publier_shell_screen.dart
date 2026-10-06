@@ -8,10 +8,9 @@ import 'package:micro_opportunites/features/annonceur/presentation/screens/publi
 import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_quand_combien_screen.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_payer_screen.dart';
-
-/// Chemin de l'écran de confirmation (supprimé avec l'étape de confirmation).
-const _confirmPath = '/poster/publish/confirm';
+import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 
 class PublierShellScreen extends ConsumerStatefulWidget {
   const PublierShellScreen({super.key});
@@ -21,12 +20,11 @@ class PublierShellScreen extends ConsumerStatefulWidget {
 }
 
 class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
-  static const _labels = ['Quoi', 'Où', 'Quand et combien', 'Payer'];
+  static const _labels = ['Quoi', 'Où', 'Quand et combien'];
   static const _nextLabels = [
     'Suivant : où',
     'Suivant : quand et combien',
-    'Suivant : payer',
-    'Payer et publier',
+    'Publier',
   ];
 
   int _step = 0;
@@ -52,19 +50,24 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
     if (_step < _labels.length - 1) {
       setState(() => _step++);
     } else {
-      context.push(_confirmPath);
+      _publish();
     }
   }
 
-  /*
-  void _back() {
-    if (_step > 0) {
-      setState(() => _step--);
-    } else {
-      Navigator.of(context).maybePop(); // quitte le formulaire
+  /// Publie : l'argent est bloqué sur le solde, puis écran de confirmation.
+  Future<void> _publish() async {
+    final result = await ref.read(annonceurActionsProvider.notifier).publish();
+    if (!mounted) return;
+    switch (result) {
+      case Success():
+        context.go(PosterPaths.publishDone);
+      case Err(:final failure):
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.message)));
     }
+  }
 
-  }*/
   void _back() {
     if (_step > 0) {
       setState(() => _step--);
@@ -80,6 +83,7 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
   @override
   Widget build(BuildContext context) {
     final draft = ref.watch(missionDraftControllerProvider);
+    final publishing = ref.watch(annonceurActionsProvider).isLoading;
     final colors = Theme.of(context).colorScheme;
 
     return Scaffold(
@@ -118,7 +122,9 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            _step == 0 ? 'Brouillon ' : '${_step + 1}/4',
+                            _step == 0
+                                ? 'Brouillon '
+                                : '${_step + 1}/${_labels.length}',
                             style: TextStyle(color: colors.onSurfaceVariant),
                           ),
                         ),
@@ -126,7 +132,7 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  StepProgressBar(current: _step),
+                  StepProgressBar(current: _step, total: _labels.length),
                   const SizedBox(height: 12),
                   //  l'étape actuelle en gras
                   Text.rich(
@@ -159,8 +165,7 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
               child: switch (_step) {
                 0 => const EtapeQuoiScreen(),
                 1 => const EtapeOuScreen(),
-                2 => const EtapeQuandCombienScreen(),
-                _ => const EtapePayerScreen(),
+                _ => const EtapeQuandCombienScreen(),
               },
             ),
             // Bouton du bas
@@ -173,14 +178,17 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
                     width: double.infinity,
                     height: 52,
                     child: FilledButton(
-                      onPressed: _canContinue(draft) ? _next : null,
+                      onPressed: _canContinue(draft) && !publishing
+                          ? _next
+                          : null,
                       child: Text(_nextLabels[_step]),
                     ),
                   ),
-                  if (_step == 3) ...[
+                  if (_step == _labels.length - 1) ...[
                     const SizedBox(height: 8),
                     Text(
-                      'Connexion requise',
+                      '${formatFcfa(draft.totalToBlock)} seront bloqués sur '
+                      'votre solde.',
                       style: TextStyle(
                         fontSize: 12,
                         color: colors.onSurfaceVariant,

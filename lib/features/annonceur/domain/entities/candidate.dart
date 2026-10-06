@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 
 part 'candidate.freezed.dart';
 
@@ -10,35 +9,9 @@ enum CandidateStatus { pending, retained, confirmed, refused }
 enum AttendanceStatus {
   notArrived,
   arrived,
-  unconfirmed, // GPS faible : l'annonceur doit confirmer la présence
   finished, // a signalé la fin : travail à valider
   validated, // travail validé, paiement versé
-  absent,
-}
-
-/// « Événement × 9 »
-class DoneMission {
-  const DoneMission(this.category, this.count);
-  final MissionCategory category;
-  final int count;
-}
-
-class CandidateReview {
-  const CandidateReview({
-    required this.author,
-    required this.stars,
-    required this.text,
-    required this.punctuality,
-    required this.quality,
-    required this.communication,
-  });
-
-  final String author;
-  final int stars;
-  final String text;
-  final int punctuality;
-  final int quality;
-  final int communication;
+  contested, // l'annonceur a contesté le travail
 }
 
 @freezed
@@ -46,28 +19,26 @@ abstract class Candidate with _$Candidate {
   const Candidate._();
 
   const factory Candidate({
-    required String id,
+    required String id, // identifiant de la candidature
     required String name, // « Sènami O. »
     required String city,
-    required String memberSince, // « janv. 2026 »
-    required String pitch, // le message du candidat
+    required DateTime memberSince,
+    required String pitch, // la présentation du candidat
     required String skills,
     @Default(false) bool verified,
-    @Default(false) bool isExpert,
     double? rating,
     @Default(0) int reviewsCount,
     @Default(0) int missionsCount,
     int? reliability, // en pourcentage
     @Default(0) int absences,
-    @Default([]) List<DoneMission> doneMissions,
-    CandidateReview? review,
     @Default(CandidateStatus.pending) CandidateStatus status,
     @Default(AttendanceStatus.notArrived) AttendanceStatus attendance,
+    String? assignmentId,
     DateTime? arrivedAt,
     DateTime? finishedAt,
-    DateTime? noCheckInAt,
+    DateTime? autoPayAt, // sans réponse, le paiement part à cette heure
+    DateTime? offerExpiresAt,
     int? distanceMeters,
-    @Default(true) bool gpsPrecise,
     @Default(0) int proofPhotos,
     String? completionNote,
   }) = _Candidate;
@@ -81,7 +52,4 @@ abstract class Candidate with _$Candidate {
   String get firstName => name.split(' ').first;
 
   bool get isNew => missionsCount == 0;
-
-  /// Sans réponse de l'annonceur, le paiement part 48 h après la fin signalée.
-  DateTime? get autoPayAt => finishedAt?.add(const Duration(hours: 48));
 }

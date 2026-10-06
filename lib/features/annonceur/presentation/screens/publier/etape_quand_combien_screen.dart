@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/formatting/dates.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/widgets/thousands_input_formatter.dart';
+
+/// « 08:00 » : heure saisie dans les sélecteurs (heure de l'appareil).
+String _clock(DateTime time) =>
+    '${time.hour.toString().padLeft(2, '0')}:'
+    '${time.minute.toString().padLeft(2, '0')}';
 
 class EtapeQuandCombienScreen extends ConsumerStatefulWidget {
   const EtapeQuandCombienScreen({super.key});
@@ -26,7 +33,7 @@ class _EtapeQuandCombienScreenState
     super.initState();
     final amount = ref.read(missionDraftControllerProvider).payAmount;
     _amountCtrl = TextEditingController(
-      text: amount == null ? '' : groupThousands(amount),
+      text: amount == null ? '' : formatAmount(amount),
     );
   }
 
@@ -77,7 +84,7 @@ class _EtapeQuandCombienScreenState
           children: [
             for (final minutes in _durations)
               ListTile(
-                title: Text(formatDuration(minutes)),
+                title: Text(formatDuration(Duration(minutes: minutes))),
                 onTap: () => Navigator.of(sheetContext).pop(minutes),
               ),
           ],
@@ -137,7 +144,7 @@ class _EtapeQuandCombienScreenState
                 flex: 4,
                 child: _PickerBox(
                   label: 'Date',
-                  value: start == null ? 'Choisir' : formatDay(start),
+                  value: start == null ? 'Choisir' : formatShortDay(start),
                   onTap: _pickDate,
                 ),
               ),
@@ -146,7 +153,7 @@ class _EtapeQuandCombienScreenState
                 flex: 3,
                 child: _PickerBox(
                   label: 'Heure',
-                  value: start == null ? '--:--' : formatClock(start),
+                  value: start == null ? '--:--' : _clock(start),
                   onTap: _pickTime,
                 ),
               ),
@@ -155,7 +162,9 @@ class _EtapeQuandCombienScreenState
                 flex: 3,
                 child: _PickerBox(
                   label: 'Durée',
-                  value: formatDuration(draft.durationMinutes),
+                  value: formatDuration(
+                    Duration(minutes: draft.durationMinutes),
+                  ),
                   onTap: _pickDuration,
                 ),
               ),
@@ -257,7 +266,7 @@ class _EtapeQuandCombienScreenState
             label: 'Candidatures jusqu\'au',
             value: deadline == null
                 ? 'Choisir'
-                : '${formatDay(deadline)} · ${formatClock(deadline)}',
+                : '${formatShortDay(deadline)} · ${_clock(deadline)}',
             onTap: _pickDeadline,
           ),
           const SizedBox(height: 20),
@@ -272,17 +281,22 @@ class _EtapeQuandCombienScreenState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Montant à bloquer',
-                  style: TextStyle(color: colors.onPrimaryContainer),
+                Flexible(
+                  child: Text(
+                    'Montant à bloquer',
+                    style: TextStyle(color: colors.onPrimaryContainer),
+                  ),
                 ),
-                Text(
-                  formatFcfa(draft.totalToBlock),
-                  style: TextStyle(
-                    fontFamily: 'Lora',
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
-                    color: colors.onPrimaryContainer,
+                Flexible(
+                  child: Text(
+                    formatFcfa(draft.totalToBlock),
+                    textAlign: TextAlign.end,
+                    style: TextStyle(
+                      fontFamily: 'Lora',
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                      color: colors.onPrimaryContainer,
+                    ),
                   ),
                 ),
               ],

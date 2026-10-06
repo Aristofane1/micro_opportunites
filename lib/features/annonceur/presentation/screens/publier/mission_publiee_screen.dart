@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/published_mission.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/published_mission_controller.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/formatting/dates.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
@@ -19,16 +20,13 @@ class MissionPublieeScreen extends ConsumerWidget {
 
   Future<void> _shareOnWhatsApp(
     BuildContext context,
-    PublishedMission mission,
+    MissionSummary mission,
   ) async {
-    final d = mission.draft;
-    final start = d.startAt;
-    final when = start == null
-        ? ''
-        : ' · ${formatDay(start)} · ${formatHour(start)}';
+    final start = mission.startAt;
     final text =
-        'Nouvelle mission sur MicroOpportunités : ${d.title}$when'
-        ' · ${formatPayPerUnit(d)}';
+        'Nouvelle mission sur MicroOpportunités : ${mission.title}'
+        ' · ${formatShortDay(start)} · ${formatHour(start)}'
+        ' · ${mission.payLabel}';
     final uri = Uri.parse('https://wa.me/?text=${Uri.encodeComponent(text)}');
 
     final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -41,7 +39,7 @@ class MissionPublieeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mission = ref.watch(publishedMissionControllerProvider);
+    final mission = ref.watch(lastPublishedProvider);
     if (mission == null) {
       return Scaffold(
         body: Center(
@@ -111,7 +109,7 @@ class MissionPublieeScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          '${formatFcfa(mission.draft.totalToBlock)} sont bloqués. '
+                          '${formatFcfa(mission.blockedAmount)} sont bloqués. '
                           'Les exécutants de votre zone voient maintenant '
                           '« Paiement garanti ».',
                           textAlign: TextAlign.center,
@@ -145,13 +143,24 @@ class MissionPublieeScreen extends ConsumerWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Text(
-                          'Reçu envoyé · ${mission.receiptNumber}',
-                          style: TextStyle(
-                            fontFamily: 'IBMPlexMono',
-                            fontSize: 12,
-                            color: AppColors.white.withValues(alpha: 0.6),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                'Montant bloqué',
+                                style: TextStyle(color: white70),
+                              ),
+                            ),
+                            Text(
+                              formatFcfa(mission.blockedAmount),
+                              style: const TextStyle(
+                                fontFamily: 'IBMPlexMono',
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.white,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

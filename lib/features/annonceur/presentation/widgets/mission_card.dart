@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/formatting/dates.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/status_chip.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
@@ -41,11 +42,15 @@ class MissionCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StatusChip(m.status),
-                  Text(
-                    '${formatDay(m.startAt)} · ${formatHour(m.startAt)}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: colors.onSurfaceVariant,
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      '${formatShortDay(m.startAt)} · ${formatHour(m.startAt)}',
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colors.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],
@@ -95,7 +100,7 @@ class MissionCard extends StatelessWidget {
                     ),
                   if (showBlocked)
                     Text(
-                      '${groupThousands(m.blockedAmount)} bloqués',
+                      '${formatAmount(m.blockedAmount)} bloqués',
                       style: TextStyle(
                         color: colors.primary,
                         fontWeight: FontWeight.w700,

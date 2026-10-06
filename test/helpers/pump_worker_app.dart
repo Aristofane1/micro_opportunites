@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/app.dart';
+import 'package:micro_opportunites/app/role/active_role.dart';
+import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/app/bootstrap.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
@@ -17,6 +19,7 @@ ProviderContainer createTestContainer({
   DateTime Function()? clock,
   String initialLocation = WorkerPaths.explore,
   String? session = 'u1',
+  ActiveRole role = ActiveRole.worker,
 }) {
   final container = ProviderContainer(
     overrides: [
@@ -27,6 +30,8 @@ ProviderContainer createTestContainer({
         session: session,
       ),
       initialLocationProvider.overrideWithValue(initialLocation),
+      if (role != ActiveRole.worker)
+        activeRoleProvider.overrideWith(() => _FixedRole(role)),
       ...overrides,
     ],
     retry: (_, _) => null,
@@ -35,7 +40,7 @@ ProviderContainer createTestContainer({
   return container;
 }
 
-/// Monte l'app complète (profil Exécutant) et attend le premier affichage.
+/// Monte l'app complète (profil [role], Exécutant par défaut) et attend le premier affichage.
 /// [beforePump] permet de préparer le faux serveur (ex. `nextError`).
 Future<ProviderContainer> pumpWorkerApp(
   WidgetTester tester, {
@@ -45,6 +50,7 @@ Future<ProviderContainer> pumpWorkerApp(
   DateTime Function()? clock,
   String initialLocation = WorkerPaths.explore,
   String? session = 'u1',
+  ActiveRole role = ActiveRole.worker,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -54,6 +60,7 @@ Future<ProviderContainer> pumpWorkerApp(
     clock: clock,
     initialLocation: initialLocation,
     session: session,
+    role: role,
   );
   beforePump?.call(container);
   await tester.pumpWidget(
@@ -61,4 +68,14 @@ Future<ProviderContainer> pumpWorkerApp(
   );
   await tester.pumpAndSettle();
   return container;
+}
+
+/// Rôle actif imposé au démarrage, comme le raccourci de `main.dart`.
+class _FixedRole extends ActiveRoleNotifier {
+  _FixedRole(this._role);
+
+  final ActiveRole _role;
+
+  @override
+  ActiveRole build() => _role;
 }

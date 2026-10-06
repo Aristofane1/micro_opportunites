@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 
 part 'mission_draft.freezed.dart';
@@ -31,9 +30,6 @@ abstract class MissionDraft with _$MissionDraft {
     @Default(PayUnit.flat) PayUnit payUnit,
     @Default(1) int slotsTotal,
     DateTime? applyDeadline,
-
-    // Étape 4 : Payer
-    @Default(PaymentMethod.mtnMomo) PaymentMethod paymentMethod,
   }) = _MissionDraft;
 
   /// Montant total à bloquer (hors frais de service).

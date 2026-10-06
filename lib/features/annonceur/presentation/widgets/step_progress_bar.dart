@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class StepProgressBar extends StatelessWidget {
-  const StepProgressBar({super.key, required this.current, this.total = 4});
+  const StepProgressBar({super.key, required this.current, this.total = 3});
 
-  final int current; // étape actuelle (0 à 3)
+  final int current; // étape actuelle (0 à total - 1)
   final int total;
 
   @override

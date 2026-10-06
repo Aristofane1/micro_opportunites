@@ -18,15 +18,14 @@ abstract final class AppRoutes {
   static const posterMessages = PosterPaths.messages;
   static const posterProfile = PosterPaths.profile;
   static const posterPublishNew = PosterPaths.publishNew;
-  static const posterPublishConfirm = '/poster/publish/confirm';
   static const posterPublishDone = PosterPaths.publishDone;
   static String posterMissionManage(String id) => PosterPaths.missionManage(id);
   static String posterCandidates(String id) => PosterPaths.candidates(id);
   static String posterCandidate(String id, String candidateId) =>
       PosterPaths.candidate(id, candidateId);
   static String posterToday(String id) => PosterPaths.today(id);
-  static String posterValidate(String id, String candidateId) =>
-      PosterPaths.validate(id, candidateId);
+  static String posterValidate(String id, String assignmentId) =>
+      PosterPaths.validate(id, assignmentId);
 
   static String homeFor(ActiveRole role) => switch (role) {
     ActiveRole.worker => workerExplore,

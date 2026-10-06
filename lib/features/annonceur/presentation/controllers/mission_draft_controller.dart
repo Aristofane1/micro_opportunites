@@ -1,41 +1,14 @@
 import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_draft.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 
 part 'mission_draft_controller.g.dart';
-
-// Brouillon de test
-MissionDraft _buildTestDraft() {
-  final tomorrow = DateTime.now().add(const Duration(days: 1));
-  return MissionDraft(
-    title: 'Distribution de flyers au carrefour',
-    category: MissionCategory.event,
-    description:
-        'Distribuer 500 flyers pour l\'ouverture d\'une boutique. Flyers et t-shirt fournis sur place.',
-    city: 'Abomey-Calavi',
-    address: 'Rue de la pharmacie, Godomey',
-    landmark: 'Face à la station du carrefour, portail bleu',
-    startAt: DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 8),
-    payAmount: 5000,
-    slotsTotal: 5,
-    applyDeadline: DateTime(
-      tomorrow.year,
-      tomorrow.month,
-      tomorrow.day - 1,
-      18,
-    ),
-  );
-}
 
 @Riverpod(keepAlive: true)
 class MissionDraftController extends _$MissionDraftController {
   @override
-  MissionDraft build() => ref.watch(annonceurDemoDataProvider)
-      ? _buildTestDraft()
-      : const MissionDraft();
+  MissionDraft build() => const MissionDraft();
   // Étape 1 : Quoi ??
   void updateTitle(String value) => state = state.copyWith(title: value);
 
@@ -115,9 +88,6 @@ class MissionDraftController extends _$MissionDraftController {
   void updateApplyDeadline(DateTime value) =>
       state = state.copyWith(applyDeadline: value);
 
-  // Étape 4 : Payer
-  void updatePaymentMethod(PaymentMethod value) =>
-      state = state.copyWith(paymentMethod: value);
   // Repartir de zéro (après publication ou annulation)
   void reset() => state = const MissionDraft();
 }

@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 
 part 'mission_summary.freezed.dart';
@@ -15,7 +17,8 @@ abstract class MissionSummary with _$MissionSummary {
     required MissionStatus status,
     required DateTime startAt,
     required String city,
-    required String payLabel, // ex. « 5 000 FCFA / pers. »
+    required int payAmount,
+    required PayUnit payUnit,
     required int slotsTotal,
     MissionCategory? category,
     @Default(240) int durationMinutes,
@@ -28,8 +31,21 @@ abstract class MissionSummary with _$MissionSummary {
 
   int get slotsFree => slotsTotal - slotsConfirmed - slotsOffered;
 
-  /// Ce que touche chaque personne (montant bloqué ÷ nombre de places)
-  int get amountPerSlot => slotsTotal == 0 ? 0 : blockedAmount ~/ slotsTotal;
+  /// « 5 000 FCFA / pers. » (ou « / h », « / jour » selon l'unité)
+  String get payLabel {
+    final suffix = switch (payUnit) {
+      PayUnit.flat => 'pers.',
+      PayUnit.hourly => 'h',
+      PayUnit.daily => 'jour',
+    };
+    return '${formatFcfa(payAmount)} / $suffix';
+  }
+
+  /// Ce que touche chaque personne : le taux, ou taux × durée à l'heure
+  /// (même calcul que le montant bloqué par place côté serveur).
+  int get amountPerSlot => payUnit == PayUnit.hourly
+      ? (payAmount * durationMinutes / 60).round()
+      : payAmount;
 
   DateTime get endAt => startAt.add(Duration(minutes: durationMinutes));
 }

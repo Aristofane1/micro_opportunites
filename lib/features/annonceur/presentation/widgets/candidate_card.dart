@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 const _green = AppColors.green;
@@ -12,27 +12,17 @@ class CandidateAvatar extends StatelessWidget {
     super.key,
     this.size = 52,
     this.serif = false,
-    this.danger = false,
   });
 
   final Candidate candidate;
   final double size;
   final bool serif; // police à empattements (profil)
-  final bool danger; // teinte rouge (absent)
 
   @override
   Widget build(BuildContext context) {
     final isNew = candidate.isNew;
-    final bg = danger
-        ? AppColors.softRed
-        : isNew
-        ? AppColors.pendingBackground
-        : AppColors.softGreen;
-    final fg = danger
-        ? AppColors.red
-        : isNew
-        ? AppColors.ochreDeep
-        : _green;
+    final bg = isNew ? AppColors.pendingBackground : AppColors.softGreen;
+    final fg = isNew ? AppColors.ochreDeep : _green;
 
     return Container(
       width: size,
@@ -131,13 +121,7 @@ class CandidateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  if (c.isExpert)
-                    const _Badge(
-                      'Expert',
-                      bg: AppColors.ink,
-                      fg: AppColors.ochre,
-                    )
-                  else if (c.isNew)
+                  if (c.isNew)
                     _Badge(
                       'Nouveau',
                       bg: colors.surfaceContainerHigh,

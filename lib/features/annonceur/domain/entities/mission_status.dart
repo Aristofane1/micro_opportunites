@@ -1,5 +1,4 @@
 enum MissionStatus {
-  draft('Brouillon'),
   published('Publiée'),
   selected('Candidat sélectionné'),
   inProgress('En cours'),
@@ -8,6 +7,10 @@ enum MissionStatus {
 
   const MissionStatus(this.label);
   final String label;
+
+  /// Statut renvoyé par l'API (`published`, `inProgress`…).
+  static MissionStatus fromApi(String value) =>
+      values.asNameMap()[value] ?? MissionStatus.published;
 
   /// Missions affichées dans l'onglet « Actives »
   bool get isActive =>

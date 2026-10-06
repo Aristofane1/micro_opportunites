@@ -5,6 +5,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:micro_opportunites/core/geo/map_tiles.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 
 class EtapeOuScreen extends ConsumerStatefulWidget {
@@ -97,12 +98,14 @@ class _EtapeOuScreenState extends ConsumerState<EtapeOuScreen> {
                       },
                     ),
                     children: [
-                      TileLayer(
-                        urlTemplate:
-                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                        // À remplacer par l'applicationId de ton projet Android
-                        userAgentPackageName: 'com.example.micro_opportunites',
-                      ),
+                      if (ref.watch(mapTilesEnabledProvider))
+                        TileLayer(
+                          urlTemplate:
+                              'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                          // À remplacer par l'applicationId de ton projet Android
+                          userAgentPackageName:
+                              'com.example.micro_opportunites',
+                        ),
                     ],
                   ),
                   // Épingle fixe au centre : c'est la carte qui bouge dessous

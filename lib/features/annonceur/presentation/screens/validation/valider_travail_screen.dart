@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/core/formatting/dates.dart';
+import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
+import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 
@@ -12,11 +16,11 @@ class ValiderTravailScreen extends ConsumerWidget {
   const ValiderTravailScreen({
     super.key,
     required this.missionId,
-    required this.candidateId,
+    required this.assignmentId,
   });
 
   final String missionId;
-  final String candidateId;
+  final String assignmentId;
 
   static const _green = AppColors.green;
 
@@ -26,309 +30,329 @@ class ValiderTravailScreen extends ConsumerWidget {
     ).showSnackBar(const SnackBar(content: Text('Bientôt disponible')));
   }
 
-  void _validate(BuildContext context, WidgetRef ref, Candidate c, int amount) {
-    ref.read(candidatesControllerProvider.notifier).validate(missionId, c.id);
+  Future<void> _validate(
+    BuildContext context,
+    WidgetRef ref,
+    Candidate c,
+    int amount,
+  ) async {
     final messenger = ScaffoldMessenger.of(context);
-    context.pop();
-    messenger.showSnackBar(
-      SnackBar(
-        content: Text(
-          '${formatFcfa(amount)} versés à ${c.firstName} (simulation).',
+    final result = await ref
+        .read(annonceurActionsProvider.notifier)
+        .validate(assignmentId);
+    if (!context.mounted) return;
+    switch (result) {
+      case Success():
+        context.pop();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text('${formatFcfa(amount)} versés à ${c.firstName}.'),
+          ),
+        );
+      case Err(:final failure):
+        messenger.showSnackBar(SnackBar(content: Text(failure.message)));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final missionProvider = posterMissionProvider(missionId);
+    final candidatesProvider = missionCandidatesProvider(missionId);
+    return Scaffold(
+      body: AsyncValueView(
+        value: ref.watch(missionProvider),
+        onRetry: () => ref.invalidate(missionProvider),
+        data: (mission) => AsyncValueView(
+          value: ref.watch(candidatesProvider),
+          onRetry: () => ref.invalidate(candidatesProvider),
+          data: (all) {
+            final c = all
+                .where((x) => x.assignmentId == assignmentId)
+                .firstOrNull;
+            if (c == null) return const Center(child: Text('Introuvable.'));
+            return _buildWork(context, ref, mission, c);
+          },
         ),
       ),
     );
   }
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget _buildWork(
+    BuildContext context,
+    WidgetRef ref,
+    MissionSummary mission,
+    Candidate c,
+  ) {
     final colors = Theme.of(context).colorScheme;
-    final mission = ref
-        .watch(missionsWithCountsProvider)
-        .where((m) => m.id == missionId)
-        .firstOrNull;
-    final c = ref.watch(
-      candidatesControllerProvider.select(
-        (m) => (m[missionId] ?? const <Candidate>[])
-            .where((x) => x.id == candidateId)
-            .firstOrNull,
-      ),
-    );
-
-    if (mission == null || c == null) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('Introuvable.')),
-      );
-    }
-
     final amount = mission.amountPerSlot;
     final canValidate = c.attendance == AttendanceStatus.finished;
     final arrived = c.arrivedAt;
     final finished = c.finishedAt;
     final autoPayAt = c.autoPayAt;
 
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // --- En-tête ---
-                    Row(
-                      children: [
-                        IconButton.outlined(
-                          onPressed: () => context.pop(),
-                          icon: const Icon(Icons.arrow_back),
+    return SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // --- En-tête ---
+                  Row(
+                    children: [
+                      IconButton.outlined(
+                        onPressed: () => context.pop(),
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              mission.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: colors.onSurfaceVariant,
+                              ),
+                            ),
+                            const Text(
+                              'Valider le travail',
+                              style: TextStyle(
+                                fontFamily: 'Lora',
+                                fontSize: 26,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ],
                         ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  // --- Qui ---
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: colors.surface,
+                      border: Border.all(color: colors.outlineVariant),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      children: [
+                        CandidateAvatar(c, size: 48),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                mission.title,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
+                                c.name,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Text(
+                                finished == null
+                                    ? 'n\'a pas encore signalé la fin'
+                                    : 'a signalé la fin à ${formatHour(finished)}',
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: colors.onSurfaceVariant,
                                 ),
                               ),
-                              const Text(
-                                'Valider le travail',
-                                style: TextStyle(
-                                  fontFamily: 'Lora',
-                                  fontSize: 26,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
                             ],
                           ),
+                        ),
+                        IconButton.outlined(
+                          onPressed: () => _soon(context), // messagerie à venir
+                          icon: const Icon(Icons.chat_bubble_outline),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
+                  ),
+                  const SizedBox(height: 14),
 
-                    // --- Qui ---
+                  // --- Preuves ---
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: colors.surface,
+                      border: Border.all(color: colors.outlineVariant),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Preuves',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        _ProofLine(
+                          title:
+                              'Arrivée ${arrived == null ? '–' : formatHour(arrived)}',
+                          detail: c.distanceMeters == null
+                              ? 'distance inconnue'
+                              : '${c.distanceMeters} m du lieu',
+                        ),
+                        const SizedBox(height: 10),
+                        _ProofLine(
+                          title:
+                              'Départ ${finished == null ? '–' : formatHour(finished)}',
+                          detail: arrived != null && finished != null
+                              ? '${formatDuration(finished.difference(arrived))} sur place'
+                              : 'durée inconnue',
+                        ),
+                        const SizedBox(height: 14),
+                        if (c.proofPhotos == 0)
+                          Text(
+                            'Aucune photo jointe.',
+                            style: TextStyle(color: colors.onSurfaceVariant),
+                          )
+                        else
+                          Row(
+                            children: [
+                              for (
+                                var i = 0;
+                                i < c.proofPhotos && i < 2;
+                                i++
+                              ) ...[
+                                if (i > 0) const SizedBox(width: 8),
+                                // emplacement de la photo (Firebase Storage plus tard)
+                                Expanded(
+                                  child: Container(
+                                    height: 80,
+                                    padding: const EdgeInsets.all(6),
+                                    alignment: Alignment.bottomLeft,
+                                    decoration: BoxDecoration(
+                                      color: colors.surfaceContainerHigh,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Text(
+                                      'photo ${i + 1}',
+                                      style: const TextStyle(fontSize: 11),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        if (c.completionNote != null) ...[
+                          const SizedBox(height: 14),
+                          Text(
+                            '« ${c.completionNote} »',
+                            style: const TextStyle(fontStyle: FontStyle.italic),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+
+                  // --- Paiement automatique ---
+                  if (autoPayAt != null && canValidate)
                     Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: colors.surface,
-                        border: Border.all(color: colors.outlineVariant),
-                        borderRadius: BorderRadius.circular(16),
+                        color: AppColors.softOchre,
+                        border: Border.all(color: AppColors.ochre),
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
-                        children: [
-                          CandidateAvatar(c, size: 48),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  c.name,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Text(
-                                  finished == null
-                                      ? 'n\'a pas encore signalé la fin'
-                                      : 'a signalé la fin à ${formatHour(finished)}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: colors.onSurfaceVariant,
-                                  ),
-                                ),
-                              ],
-                            ),
+                      child: Text.rich(
+                        TextSpan(
+                          style: const TextStyle(
+                            color: AppColors.bannerOchreText,
                           ),
-                          IconButton.outlined(
-                            onPressed: () =>
-                                _soon(context), // messagerie à venir
-                            icon: const Icon(Icons.chat_bubble_outline),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 14),
-
-                    // --- Preuves ---
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: colors.surface,
-                        border: Border.all(color: colors.outlineVariant),
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            'Preuves',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 16,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          _ProofLine(
-                            title:
-                                'Arrivée ${arrived == null ? '–' : formatHour(arrived)}',
-                            detail:
-                                '${c.distanceMeters == null ? '' : '${c.distanceMeters} m du lieu · '}'
-                                '${c.gpsPrecise ? 'GPS précis' : 'GPS approximatif'}',
-                          ),
-                          const SizedBox(height: 10),
-                          _ProofLine(
-                            title:
-                                'Départ ${finished == null ? '–' : formatHour(finished)}',
-                            detail: arrived != null && finished != null
-                                ? '${formatDuration(finished.difference(arrived).inMinutes)} sur place'
-                                : 'durée inconnue',
-                          ),
-                          const SizedBox(height: 14),
-                          if (c.proofPhotos == 0)
-                            Text(
-                              'Aucune photo jointe.',
-                              style: TextStyle(color: colors.onSurfaceVariant),
-                            )
-                          else
-                            Row(
-                              children: [
-                                for (
-                                  var i = 0;
-                                  i < c.proofPhotos && i < 2;
-                                  i++
-                                ) ...[
-                                  if (i > 0) const SizedBox(width: 8),
-                                  // emplacement de la photo (Firebase Storage plus tard)
-                                  Expanded(
-                                    child: Container(
-                                      height: 80,
-                                      padding: const EdgeInsets.all(6),
-                                      alignment: Alignment.bottomLeft,
-                                      decoration: BoxDecoration(
-                                        color: colors.surfaceContainerHigh,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        'photo ${i + 1}',
-                                        style: const TextStyle(fontSize: 11),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ],
-                            ),
-                          if (c.completionNote != null) ...[
-                            const SizedBox(height: 14),
-                            Text(
-                              '« ${c.completionNote} »',
+                          children: [
+                            const TextSpan(text: 'Sans réponse avant '),
+                            TextSpan(
+                              text:
+                                  '${formatShortDay(autoPayAt)} ${formatHour(autoPayAt)}',
                               style: const TextStyle(
-                                fontStyle: FontStyle.italic,
+                                fontWeight: FontWeight.w700,
                               ),
+                            ),
+                            const TextSpan(
+                              text: ', le paiement part automatiquement.',
                             ),
                           ],
-                        ],
+                        ),
                       ),
                     ),
-                    const SizedBox(height: 14),
-
-                    // --- Paiement automatique ---
-                    if (autoPayAt != null && canValidate)
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: AppColors.softOchre,
-                          border: Border.all(color: AppColors.ochre),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Text.rich(
-                          TextSpan(
-                            style: const TextStyle(
-                              color: AppColors.bannerOchreText,
-                            ),
-                            children: [
-                              const TextSpan(text: 'Sans réponse avant '),
-                              TextSpan(
-                                text:
-                                    '${formatDayLong(autoPayAt)} ${formatHour(autoPayAt)}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: ', le paiement part automatiquement.',
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-
-            // --- Actions ---
-            Container(
-              padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-              decoration: BoxDecoration(
-                color: colors.surface,
-                border: Border(top: BorderSide(color: colors.outlineVariant)),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: _green,
-                        foregroundColor: AppColors.white,
-                      ),
-                      onPressed: canValidate
-                          ? () => _validate(context, ref, c, amount)
-                          : null,
-                      child: Text(
-                        canValidate
-                            ? 'Valider et verser ${formatFcfa(amount)}'
-                            : 'Paiement déjà versé',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => _soon(context),
-                          child: const Text('Ajouter un complément'),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: colors.error,
-                          ),
-                          onPressed: () => _soon(context),
-                          child: const Text('Signaler un problème'),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+
+          // --- Actions ---
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
+            decoration: BoxDecoration(
+              color: colors.surface,
+              border: Border(top: BorderSide(color: colors.outlineVariant)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: _green,
+                      foregroundColor: AppColors.white,
+                    ),
+                    onPressed: canValidate
+                        ? () => _validate(context, ref, c, amount)
+                        : null,
+                    child: Text(
+                      canValidate
+                          ? 'Valider et verser ${formatFcfa(amount)}'
+                          : c.attendance == AttendanceStatus.contested
+                          ? 'Travail contesté'
+                          : 'Paiement déjà versé',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => _soon(context),
+                        child: const Text('Ajouter un complément'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: OutlinedButton(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: colors.error,
+                        ),
+                        onPressed: canValidate
+                            ? () => context.push(
+                                PosterPaths.contest(missionId, assignmentId),
+                              )
+                            : null,
+                        child: const Text('Signaler un problème'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
