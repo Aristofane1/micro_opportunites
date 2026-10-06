@@ -1,6 +1,11 @@
 import 'package:micro_opportunites/dev/fake_api/fake_database.dart';
 import 'package:micro_opportunites/dev/fake_api/geo.dart';
 
+/// Montant versé à une personne pour la mission (taux × durée pour une
+/// mission à l'heure) : c'est le seul montant montré aux exécutants.
+int workerPay(Json mission) =>
+    (mission['slotAmount'] ?? (mission['pay'] as Json)['amount']) as int;
+
 /// Mission telle que vue par un candidat : jamais d'adresse ni de zone.
 Json publicMission(FakeDatabase db, Json mission) {
   final poster = db.posters[mission['posterId']]!;
@@ -17,7 +22,7 @@ Json publicMission(FakeDatabase db, Json mission) {
     'city': mission['city'],
     'startAt': mission['startAt'],
     'durationMin': mission['durationMin'],
-    'pay': mission['pay'],
+    'pay': {'amount': workerPay(mission), 'type': 'flat'},
     'slotsTotal': mission['slotsTotal'],
     'slotsFree': mission['slotsFree'],
     'description': mission['description'],
@@ -53,7 +58,7 @@ Json applicationJson(FakeDatabase db, Json application) {
       'city': mission['city'],
       'startAt': mission['startAt'],
       'durationMin': mission['durationMin'],
-      'payAmount': (mission['pay'] as Json)['amount'],
+      'payAmount': workerPay(mission),
       'posterName': poster['displayName'],
       'posterRating': poster['rating'],
       'posterVerified': poster['verified'],
@@ -73,6 +78,7 @@ Json assignmentJson(FakeDatabase db, Json assignment) {
   );
   return {
     ...assignment,
+    'contestReason': assignment['contestReason'],
     'distanceKm': double.parse(km.toStringAsFixed(1)),
     'travelMinutes': (km / 15 * 60).ceil().clamp(1, 600),
   };

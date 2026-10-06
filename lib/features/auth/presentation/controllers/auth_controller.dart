@@ -1,4 +1,3 @@
-import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/network/data_revision.dart';
 import 'package:micro_opportunites/features/auth/data/auth_providers.dart';
@@ -24,28 +23,15 @@ class AuthActions extends _$AuthActions {
 
   AuthRepository get _repository => ref.read(authRepositoryProvider);
 
-  Future<Result<PhoneVerification>> requestCode(String phone) async {
-    final result = await _run(() => _repository.requestCode(phone));
-    if (result case Success(:final value)) {
-      ref
-          .read(entryDraftControllerProvider.notifier)
-          .setVerification(phone, value);
-    }
-    return result;
-  }
+  Future<Result<Account>> login(String email, String password) =>
+      _run(() => _repository.login(email: email, password: password));
 
-  Future<Result<void>> verifyCode(String code) {
-    final requestId = ref
-        .read(entryDraftControllerProvider)
-        .verification
-        ?.requestId;
-    if (requestId == null) {
-      return Future.value(
-        const Err(ValidationFailure('Demandez d’abord un code.')),
-      );
-    }
-    return _run(() => _repository.verifyCode(requestId: requestId, code: code));
-  }
+  Future<Result<Account>> signup(String email, String password) =>
+      _run(() => _repository.signup(email: email, password: password));
+
+  /// Le nettoyage de l'état local (brouillons, filtres…) est fait par
+  /// l'en-tête de l'app, qui connaît toutes les fonctionnalités.
+  Future<Result<void>> logout() => _run(_repository.logout);
 
   Future<Result<UserProfile>> saveProfile({
     required String firstName,

@@ -11,6 +11,8 @@ import 'package:micro_opportunites/dev/fake_api/handlers/auth_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/earnings_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/me_handlers.dart';
 import 'package:micro_opportunites/dev/fake_api/handlers/missions_handlers.dart';
+import 'package:micro_opportunites/dev/fake_api/handlers/poster_handlers.dart';
+import 'package:micro_opportunites/dev/fake_api/settlement.dart';
 
 /// Faux serveur REST en mémoire : mêmes routes et même JSON que la future
 /// API. Les requêtes et réponses passent par `jsonEncode`/`jsonDecode`
@@ -30,25 +32,37 @@ class FakeApiClient implements ApiClient {
   ApiException? nextError;
 
   static final List<FakeRoute> _routes = [
-    FakeRoute('POST', '/auth/phone', requestPhoneCode),
-    FakeRoute('POST', '/auth/otp', verifyPhoneCode),
+    FakeRoute('POST', '/auth/login', login),
+    FakeRoute('POST', '/auth/signup', signup),
+    FakeRoute('POST', '/auth/logout', logout),
     FakeRoute('POST', '/auth/profile', saveProfile),
     FakeRoute('POST', '/auth/kyc', submitKyc),
     FakeRoute('GET', '/auth/kyc', getKyc),
+    FakeRoute('POST', '/me/role', setRole),
     FakeRoute('GET', '/me', getMe),
+    FakeRoute('GET', '/me/missions', listMyMissions),
+    FakeRoute('GET', '/me/missions/:id', getMyMission),
+    FakeRoute('GET', '/me/wallet', getWallet),
     FakeRoute('GET', '/missions', listMissions),
     FakeRoute('GET', '/missions/cities', listCities),
     FakeRoute('GET', '/missions/:id', getMission),
+    FakeRoute('GET', '/missions/:id/candidates', listCandidates),
     FakeRoute('GET', '/posters/:id', getPoster),
+    FakeRoute('POST', '/missions', publishMission),
+    FakeRoute('POST', '/missions/:id/cancel', cancelMission),
     FakeRoute('POST', '/missions/:id/applications', applyToMission),
     FakeRoute('GET', '/me/applications', listMyApplications),
     FakeRoute('POST', '/applications/:id/withdraw', withdrawApplication),
     FakeRoute('POST', '/applications/:id/confirm', confirmOffer),
     FakeRoute('POST', '/applications/:id/decline', declineOffer),
+    FakeRoute('POST', '/applications/:id/offer', offerApplication),
+    FakeRoute('POST', '/applications/:id/reject', rejectApplication),
     FakeRoute('GET', '/assignments/:id', getAssignment),
     FakeRoute('POST', '/assignments/:id/check-in', checkIn),
     FakeRoute('POST', '/assignments/:id/check-out', checkOut),
     FakeRoute('POST', '/assignments/:id/withdraw', withdrawFromAssignment),
+    FakeRoute('POST', '/assignments/:id/validate', validateAssignment),
+    FakeRoute('POST', '/assignments/:id/contest', contestAssignment),
     FakeRoute('GET', '/me/earnings', getEarnings),
     FakeRoute('GET', '/me/payouts/:id', getPayout),
     FakeRoute('GET', '/me/alerts', listAlerts),
@@ -74,6 +88,7 @@ class FakeApiClient implements ApiClient {
     Object? body,
   }) async {
     await Future<void>.delayed(latency);
+    settle(db, clock());
     final error = nextError;
     if (error != null) {
       nextError = null;

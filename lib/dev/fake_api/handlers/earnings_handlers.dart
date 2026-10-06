@@ -11,7 +11,7 @@ Object? getEarnings(FakeDatabase db, FakeRequest request) {
   )) {
     final status = switch (a['status']) {
       'confirmed' || 'in_progress' => 'reserved',
-      'submitted' => 'awaiting_validation',
+      'submitted' || 'contested' => 'awaiting_validation',
       _ => null,
     };
     if (status == null) continue;
@@ -29,7 +29,9 @@ Object? getEarnings(FakeDatabase db, FakeRequest request) {
   var paidAmount = 0;
   var paidCount = 0;
   final since = request.now.toUtc().subtract(const Duration(days: 30));
-  for (final p in db.payouts.values) {
+  for (final p in db.payouts.values.where(
+    (p) => p['workerId'] == db.currentUserId,
+  )) {
     final validatedAt = DateTime.parse(p['validatedAt'] as String);
     if (validatedAt.isAfter(since)) {
       paidAmount += p['amount'] as int;
@@ -59,6 +61,8 @@ Object? getEarnings(FakeDatabase db, FakeRequest request) {
 
 Object? getPayout(FakeDatabase db, FakeRequest request) {
   final payout = db.payouts[request.params['id']];
-  if (payout == null) throw const ApiException(404, 'Reçu introuvable.');
+  if (payout == null || payout['workerId'] != db.currentUserId) {
+    throw const ApiException(404, 'Reçu introuvable.');
+  }
   return payout;
 }

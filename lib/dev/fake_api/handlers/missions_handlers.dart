@@ -22,6 +22,10 @@ const _cityCenters = {
   'Ouidah': (6.3667, 2.0850),
 };
 
+/// Mission ouverte aux candidatures : publiée et pas encore complète.
+bool _open(Json mission) =>
+    mission['status'] == 'published' && (mission['slotsFree'] as int) > 0;
+
 DateTime _beninDay(DateTime instant) {
   final local = instant.toUtc().add(const Duration(hours: 1));
   return DateTime.utc(local.year, local.month, local.day);
@@ -29,6 +33,7 @@ DateTime _beninDay(DateTime instant) {
 
 Object? listMissions(FakeDatabase db, FakeRequest request) {
   final user = db.currentUser;
+  final userId = user['id'];
   final query = request.query;
   final km = int.tryParse(query['km'] ?? '') ?? 5;
   final categories = (query['cat'] ?? '')
@@ -43,7 +48,7 @@ Object? listMissions(FakeDatabase db, FakeRequest request) {
 
   final items =
       db.missions.values.where((m) {
-        if (m['status'] != 'published') return false;
+        if (!_open(m) || m['posterId'] == userId) return false;
         if (city != null) {
           if (m['city'] != city) return false;
         } else {
@@ -59,7 +64,7 @@ Object? listMissions(FakeDatabase db, FakeRequest request) {
         if (categories.isNotEmpty && !categories.contains(m['category'])) {
           return false;
         }
-        if (minPay != null && ((m['pay'] as Json)['amount'] as int) < minPay) {
+        if (minPay != null && workerPay(m) < minPay) {
           return false;
         }
         final start = DateTime.parse(m['startAt'] as String);
@@ -92,7 +97,10 @@ Object? listMissions(FakeDatabase db, FakeRequest request) {
 
 Object? listCities(FakeDatabase db, FakeRequest request) {
   final byCity = <String, List<Json>>{};
-  for (final m in db.missions.values.where((m) => m['status'] == 'published')) {
+  final userId = db.currentUserId;
+  for (final m in db.missions.values.where(
+    (m) => _open(m) && m['posterId'] != userId,
+  )) {
     byCity.putIfAbsent(m['city'] as String, () => []).add(m);
   }
   final user = db.currentUser;
@@ -106,12 +114,8 @@ Object? listCities(FakeDatabase db, FakeRequest request) {
           'count': entry.value.length,
           'lat': _cityCenters[entry.key]?.$1 ?? asDouble(user['lat']),
           'lng': _cityCenters[entry.key]?.$2 ?? asDouble(user['lng']),
-          'minPay': entry.value
-              .map((m) => (m['pay'] as Json)['amount'] as int)
-              .reduce((a, b) => a < b ? a : b),
-          'maxPay': entry.value
-              .map((m) => (m['pay'] as Json)['amount'] as int)
-              .reduce((a, b) => a > b ? a : b),
+          'minPay': entry.value.map(workerPay).reduce((a, b) => a < b ? a : b),
+          'maxPay': entry.value.map(workerPay).reduce((a, b) => a > b ? a : b),
         },
     ]..sort((a, b) => (b['count'] as int).compareTo(a['count'] as int)),
   };

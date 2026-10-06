@@ -3,4 +3,6 @@ import 'package:micro_opportunites/features/account/domain/entities/current_user
 
 abstract interface class AccountRepository {
   Future<Result<CurrentUser>> fetchCurrentUser();
+
+  Future<Result<CurrentUser>> saveRole(String role);
 }

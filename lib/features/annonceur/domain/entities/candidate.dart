@@ -10,10 +10,9 @@ enum CandidateStatus { pending, retained, confirmed, refused }
 enum AttendanceStatus {
   notArrived,
   arrived,
-  unconfirmed, // GPS faible : l'annonceur doit confirmer la présence
   finished, // a signalé la fin : travail à valider
   validated, // travail validé, paiement versé
-  absent,
+  contested, // l'annonceur a contesté le travail
 }
 
 /// « Événement × 9 »
@@ -46,11 +45,11 @@ abstract class Candidate with _$Candidate {
   const Candidate._();
 
   const factory Candidate({
-    required String id,
+    required String id, // identifiant de la candidature
     required String name, // « Sènami O. »
     required String city,
-    required String memberSince, // « janv. 2026 »
-    required String pitch, // le message du candidat
+    DateTime? memberSince, // null pour un compte sans profil
+    required String pitch, // la présentation du candidat
     required String skills,
     @Default(false) bool verified,
     @Default(false) bool isExpert,
@@ -63,11 +62,12 @@ abstract class Candidate with _$Candidate {
     CandidateReview? review,
     @Default(CandidateStatus.pending) CandidateStatus status,
     @Default(AttendanceStatus.notArrived) AttendanceStatus attendance,
+    String? assignmentId,
     DateTime? arrivedAt,
     DateTime? finishedAt,
-    DateTime? noCheckInAt,
+    DateTime? autoPayAt, // sans réponse, le paiement part à cette heure
+    DateTime? offerExpiresAt,
     int? distanceMeters,
-    @Default(true) bool gpsPrecise,
     @Default(0) int proofPhotos,
     String? completionNote,
   }) = _Candidate;
@@ -81,7 +81,4 @@ abstract class Candidate with _$Candidate {
   String get firstName => name.split(' ').first;
 
   bool get isNew => missionsCount == 0;
-
-  /// Sans réponse de l'annonceur, le paiement part 48 h après la fin signalée.
-  DateTime? get autoPayAt => finishedAt?.add(const Duration(hours: 48));
 }

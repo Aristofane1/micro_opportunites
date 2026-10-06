@@ -27,11 +27,14 @@ class AssignmentPage extends ConsumerWidget {
         AssignmentStatus.confirmed => ConfirmedView(assignment: value),
         AssignmentStatus.inProgress => InProgressView(assignment: value),
         AssignmentStatus.submitted ||
+        AssignmentStatus.contested ||
         AssignmentStatus.paid => AwaitingValidationView(assignment: value),
         AssignmentStatus.cancelled => Padding(
           padding: const EdgeInsets.all(AppSpacing.screen),
           child: EmptyState(
-            title: 'Vous vous êtes désisté de cette mission',
+            title: value.cancelledByPoster
+                ? 'Mission annulée par l’annonceur'
+                : 'Vous vous êtes désisté de cette mission',
             actionLabel: 'Mes candidatures',
             onAction: () => context.go(WorkerPaths.applications),
           ),

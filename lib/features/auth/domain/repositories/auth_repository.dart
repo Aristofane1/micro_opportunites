@@ -2,12 +2,17 @@ import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/features/auth/domain/entities/auth_entities.dart';
 
 abstract interface class AuthRepository {
-  Future<Result<PhoneVerification>> requestCode(String phone);
-
-  Future<Result<void>> verifyCode({
-    required String requestId,
-    required String code,
+  Future<Result<Account>> login({
+    required String email,
+    required String password,
   });
+
+  Future<Result<Account>> signup({
+    required String email,
+    required String password,
+  });
+
+  Future<Result<void>> logout();
 
   Future<Result<UserProfile>> saveProfile({
     required String firstName,

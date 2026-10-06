@@ -2,33 +2,98 @@ import 'package:micro_opportunites/core/network/api_exception.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_database.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_routing.dart';
 
-/// Code SMS accepté par le faux serveur (affiché dans l'app en démo).
-const demoSmsCode = '12345';
+final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
-Object? requestPhoneCode(FakeDatabase db, FakeRequest request) {
-  final phone = (request.body['phone'] as String? ?? '').replaceAll(' ', '');
-  final digits = phone.replaceAll(RegExp(r'\D'), '');
-  if (digits.length < 8) {
-    throw const ApiException(422, 'Numéro de téléphone invalide.');
+Json publicAccount(Json user) => {
+  'id': user['id'],
+  'email': user['email'],
+  'firstName': user['firstName'],
+  'city': user['city'],
+  'role': user['role'],
+};
+
+Object? login(FakeDatabase db, FakeRequest request) {
+  final user = db.userByEmail(request.body['email'] as String? ?? '');
+  if (user == null || user['password'] != request.body['password']) {
+    throw const ApiException(422, 'E-mail ou mot de passe incorrect.');
   }
-  final requestId = db.newId('otp');
-  db.authRequests[requestId] = {'phone': phone, 'code': demoSmsCode};
-  return {
-    'requestId': requestId,
-    'demoCode': demoSmsCode,
-    'maskedPhone':
-        '${phone.substring(0, 4)} •• •• •• ${phone.substring(phone.length - 2)}',
-  };
+  db.sessionUserId = user['id'] as String;
+  return publicAccount(user);
 }
 
-Object? verifyPhoneCode(FakeDatabase db, FakeRequest request) {
-  final pending = db.authRequests[request.body['requestId']];
-  if (pending == null) throw const ApiException(404, 'Demande introuvable.');
-  if (request.body['code'] != pending['code']) {
-    throw const ApiException(422, 'Code incorrect.');
+Object? signup(FakeDatabase db, FakeRequest request) {
+  final email = (request.body['email'] as String? ?? '').trim().toLowerCase();
+  final password = request.body['password'] as String? ?? '';
+  if (!_emailPattern.hasMatch(email)) {
+    throw const ApiException(422, 'Adresse e-mail invalide.');
   }
-  db.currentUser['phone'] = pending['phone'];
-  return {'userId': db.currentUserId};
+  if (password.length < 6) {
+    throw const ApiException(422, 'Au moins 6 caractères.');
+  }
+  if (db.userByEmail(email) != null) {
+    throw const ApiException(422, 'Un compte existe déjà avec cet e-mail.');
+  }
+  final id = db.newId('u');
+  db.users[id] = {
+    'id': id,
+    'email': email,
+    'password': password,
+    'firstName': '',
+    'lastName': '',
+    'city': 'Abomey-Calavi',
+    'lat': 6.4485,
+    'lng': 2.3557,
+    'role': null,
+    'createdAt': request.now.toUtc().toIso8601String(),
+    'payoutAccount': {
+      'operator': 'MTN MoMo',
+      'maskedNumber': '•• •• •• ••',
+      'holderName': '',
+    },
+  };
+  db.sessionUserId = id;
+  return publicAccount(db.users[id]!);
+}
+
+Object? logout(FakeDatabase db, FakeRequest request) {
+  db.sessionUserId = null;
+  return null;
+}
+
+Object? setRole(FakeDatabase db, FakeRequest request) {
+  final role = request.body['role'];
+  if (role != 'worker' && role != 'poster') {
+    throw const ApiException(422, 'Rôle inconnu.');
+  }
+  final user = db.currentUser..['role'] = role;
+  if (role == 'poster') {
+    db.wallets.putIfAbsent(
+      user['id'] as String,
+      () => {'balance': 200000, 'blocked': <String, int>{}},
+    );
+    db.posters.putIfAbsent(
+      user['id'] as String,
+      () => {
+        'id': user['id'],
+        'displayName':
+            '${user['firstName']} ${(user['lastName'] as String).isEmpty ? '' : '${(user['lastName'] as String)[0]}.'}'
+                .trim(),
+        'initials': (user['firstName'] as String).isEmpty
+            ? '?'
+            : (user['firstName'] as String)[0].toUpperCase(),
+        'verified': false,
+        'reliable': false,
+        'city': user['city'],
+        'memberSince': request.now.toUtc().toIso8601String(),
+        'rating': 0.0,
+        'reviewsCount': 0,
+        'paidMissions': 0,
+        'avgValidationHours': 0,
+        'reviews': <Json>[],
+      },
+    );
+  }
+  return publicAccount(user);
 }
 
 Object? saveProfile(FakeDatabase db, FakeRequest request) {
@@ -74,17 +139,18 @@ Object? submitKyc(FakeDatabase db, FakeRequest request) {
   if (body['frontCaptured'] != true || body['backCaptured'] != true) {
     throw const ApiException(422, 'Photographiez le recto et le verso.');
   }
-  db.kyc = {
+  final kyc = <String, dynamic>{
     'status': 'pending',
     'documentType': body['documentType'],
     'countryCode': body['countryCode'],
     'submittedAt': request.now.toUtc().toIso8601String(),
   };
-  return {'status': 'pending', 'submittedAt': db.kyc!['submittedAt']};
+  db.currentUser['kyc'] = kyc;
+  return {'status': 'pending', 'submittedAt': kyc['submittedAt']};
 }
 
 Object? getKyc(FakeDatabase db, FakeRequest request) {
-  final kyc = db.kyc;
+  final kyc = db.currentUser['kyc'] as Json?;
   return kyc == null
       ? {'status': 'none', 'submittedAt': null}
       : {'status': kyc['status'], 'submittedAt': kyc['submittedAt']};

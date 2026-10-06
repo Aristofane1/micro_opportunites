@@ -8,5 +8,6 @@ abstract class CurrentUser with _$CurrentUser {
     required String id,
     required String firstName,
     required String city,
+    String? role,
   }) = _CurrentUser;
 }

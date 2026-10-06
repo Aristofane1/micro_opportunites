@@ -69,7 +69,8 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
     switch (application.status) {
       case ApplicationStatus.offered:
         context.push(WorkerPaths.offer(application.id));
-      case ApplicationStatus.confirmed when application.assignmentId != null:
+      case ApplicationStatus.confirmed || ApplicationStatus.cancelled
+          when application.assignmentId != null:
         context.push(WorkerPaths.assignment(application.assignmentId!));
       default:
         break;
@@ -138,7 +139,10 @@ class _ApplicationsPageState extends ConsumerState<ApplicationsPage> {
                     now: now,
                     onTap:
                         application.status == ApplicationStatus.offered ||
-                            application.status == ApplicationStatus.confirmed
+                            application.status == ApplicationStatus.confirmed ||
+                            (application.status ==
+                                    ApplicationStatus.cancelled &&
+                                application.assignmentId != null)
                         ? () => _open(application)
                         : null,
                     onWithdraw: application.status == ApplicationStatus.pending

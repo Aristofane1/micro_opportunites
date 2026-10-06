@@ -45,7 +45,7 @@ final class ActiveRoleNotifierProvider
 }
 
 String _$activeRoleNotifierHash() =>
-    r'8047086475d9a796f3a3de033aff7bb2f6f150ff';
+    r'6d835eb4f1af5a2f6c540c2937d0e49f9ca20a22';
 
 /// Rôle actif, gardé en mémoire (persistance ajoutée avec la feature profil).
 

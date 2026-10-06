@@ -3,10 +3,18 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:micro_opportunites/app/app.dart';
 import 'package:micro_opportunites/app/bootstrap.dart';
+import 'package:micro_opportunites/app/role/active_role.dart';
+import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/core/assets/font_licenses.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
-import 'package:micro_opportunites/core/dev/dev_start.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
+import 'package:micro_opportunites/dev/dev_start.dart';
+
+/// Rôle annonceur imposé par le raccourci de développement.
+class _PosterRole extends ActiveRoleNotifier {
+  @override
+  ActiveRole build() => ActiveRole.poster;
+}
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,9 +23,11 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [
-        ...appOverrides(),
-        if (startOnPublish)
-          initialLocationProvider.overrideWithValue(AppRoutes.posterPublishNew),
+        ...appOverrides(session: startOnPublish ? 'u10' : null),
+        if (startOnPublish) ...[
+          initialLocationProvider.overrideWithValue(PosterPaths.publishNew),
+          activeRoleProvider.overrideWith(() => _PosterRole()),
+        ],
       ],
       // Pas de nouvelle tentative automatique : l'écran propose « Réessayer ».
       retry: (_, _) => null,

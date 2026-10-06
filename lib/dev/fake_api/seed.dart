@@ -25,12 +25,38 @@ class _SeedTime {
 }
 
 /// Base de démonstration fidèle aux planches B01–B17.
-FakeDatabase seedDatabase(DateTime now) {
+FakeDatabase seedDatabase(DateTime now, {String? sessionUserId = 'u1'}) {
   final t = _SeedTime(now);
-  final db = FakeDatabase(currentUserId: 'u1');
+  final db = FakeDatabase(sessionUserId: sessionUserId);
 
   db.users['u1'] = {
     'id': 'u1',
+    'email': 'executant@demo.bj',
+    'password': 'demo123',
+    'role': 'worker',
+    'worker': {
+      'rating': 4.7,
+      'reviewsCount': 11,
+      'missionsCount': 14,
+      'reliability': 96,
+      'absences': 0,
+      'skills': ['Flyers', 'Informatique'],
+      'pitch': 'Ponctuel, à l’aise avec le public.',
+      'memberSince': t.ago(const Duration(days: 300)),
+      'verified': true,
+      'doneMissions': [
+        {'category': 'flyers', 'count': 6},
+        {'category': 'computer', 'count': 4},
+      ],
+      'lastReview': {
+        'author': 'Boutique Lumière',
+        'stars': 5,
+        'text': 'Ponctuel et efficace, flyers tous distribués.',
+        'punctuality': 5,
+        'quality': 5,
+        'communication': 4,
+      },
+    },
     'firstName': 'Rodrigue',
     'lastName': 'K.',
     'city': 'Abomey-Calavi',
@@ -42,6 +68,104 @@ FakeDatabase seedDatabase(DateTime now) {
       'holderName': 'Rodrigue K.',
     },
   };
+
+  db.users['u2'] = {
+    'id': 'u2',
+    'email': 'executant2@demo.bj',
+    'password': 'demo123',
+    'firstName': 'Sènami',
+    'lastName': 'O.',
+    'city': 'Abomey-Calavi',
+    'lat': 6.4500,
+    'lng': 2.3500,
+    'role': 'worker',
+    'payoutAccount': {
+      'operator': 'Moov Money',
+      'maskedNumber': '01 66 •• •• 12',
+      'holderName': 'Sènami O.',
+    },
+    'worker': {
+      'rating': 4.9,
+      'reviewsCount': 22,
+      'missionsCount': 31,
+      'reliability': 98,
+      'absences': 0,
+      'skills': ['Saisie', 'Événements'],
+      'pitch': 'Expérience en saisie et accueil.',
+      'memberSince': t.ago(const Duration(days: 420)),
+      'verified': true,
+      'doneMissions': [
+        {'category': 'data_entry', 'count': 12},
+        {'category': 'event', 'count': 9},
+      ],
+      'lastReview': {
+        'author': 'Cabinet Hounkpè',
+        'stars': 5,
+        'text': 'Saisie rapide et sans erreur, très à l’aise à l’accueil.',
+        'punctuality': 5,
+        'quality': 5,
+        'communication': 5,
+      },
+    },
+  };
+  db.users['u3'] = {
+    'id': 'u3',
+    'email': null,
+    'password': null,
+    'firstName': 'Ganiou',
+    'lastName': 'A.',
+    'city': 'Godomey',
+    'lat': 6.4200,
+    'lng': 2.3400,
+    'role': 'worker',
+    'payoutAccount': {
+      'operator': 'MTN MoMo',
+      'maskedNumber': '01 51 •• •• 08',
+      'holderName': 'Ganiou A.',
+    },
+    'worker': {
+      'rating': null,
+      'reviewsCount': 0,
+      'missionsCount': 0,
+      'reliability': null,
+      'absences': 0,
+      'skills': <String>[],
+      'pitch': 'Disponible tout de suite.',
+      'memberSince': t.ago(const Duration(days: 6)),
+      'verified': true,
+    },
+  };
+  db.users['u10'] = {
+    'id': 'u10',
+    'email': 'annonceur@demo.bj',
+    'password': 'demo123',
+    'firstName': 'Mireille',
+    'lastName': 'A.',
+    'city': 'Abomey-Calavi',
+    'lat': 6.4520,
+    'lng': 2.3480,
+    'role': 'poster',
+    'payoutAccount': {
+      'operator': 'MTN MoMo',
+      'maskedNumber': '01 90 •• •• 77',
+      'holderName': 'Mireille A.',
+    },
+  };
+  db.posters['u10'] = {
+    'id': 'u10',
+    'displayName': 'Mireille A.',
+    'initials': 'MA',
+    'verified': true,
+    'reliable': true,
+    'city': 'Abomey-Calavi',
+    'memberSince': t.ago(const Duration(days: 120)),
+    'rating': 4.7,
+    'reviewsCount': 6,
+    'paidMissions': 4,
+    'avgValidationHours': 5,
+    'reviews': <Json>[],
+  };
+  db.wallets['u10'] = {'balance': 200000, 'blocked': <String, int>{}};
 
   db.posters['p1'] = {
     'id': 'p1',
@@ -149,6 +273,7 @@ FakeDatabase seedDatabase(DateTime now) {
     'startAt': startAt,
     'durationMin': durationMin,
     'pay': {'amount': pay, 'type': 'flat'},
+    'slotAmount': pay,
     'slotsTotal': slotsTotal,
     'slotsFree': slotsFree,
     'posterId': posterId,
@@ -626,6 +751,116 @@ FakeDatabase seedDatabase(DateTime now) {
     'autoValidateAt': null,
   };
 
+  // Missions de l'annonceur de démonstration (u10).
+  db.missions['m20'] = mission(
+    id: 'm20',
+    title: 'Accueil au salon de l’artisanat',
+    category: 'event',
+    city: 'Ouidah',
+    lat: 6.37,
+    lng: 2.09,
+    startAt: t.at(3, 9),
+    durationMin: 300,
+    pay: 6000,
+    slotsTotal: 2,
+    slotsFree: 2,
+    posterId: 'u10',
+    publishedAt: t.ago(const Duration(hours: 5)),
+    applyDeadline: t.at(2, 18),
+    description: 'Accueillir les visiteurs et distribuer les programmes.',
+    private: {
+      'district': 'Centre',
+      'address': 'Place Chacha, Ouidah',
+      'landmark': 'Devant le musée',
+      'lat': 6.3667,
+      'lng': 2.0850,
+      'briefing': 'Tenue correcte, badge fourni.',
+    },
+  );
+  db.applications['a20'] = {
+    'id': 'a20',
+    'missionId': 'm20',
+    'workerId': 'u2',
+    'status': 'pending',
+    'message': 'J’ai déjà fait de l’accueil.',
+    'createdAt': t.ago(const Duration(hours: 3)),
+    'offerExpiresAt': null,
+    'assignmentId': null,
+  };
+  db.applications['a21'] = {
+    'id': 'a21',
+    'missionId': 'm20',
+    'workerId': 'u3',
+    'status': 'pending',
+    'message': 'Disponible.',
+    'createdAt': t.ago(const Duration(hours: 2)),
+    'offerExpiresAt': null,
+    'assignmentId': null,
+  };
+  db.missions['m21'] = mission(
+    id: 'm21',
+    title: 'Tri de vêtements pour une vente',
+    category: 'other',
+    city: 'Abomey-Calavi',
+    lat: 6.45,
+    lng: 2.35,
+    startAt: t.at(0, 8),
+    durationMin: 180,
+    pay: 8000,
+    slotsTotal: 1,
+    slotsFree: 0,
+    posterId: 'u10',
+    publishedAt: t.ago(const Duration(days: 3)),
+    applyDeadline: t.at(-1, 18),
+    description: 'Trier et plier des vêtements.',
+    status: 'filled',
+    private: {
+      'district': 'Tankpè',
+      'address': 'Rue 4, Tankpè',
+      'landmark': 'Boutique Bonne Mine',
+      'lat': 6.4495,
+      'lng': 2.3550,
+      'briefing': 'Sacs fournis.',
+    },
+  );
+  db.applications['a22'] = {
+    'id': 'a22',
+    'missionId': 'm21',
+    'workerId': 'u2',
+    'status': 'confirmed',
+    'message': '',
+    'createdAt': t.ago(const Duration(days: 2)),
+    'offerExpiresAt': null,
+    'assignmentId': 'm21',
+  };
+  db.assignments['m21'] = {
+    'id': 'm21',
+    'missionId': 'm21',
+    'applicationId': 'a22',
+    'workerId': 'u2',
+    'title': 'Tri de vêtements pour une vente',
+    'status': 'submitted',
+    'startAt': t.at(0, 8),
+    'durationMin': 180,
+    'payAmount': 8000,
+    'city': 'Abomey-Calavi',
+    'district': 'Tankpè',
+    'address': 'Rue 4, Tankpè',
+    'landmark': 'Boutique Bonne Mine',
+    'lat': 6.4495,
+    'lng': 2.3550,
+    'briefing': 'Sacs fournis.',
+    'posterName': 'Mireille A.',
+    'payoutOperator': 'Moov Money',
+    'checkInAt': t.ago(const Duration(hours: 4)),
+    'checkInDistanceM': 35,
+    'checkOutAt': t.ago(const Duration(hours: 1)),
+    'note': 'Tout est trié par taille.',
+    'photos': ['p1.jpg', 'p2.jpg'],
+    'autoValidateAt': t.later(const Duration(hours: 47)),
+  };
+  db.wallets['u10']!['blocked'] = <String, int>{'m20': 12000, 'm21': 8000};
+
   Json payout(
     String id,
     String title,
@@ -640,7 +875,8 @@ FakeDatabase seedDatabase(DateTime now) {
     'missionTitle': title,
     'posterName': posterName,
     'validatedAt': t.ago(ago),
-    'commissionLabel': '[à définir]',
+    'workerId': 'u1',
+    'commissionLabel': 'Aucune (démo)',
     'accountLabel': 'MTN MoMo · •• 45',
     'reference': reference,
     'status': 'paid',
@@ -702,6 +938,7 @@ FakeDatabase seedDatabase(DateTime now) {
   for (final alert in <Json>[
     {
       'id': 'al1',
+      'ownerId': 'u1',
       'keyword': null,
       'category': 'Informatique',
       'zone': 'Abomey-Calavi · 10 km',
@@ -710,6 +947,7 @@ FakeDatabase seedDatabase(DateTime now) {
     },
     {
       'id': 'al2',
+      'ownerId': 'u1',
       'keyword': null,
       'category': 'Événement, Flyers',
       'zone': 'Cotonou et Calavi',
@@ -718,6 +956,7 @@ FakeDatabase seedDatabase(DateTime now) {
     },
     {
       'id': 'al3',
+      'ownerId': 'u1',
       'keyword': 'plomberie',
       'category': null,
       'zone': '5 km autour de moi',

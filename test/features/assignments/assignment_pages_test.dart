@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
+import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 
@@ -41,5 +43,35 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Vous vous êtes désisté'), findsOneWidget);
     expect(find.text('Mes candidatures'), findsOneWidget);
+  });
+
+  testWidgets('B13 : contesté par l’annonceur', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      session: 'u2',
+      initialLocation: WorkerPaths.assignment('m21'),
+      beforePump: (container) {
+        final db = (container.read(apiClientProvider) as FakeApiClient).db;
+        db.assignments['m21']!
+          ..['status'] = 'contested'
+          ..['contestReason'] = 'Travail incomplet';
+      },
+    );
+    expect(find.text('Contesté par l’annonceur'), findsOneWidget);
+    expect(find.text('Travail incomplet'), findsOneWidget);
+  });
+
+  testWidgets('B13 : en attente, versement automatique sous 48 h', (
+    tester,
+  ) async {
+    await pumpWorkerApp(
+      tester,
+      session: 'u2',
+      initialLocation: WorkerPaths.assignment('m21'),
+    );
+    expect(
+      find.textContaining('vous êtes payé automatiquement'),
+      findsOneWidget,
+    );
   });
 }

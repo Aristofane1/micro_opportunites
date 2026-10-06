@@ -133,4 +133,17 @@ void main() {
       ),
     );
   });
+
+  test('gains : seuls les versements du compte connecté', () async {
+    final api = FakeApiClient(
+      seedDatabase(fixedNow, sessionUserId: 'u2'),
+      clock: () => fixedNow,
+      latency: Duration.zero,
+    );
+    final earnings = await api.get('/me/earnings') as Map;
+    expect(
+      (earnings['lines'] as List).where((l) => l['status'] == 'paid'),
+      isEmpty,
+    );
+  });
 }

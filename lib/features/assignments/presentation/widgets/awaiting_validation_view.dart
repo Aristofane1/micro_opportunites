@@ -22,6 +22,7 @@ class AwaitingValidationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final paid = assignment.status == AssignmentStatus.paid;
+    final contested = assignment.status == AssignmentStatus.contested;
     final deadline = assignment.autoValidateAt;
     return ListView(
       padding: const EdgeInsets.fromLTRB(
@@ -58,13 +59,20 @@ class AwaitingValidationView extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.md),
         Text(
-          paid ? 'Mission payée' : 'Bravo, c’est envoyé',
+          paid
+              ? 'Mission payée'
+              : contested
+              ? 'Contesté par l’annonceur'
+              : 'Bravo, c’est envoyé',
           textAlign: TextAlign.center,
           style: AppTypography.title,
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          paid || deadline == null
+          contested
+              ? (assignment.contestReason ??
+                    'L’annonceur a contesté le travail.')
+              : paid || deadline == null
               ? '${formatFcfa(assignment.payAmount)} ont été versés sur ${assignment.payoutOperator}.'
               : '${assignment.posterName} doit valider votre travail. Au plus tard '
                     '${formatShortDay(deadline)} à ${formatHour(deadline)}, vous êtes payé '
@@ -72,6 +80,14 @@ class AwaitingValidationView extends StatelessWidget {
           textAlign: TextAlign.center,
           style: AppTypography.body.copyWith(color: AppColors.toggleText),
         ),
+        if (contested) ...[
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            'Le versement est suspendu le temps de régler le différend.',
+            textAlign: TextAlign.center,
+            style: AppTypography.body.copyWith(color: AppColors.toggleText),
+          ),
+        ],
         const SizedBox(height: AppSpacing.lg),
         _Step(
           number: 1,
@@ -82,7 +98,7 @@ class AwaitingValidationView extends StatelessWidget {
         _Step(
           number: 2,
           done: paid,
-          current: !paid,
+          current: !paid && !contested,
           label: 'Validation par l’annonceur',
         ),
         _Step(

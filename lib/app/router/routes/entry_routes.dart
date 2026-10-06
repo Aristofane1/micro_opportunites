@@ -3,8 +3,6 @@ import 'package:micro_opportunites/app/router/routes/entry_role_pages.dart';
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:micro_opportunites/features/auth/presentation/pages/id_camera_page.dart';
 import 'package:micro_opportunites/features/auth/presentation/pages/id_document_page.dart';
-import 'package:micro_opportunites/features/auth/presentation/pages/otp_page.dart';
-import 'package:micro_opportunites/features/auth/presentation/pages/phone_input_page.dart';
 import 'package:micro_opportunites/features/auth/presentation/pages/profile_form_page.dart';
 import 'package:micro_opportunites/features/auth/presentation/pages/verification_pending_page.dart';
 import 'package:micro_opportunites/features/onboarding/presentation/pages/onboarding_page.dart';
@@ -17,8 +15,7 @@ final entryRoutes = <RouteBase>[
     path: EntryPaths.onboarding,
     builder: (_, _) => const OnboardingPage(),
   ),
-  GoRoute(path: EntryPaths.phone, builder: (_, _) => const PhoneInputPage()),
-  GoRoute(path: EntryPaths.otp, builder: (_, _) => const OtpPage()),
+  GoRoute(path: EntryPaths.email, builder: (_, _) => const EntryEmail()),
   GoRoute(path: EntryPaths.profile, builder: (_, _) => const ProfileFormPage()),
   GoRoute(
     path: EntryPaths.idDocument,

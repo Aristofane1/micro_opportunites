@@ -19,6 +19,7 @@ void main() {
       tester,
       size: const Size(1000, 1600),
       initialLocation: EntryPaths.splash,
+      session: null,
     );
     await tester.pump(const Duration(seconds: 2));
     await tester.pumpAndSettle();
@@ -26,13 +27,10 @@ void main() {
     // A02–A04
     await _tap(tester, find.text('Passer'));
 
-    // A05 → A06
-    await tester.enterText(find.byType(TextField).first, '97123456');
-    await _tap(tester, find.text('Envoyer le code'));
-    for (var i = 0; i < 5; i++) {
-      await tester.enterText(find.byKey(Key('otp.digit.$i')), '${i + 1}');
-    }
-    await _tap(tester, find.text('Valider'));
+    // A05 : création de compte, puis directement A07
+    await tester.enterText(find.byKey(const Key('email.field')), 'awa@demo.bj');
+    await tester.enterText(find.byKey(const Key('password.field')), 'secret1');
+    await _tap(tester, find.text('Créer mon compte'));
 
     // A07
     expect(find.text('Faisons connaissance'), findsOneWidget);

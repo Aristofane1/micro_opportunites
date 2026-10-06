@@ -14,8 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MissionSummary {
 
- String get id; String get title; MissionStatus get status; DateTime get startAt; String get city; String get payLabel;// ex. « 5 000 FCFA / pers. »
- int get slotsTotal; MissionCategory? get category; int get durationMinutes; int get slotsConfirmed; int get slotsOffered;// place proposée, pas encore acceptée
+ String get id; String get title; MissionStatus get status; DateTime get startAt; String get city; int get payAmount; PayUnit get payUnit; int get slotsTotal; MissionCategory? get category; int get durationMinutes; int get slotsConfirmed; int get slotsOffered;// place proposée, pas encore acceptée
  int get applicantsCount; int get newApplicantsCount; int get blockedAmount;
 /// Create a copy of MissionSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -27,16 +26,16 @@ $MissionSummaryCopyWith<MissionSummary> get copyWith => _$MissionSummaryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.city, city) || other.city == city)&&(identical(other.payLabel, payLabel) || other.payLabel == payLabel)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.category, category) || other.category == category)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.slotsConfirmed, slotsConfirmed) || other.slotsConfirmed == slotsConfirmed)&&(identical(other.slotsOffered, slotsOffered) || other.slotsOffered == slotsOffered)&&(identical(other.applicantsCount, applicantsCount) || other.applicantsCount == applicantsCount)&&(identical(other.newApplicantsCount, newApplicantsCount) || other.newApplicantsCount == newApplicantsCount)&&(identical(other.blockedAmount, blockedAmount) || other.blockedAmount == blockedAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.city, city) || other.city == city)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.category, category) || other.category == category)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.slotsConfirmed, slotsConfirmed) || other.slotsConfirmed == slotsConfirmed)&&(identical(other.slotsOffered, slotsOffered) || other.slotsOffered == slotsOffered)&&(identical(other.applicantsCount, applicantsCount) || other.applicantsCount == applicantsCount)&&(identical(other.newApplicantsCount, newApplicantsCount) || other.newApplicantsCount == newApplicantsCount)&&(identical(other.blockedAmount, blockedAmount) || other.blockedAmount == blockedAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,status,startAt,city,payLabel,slotsTotal,category,durationMinutes,slotsConfirmed,slotsOffered,applicantsCount,newApplicantsCount,blockedAmount);
+int get hashCode => Object.hash(runtimeType,id,title,status,startAt,city,payAmount,payUnit,slotsTotal,category,durationMinutes,slotsConfirmed,slotsOffered,applicantsCount,newApplicantsCount,blockedAmount);
 
 @override
 String toString() {
-  return 'MissionSummary(id: $id, title: $title, status: $status, startAt: $startAt, city: $city, payLabel: $payLabel, slotsTotal: $slotsTotal, category: $category, durationMinutes: $durationMinutes, slotsConfirmed: $slotsConfirmed, slotsOffered: $slotsOffered, applicantsCount: $applicantsCount, newApplicantsCount: $newApplicantsCount, blockedAmount: $blockedAmount)';
+  return 'MissionSummary(id: $id, title: $title, status: $status, startAt: $startAt, city: $city, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, category: $category, durationMinutes: $durationMinutes, slotsConfirmed: $slotsConfirmed, slotsOffered: $slotsOffered, applicantsCount: $applicantsCount, newApplicantsCount: $newApplicantsCount, blockedAmount: $blockedAmount)';
 }
 
 
@@ -47,7 +46,7 @@ abstract mixin class $MissionSummaryCopyWith<$Res>  {
   factory $MissionSummaryCopyWith(MissionSummary value, $Res Function(MissionSummary) _then) = _$MissionSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, MissionStatus status, DateTime startAt, String city, String payLabel, int slotsTotal, MissionCategory? category, int durationMinutes, int slotsConfirmed, int slotsOffered, int applicantsCount, int newApplicantsCount, int blockedAmount
+ String id, String title, MissionStatus status, DateTime startAt, String city, int payAmount, PayUnit payUnit, int slotsTotal, MissionCategory? category, int durationMinutes, int slotsConfirmed, int slotsOffered, int applicantsCount, int newApplicantsCount, int blockedAmount
 });
 
 
@@ -64,15 +63,16 @@ class _$MissionSummaryCopyWithImpl<$Res>
 
 /// Create a copy of MissionSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? status = null,Object? startAt = null,Object? city = null,Object? payLabel = null,Object? slotsTotal = null,Object? category = freezed,Object? durationMinutes = null,Object? slotsConfirmed = null,Object? slotsOffered = null,Object? applicantsCount = null,Object? newApplicantsCount = null,Object? blockedAmount = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? status = null,Object? startAt = null,Object? city = null,Object? payAmount = null,Object? payUnit = null,Object? slotsTotal = null,Object? category = freezed,Object? durationMinutes = null,Object? slotsConfirmed = null,Object? slotsOffered = null,Object? applicantsCount = null,Object? newApplicantsCount = null,Object? blockedAmount = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MissionStatus,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,payLabel: null == payLabel ? _self.payLabel : payLabel // ignore: cast_nullable_to_non_nullable
-as String,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
+as String,payAmount: null == payAmount ? _self.payAmount : payAmount // ignore: cast_nullable_to_non_nullable
+as int,payUnit: null == payUnit ? _self.payUnit : payUnit // ignore: cast_nullable_to_non_nullable
+as PayUnit,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
 as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as MissionCategory?,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,slotsConfirmed: null == slotsConfirmed ? _self.slotsConfirmed : slotsConfirmed // ignore: cast_nullable_to_non_nullable
@@ -165,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  String payLabel,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  int payAmount,  PayUnit payUnit,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MissionSummary() when $default != null:
-return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payLabel,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
+return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
   return orElse();
 
 }
@@ -186,10 +186,10 @@ return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  String payLabel,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  int payAmount,  PayUnit payUnit,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)  $default,) {final _that = this;
 switch (_that) {
 case _MissionSummary():
-return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payLabel,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
+return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +206,10 @@ return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  String payLabel,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  MissionStatus status,  DateTime startAt,  String city,  int payAmount,  PayUnit payUnit,  int slotsTotal,  MissionCategory? category,  int durationMinutes,  int slotsConfirmed,  int slotsOffered,  int applicantsCount,  int newApplicantsCount,  int blockedAmount)?  $default,) {final _that = this;
 switch (_that) {
 case _MissionSummary() when $default != null:
-return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payLabel,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
+return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.category,_that.durationMinutes,_that.slotsConfirmed,_that.slotsOffered,_that.applicantsCount,_that.newApplicantsCount,_that.blockedAmount);case _:
   return null;
 
 }
@@ -221,7 +221,7 @@ return $default(_that.id,_that.title,_that.status,_that.startAt,_that.city,_that
 
 
 class _MissionSummary extends MissionSummary {
-  const _MissionSummary({required this.id, required this.title, required this.status, required this.startAt, required this.city, required this.payLabel, required this.slotsTotal, this.category, this.durationMinutes = 240, this.slotsConfirmed = 0, this.slotsOffered = 0, this.applicantsCount = 0, this.newApplicantsCount = 0, this.blockedAmount = 0}): super._();
+  const _MissionSummary({required this.id, required this.title, required this.status, required this.startAt, required this.city, required this.payAmount, required this.payUnit, required this.slotsTotal, this.category, this.durationMinutes = 240, this.slotsConfirmed = 0, this.slotsOffered = 0, this.applicantsCount = 0, this.newApplicantsCount = 0, this.blockedAmount = 0}): super._();
   
 
 @override final  String id;
@@ -229,8 +229,8 @@ class _MissionSummary extends MissionSummary {
 @override final  MissionStatus status;
 @override final  DateTime startAt;
 @override final  String city;
-@override final  String payLabel;
-// ex. « 5 000 FCFA / pers. »
+@override final  int payAmount;
+@override final  PayUnit payUnit;
 @override final  int slotsTotal;
 @override final  MissionCategory? category;
 @override@JsonKey() final  int durationMinutes;
@@ -251,16 +251,16 @@ _$MissionSummaryCopyWith<_MissionSummary> get copyWith => __$MissionSummaryCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.city, city) || other.city == city)&&(identical(other.payLabel, payLabel) || other.payLabel == payLabel)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.category, category) || other.category == category)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.slotsConfirmed, slotsConfirmed) || other.slotsConfirmed == slotsConfirmed)&&(identical(other.slotsOffered, slotsOffered) || other.slotsOffered == slotsOffered)&&(identical(other.applicantsCount, applicantsCount) || other.applicantsCount == applicantsCount)&&(identical(other.newApplicantsCount, newApplicantsCount) || other.newApplicantsCount == newApplicantsCount)&&(identical(other.blockedAmount, blockedAmount) || other.blockedAmount == blockedAmount));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MissionSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.city, city) || other.city == city)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.category, category) || other.category == category)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.slotsConfirmed, slotsConfirmed) || other.slotsConfirmed == slotsConfirmed)&&(identical(other.slotsOffered, slotsOffered) || other.slotsOffered == slotsOffered)&&(identical(other.applicantsCount, applicantsCount) || other.applicantsCount == applicantsCount)&&(identical(other.newApplicantsCount, newApplicantsCount) || other.newApplicantsCount == newApplicantsCount)&&(identical(other.blockedAmount, blockedAmount) || other.blockedAmount == blockedAmount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,status,startAt,city,payLabel,slotsTotal,category,durationMinutes,slotsConfirmed,slotsOffered,applicantsCount,newApplicantsCount,blockedAmount);
+int get hashCode => Object.hash(runtimeType,id,title,status,startAt,city,payAmount,payUnit,slotsTotal,category,durationMinutes,slotsConfirmed,slotsOffered,applicantsCount,newApplicantsCount,blockedAmount);
 
 @override
 String toString() {
-  return 'MissionSummary(id: $id, title: $title, status: $status, startAt: $startAt, city: $city, payLabel: $payLabel, slotsTotal: $slotsTotal, category: $category, durationMinutes: $durationMinutes, slotsConfirmed: $slotsConfirmed, slotsOffered: $slotsOffered, applicantsCount: $applicantsCount, newApplicantsCount: $newApplicantsCount, blockedAmount: $blockedAmount)';
+  return 'MissionSummary(id: $id, title: $title, status: $status, startAt: $startAt, city: $city, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, category: $category, durationMinutes: $durationMinutes, slotsConfirmed: $slotsConfirmed, slotsOffered: $slotsOffered, applicantsCount: $applicantsCount, newApplicantsCount: $newApplicantsCount, blockedAmount: $blockedAmount)';
 }
 
 
@@ -271,7 +271,7 @@ abstract mixin class _$MissionSummaryCopyWith<$Res> implements $MissionSummaryCo
   factory _$MissionSummaryCopyWith(_MissionSummary value, $Res Function(_MissionSummary) _then) = __$MissionSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, MissionStatus status, DateTime startAt, String city, String payLabel, int slotsTotal, MissionCategory? category, int durationMinutes, int slotsConfirmed, int slotsOffered, int applicantsCount, int newApplicantsCount, int blockedAmount
+ String id, String title, MissionStatus status, DateTime startAt, String city, int payAmount, PayUnit payUnit, int slotsTotal, MissionCategory? category, int durationMinutes, int slotsConfirmed, int slotsOffered, int applicantsCount, int newApplicantsCount, int blockedAmount
 });
 
 
@@ -288,15 +288,16 @@ class __$MissionSummaryCopyWithImpl<$Res>
 
 /// Create a copy of MissionSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? status = null,Object? startAt = null,Object? city = null,Object? payLabel = null,Object? slotsTotal = null,Object? category = freezed,Object? durationMinutes = null,Object? slotsConfirmed = null,Object? slotsOffered = null,Object? applicantsCount = null,Object? newApplicantsCount = null,Object? blockedAmount = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? status = null,Object? startAt = null,Object? city = null,Object? payAmount = null,Object? payUnit = null,Object? slotsTotal = null,Object? category = freezed,Object? durationMinutes = null,Object? slotsConfirmed = null,Object? slotsOffered = null,Object? applicantsCount = null,Object? newApplicantsCount = null,Object? blockedAmount = null,}) {
   return _then(_MissionSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as MissionStatus,startAt: null == startAt ? _self.startAt : startAt // ignore: cast_nullable_to_non_nullable
 as DateTime,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,payLabel: null == payLabel ? _self.payLabel : payLabel // ignore: cast_nullable_to_non_nullable
-as String,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
+as String,payAmount: null == payAmount ? _self.payAmount : payAmount // ignore: cast_nullable_to_non_nullable
+as int,payUnit: null == payUnit ? _self.payUnit : payUnit // ignore: cast_nullable_to_non_nullable
+as PayUnit,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
 as int,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
 as MissionCategory?,durationMinutes: null == durationMinutes ? _self.durationMinutes : durationMinutes // ignore: cast_nullable_to_non_nullable
 as int,slotsConfirmed: null == slotsConfirmed ? _self.slotsConfirmed : slotsConfirmed // ignore: cast_nullable_to_non_nullable

@@ -17,8 +17,7 @@ mixin _$MissionDraft {
 // Étape 1 : Quoi ??
  String? get title; MissionCategory? get category; String? get description; List<String> get photoPaths;// Étape 2 : Où ??
  String? get city; String? get address; String? get landmark; String? get entrancePhotoPath; double? get latitude; double? get longitude;// Étape 3 : Quand et combien ??
- DateTime? get startAt; int get durationMinutes; int? get payAmount; PayUnit get payUnit; int get slotsTotal; DateTime? get applyDeadline;// Étape 4 : Payer
- PaymentMethod get paymentMethod;
+ DateTime? get startAt; int get durationMinutes; int? get payAmount; PayUnit get payUnit; int get slotsTotal; DateTime? get applyDeadline;
 /// Create a copy of MissionDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +28,16 @@ $MissionDraftCopyWith<MissionDraft> get copyWith => _$MissionDraftCopyWithImpl<M
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MissionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoPaths, photoPaths)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.entrancePhotoPath, entrancePhotoPath) || other.entrancePhotoPath == entrancePhotoPath)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.applyDeadline, applyDeadline) || other.applyDeadline == applyDeadline)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MissionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.photoPaths, photoPaths)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.entrancePhotoPath, entrancePhotoPath) || other.entrancePhotoPath == entrancePhotoPath)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.applyDeadline, applyDeadline) || other.applyDeadline == applyDeadline));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,category,description,const DeepCollectionEquality().hash(photoPaths),city,address,landmark,entrancePhotoPath,latitude,longitude,startAt,durationMinutes,payAmount,payUnit,slotsTotal,applyDeadline,paymentMethod);
+int get hashCode => Object.hash(runtimeType,title,category,description,const DeepCollectionEquality().hash(photoPaths),city,address,landmark,entrancePhotoPath,latitude,longitude,startAt,durationMinutes,payAmount,payUnit,slotsTotal,applyDeadline);
 
 @override
 String toString() {
-  return 'MissionDraft(title: $title, category: $category, description: $description, photoPaths: $photoPaths, city: $city, address: $address, landmark: $landmark, entrancePhotoPath: $entrancePhotoPath, latitude: $latitude, longitude: $longitude, startAt: $startAt, durationMinutes: $durationMinutes, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, applyDeadline: $applyDeadline, paymentMethod: $paymentMethod)';
+  return 'MissionDraft(title: $title, category: $category, description: $description, photoPaths: $photoPaths, city: $city, address: $address, landmark: $landmark, entrancePhotoPath: $entrancePhotoPath, latitude: $latitude, longitude: $longitude, startAt: $startAt, durationMinutes: $durationMinutes, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, applyDeadline: $applyDeadline)';
 }
 
 
@@ -49,7 +48,7 @@ abstract mixin class $MissionDraftCopyWith<$Res>  {
   factory $MissionDraftCopyWith(MissionDraft value, $Res Function(MissionDraft) _then) = _$MissionDraftCopyWithImpl;
 @useResult
 $Res call({
- String? title, MissionCategory? category, String? description, List<String> photoPaths, String? city, String? address, String? landmark, String? entrancePhotoPath, double? latitude, double? longitude, DateTime? startAt, int durationMinutes, int? payAmount, PayUnit payUnit, int slotsTotal, DateTime? applyDeadline, PaymentMethod paymentMethod
+ String? title, MissionCategory? category, String? description, List<String> photoPaths, String? city, String? address, String? landmark, String? entrancePhotoPath, double? latitude, double? longitude, DateTime? startAt, int durationMinutes, int? payAmount, PayUnit payUnit, int slotsTotal, DateTime? applyDeadline
 });
 
 
@@ -66,7 +65,7 @@ class _$MissionDraftCopyWithImpl<$Res>
 
 /// Create a copy of MissionDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? title = freezed,Object? category = freezed,Object? description = freezed,Object? photoPaths = null,Object? city = freezed,Object? address = freezed,Object? landmark = freezed,Object? entrancePhotoPath = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? startAt = freezed,Object? durationMinutes = null,Object? payAmount = freezed,Object? payUnit = null,Object? slotsTotal = null,Object? applyDeadline = freezed,Object? paymentMethod = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? title = freezed,Object? category = freezed,Object? description = freezed,Object? photoPaths = null,Object? city = freezed,Object? address = freezed,Object? landmark = freezed,Object? entrancePhotoPath = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? startAt = freezed,Object? durationMinutes = null,Object? payAmount = freezed,Object? payUnit = null,Object? slotsTotal = null,Object? applyDeadline = freezed,}) {
   return _then(_self.copyWith(
 title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -84,8 +83,7 @@ as int,payAmount: freezed == payAmount ? _self.payAmount : payAmount // ignore: 
 as int?,payUnit: null == payUnit ? _self.payUnit : payUnit // ignore: cast_nullable_to_non_nullable
 as PayUnit,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
 as int,applyDeadline: freezed == applyDeadline ? _self.applyDeadline : applyDeadline // ignore: cast_nullable_to_non_nullable
-as DateTime?,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,
+as DateTime?,
   ));
 }
 
@@ -170,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline,  PaymentMethod paymentMethod)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MissionDraft() when $default != null:
-return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline,_that.paymentMethod);case _:
+return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline);case _:
   return orElse();
 
 }
@@ -191,10 +189,10 @@ return $default(_that.title,_that.category,_that.description,_that.photoPaths,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline,  PaymentMethod paymentMethod)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline)  $default,) {final _that = this;
 switch (_that) {
 case _MissionDraft():
-return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline,_that.paymentMethod);case _:
+return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -211,10 +209,10 @@ return $default(_that.title,_that.category,_that.description,_that.photoPaths,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline,  PaymentMethod paymentMethod)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? title,  MissionCategory? category,  String? description,  List<String> photoPaths,  String? city,  String? address,  String? landmark,  String? entrancePhotoPath,  double? latitude,  double? longitude,  DateTime? startAt,  int durationMinutes,  int? payAmount,  PayUnit payUnit,  int slotsTotal,  DateTime? applyDeadline)?  $default,) {final _that = this;
 switch (_that) {
 case _MissionDraft() when $default != null:
-return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline,_that.paymentMethod);case _:
+return $default(_that.title,_that.category,_that.description,_that.photoPaths,_that.city,_that.address,_that.landmark,_that.entrancePhotoPath,_that.latitude,_that.longitude,_that.startAt,_that.durationMinutes,_that.payAmount,_that.payUnit,_that.slotsTotal,_that.applyDeadline);case _:
   return null;
 
 }
@@ -226,7 +224,7 @@ return $default(_that.title,_that.category,_that.description,_that.photoPaths,_t
 
 
 class _MissionDraft extends MissionDraft {
-  const _MissionDraft({this.title, this.category, this.description, final  List<String> photoPaths = const [], this.city, this.address, this.landmark, this.entrancePhotoPath, this.latitude, this.longitude, this.startAt, this.durationMinutes = 240, this.payAmount, this.payUnit = PayUnit.flat, this.slotsTotal = 1, this.applyDeadline, this.paymentMethod = PaymentMethod.mtnMomo}): _photoPaths = photoPaths,super._();
+  const _MissionDraft({this.title, this.category, this.description, final  List<String> photoPaths = const [], this.city, this.address, this.landmark, this.entrancePhotoPath, this.latitude, this.longitude, this.startAt, this.durationMinutes = 240, this.payAmount, this.payUnit = PayUnit.flat, this.slotsTotal = 1, this.applyDeadline}): _photoPaths = photoPaths,super._();
   
 
 // Étape 1 : Quoi ??
@@ -254,8 +252,6 @@ class _MissionDraft extends MissionDraft {
 @override@JsonKey() final  PayUnit payUnit;
 @override@JsonKey() final  int slotsTotal;
 @override final  DateTime? applyDeadline;
-// Étape 4 : Payer
-@override@JsonKey() final  PaymentMethod paymentMethod;
 
 /// Create a copy of MissionDraft
 /// with the given fields replaced by the non-null parameter values.
@@ -267,16 +263,16 @@ _$MissionDraftCopyWith<_MissionDraft> get copyWith => __$MissionDraftCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MissionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoPaths, _photoPaths)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.entrancePhotoPath, entrancePhotoPath) || other.entrancePhotoPath == entrancePhotoPath)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.applyDeadline, applyDeadline) || other.applyDeadline == applyDeadline)&&(identical(other.paymentMethod, paymentMethod) || other.paymentMethod == paymentMethod));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MissionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.category, category) || other.category == category)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._photoPaths, _photoPaths)&&(identical(other.city, city) || other.city == city)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.entrancePhotoPath, entrancePhotoPath) || other.entrancePhotoPath == entrancePhotoPath)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.payUnit, payUnit) || other.payUnit == payUnit)&&(identical(other.slotsTotal, slotsTotal) || other.slotsTotal == slotsTotal)&&(identical(other.applyDeadline, applyDeadline) || other.applyDeadline == applyDeadline));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,category,description,const DeepCollectionEquality().hash(_photoPaths),city,address,landmark,entrancePhotoPath,latitude,longitude,startAt,durationMinutes,payAmount,payUnit,slotsTotal,applyDeadline,paymentMethod);
+int get hashCode => Object.hash(runtimeType,title,category,description,const DeepCollectionEquality().hash(_photoPaths),city,address,landmark,entrancePhotoPath,latitude,longitude,startAt,durationMinutes,payAmount,payUnit,slotsTotal,applyDeadline);
 
 @override
 String toString() {
-  return 'MissionDraft(title: $title, category: $category, description: $description, photoPaths: $photoPaths, city: $city, address: $address, landmark: $landmark, entrancePhotoPath: $entrancePhotoPath, latitude: $latitude, longitude: $longitude, startAt: $startAt, durationMinutes: $durationMinutes, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, applyDeadline: $applyDeadline, paymentMethod: $paymentMethod)';
+  return 'MissionDraft(title: $title, category: $category, description: $description, photoPaths: $photoPaths, city: $city, address: $address, landmark: $landmark, entrancePhotoPath: $entrancePhotoPath, latitude: $latitude, longitude: $longitude, startAt: $startAt, durationMinutes: $durationMinutes, payAmount: $payAmount, payUnit: $payUnit, slotsTotal: $slotsTotal, applyDeadline: $applyDeadline)';
 }
 
 
@@ -287,7 +283,7 @@ abstract mixin class _$MissionDraftCopyWith<$Res> implements $MissionDraftCopyWi
   factory _$MissionDraftCopyWith(_MissionDraft value, $Res Function(_MissionDraft) _then) = __$MissionDraftCopyWithImpl;
 @override @useResult
 $Res call({
- String? title, MissionCategory? category, String? description, List<String> photoPaths, String? city, String? address, String? landmark, String? entrancePhotoPath, double? latitude, double? longitude, DateTime? startAt, int durationMinutes, int? payAmount, PayUnit payUnit, int slotsTotal, DateTime? applyDeadline, PaymentMethod paymentMethod
+ String? title, MissionCategory? category, String? description, List<String> photoPaths, String? city, String? address, String? landmark, String? entrancePhotoPath, double? latitude, double? longitude, DateTime? startAt, int durationMinutes, int? payAmount, PayUnit payUnit, int slotsTotal, DateTime? applyDeadline
 });
 
 
@@ -304,7 +300,7 @@ class __$MissionDraftCopyWithImpl<$Res>
 
 /// Create a copy of MissionDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? title = freezed,Object? category = freezed,Object? description = freezed,Object? photoPaths = null,Object? city = freezed,Object? address = freezed,Object? landmark = freezed,Object? entrancePhotoPath = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? startAt = freezed,Object? durationMinutes = null,Object? payAmount = freezed,Object? payUnit = null,Object? slotsTotal = null,Object? applyDeadline = freezed,Object? paymentMethod = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? title = freezed,Object? category = freezed,Object? description = freezed,Object? photoPaths = null,Object? city = freezed,Object? address = freezed,Object? landmark = freezed,Object? entrancePhotoPath = freezed,Object? latitude = freezed,Object? longitude = freezed,Object? startAt = freezed,Object? durationMinutes = null,Object? payAmount = freezed,Object? payUnit = null,Object? slotsTotal = null,Object? applyDeadline = freezed,}) {
   return _then(_MissionDraft(
 title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -322,8 +318,7 @@ as int,payAmount: freezed == payAmount ? _self.payAmount : payAmount // ignore: 
 as int?,payUnit: null == payUnit ? _self.payUnit : payUnit // ignore: cast_nullable_to_non_nullable
 as PayUnit,slotsTotal: null == slotsTotal ? _self.slotsTotal : slotsTotal // ignore: cast_nullable_to_non_nullable
 as int,applyDeadline: freezed == applyDeadline ? _self.applyDeadline : applyDeadline // ignore: cast_nullable_to_non_nullable
-as DateTime?,paymentMethod: null == paymentMethod ? _self.paymentMethod : paymentMethod // ignore: cast_nullable_to_non_nullable
-as PaymentMethod,
+as DateTime?,
   ));
 }
 

@@ -13,11 +13,12 @@ abstract class CurrentUserModel with _$CurrentUserModel {
     required String id,
     required String firstName,
     required String city,
+    String? role,
   }) = _CurrentUserModel;
 
   factory CurrentUserModel.fromJson(Map<String, dynamic> json) =>
       _$CurrentUserModelFromJson(json);
 
   CurrentUser toEntity() =>
-      CurrentUser(id: id, firstName: firstName, city: city);
+      CurrentUser(id: id, firstName: firstName, city: city, role: role);
 }

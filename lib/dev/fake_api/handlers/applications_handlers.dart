@@ -29,6 +29,12 @@ Object? applyToMission(FakeDatabase db, FakeRequest request) {
   if (mission == null || mission['status'] != 'published') {
     throw const ApiException(404, 'Cette mission n’est plus disponible.');
   }
+  if (mission['posterId'] == db.currentUserId) {
+    throw const ApiException(
+      422,
+      'Vous ne pouvez pas postuler à votre propre mission.',
+    );
+  }
   if ((mission['slotsFree'] as int) <= 0) {
     throw const ApiException(409, 'Cette mission est complète.');
   }
@@ -90,7 +96,7 @@ Object? confirmOffer(FakeDatabase db, FakeRequest request) {
     'status': 'confirmed',
     'startAt': mission['startAt'],
     'durationMin': mission['durationMin'],
-    'payAmount': (mission['pay'] as Json)['amount'],
+    'payAmount': mission['slotAmount'],
     'city': mission['city'],
     'district': private['district'],
     'address': private['address'],
@@ -110,6 +116,16 @@ Object? confirmOffer(FakeDatabase db, FakeRequest request) {
   application['status'] = 'confirmed';
   application['assignmentId'] = assignmentId;
   mission['slotsFree'] = ((mission['slotsFree'] as int) - 1).clamp(0, 999);
+  // Mission complète : les autres candidatures en attente sont closes.
+  if ((mission['slotsFree'] as int) <= 0) {
+    for (final other in db.applications.values.where(
+      (a) =>
+          a['missionId'] == mission['id'] &&
+          const {'pending', 'pending_sync'}.contains(a['status']),
+    )) {
+      other['status'] = 'rejected';
+    }
+  }
   return applicationJson(db, application);
 }
 

@@ -112,7 +112,7 @@ class _ProfileFormPageState extends ConsumerState<ProfileFormPage> {
             if (context.canPop()) {
               context.pop();
             } else {
-              context.go(EntryPaths.otp);
+              context.go(EntryPaths.email);
             }
           },
         ),

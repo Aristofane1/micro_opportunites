@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CurrentUser {
 
- String get id; String get firstName; String get city;
+ String get id; String get firstName; String get city; String? get role;
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CurrentUserCopyWith<CurrentUser> get copyWith => _$CurrentUserCopyWithImpl<Curr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,city);
+int get hashCode => Object.hash(runtimeType,id,firstName,city,role);
 
 @override
 String toString() {
-  return 'CurrentUser(id: $id, firstName: $firstName, city: $city)';
+  return 'CurrentUser(id: $id, firstName: $firstName, city: $city, role: $role)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CurrentUserCopyWith<$Res>  {
   factory $CurrentUserCopyWith(CurrentUser value, $Res Function(CurrentUser) _then) = _$CurrentUserCopyWithImpl;
 @useResult
 $Res call({
- String id, String firstName, String city
+ String id, String firstName, String city, String? role
 });
 
 
@@ -62,12 +62,13 @@ class _$CurrentUserCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? city = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -152,10 +153,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String firstName,  String city)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String firstName,  String city,  String? role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CurrentUser() when $default != null:
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   return orElse();
 
 }
@@ -173,10 +174,10 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String firstName,  String city)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String firstName,  String city,  String? role)  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUser():
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +194,10 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String firstName,  String city)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String firstName,  String city,  String? role)?  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUser() when $default != null:
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   return null;
 
 }
@@ -208,12 +209,13 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 
 
 class _CurrentUser implements CurrentUser {
-  const _CurrentUser({required this.id, required this.firstName, required this.city});
+  const _CurrentUser({required this.id, required this.firstName, required this.city, this.role});
   
 
 @override final  String id;
 @override final  String firstName;
 @override final  String city;
+@override final  String? role;
 
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +227,16 @@ _$CurrentUserCopyWith<_CurrentUser> get copyWith => __$CurrentUserCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,city);
+int get hashCode => Object.hash(runtimeType,id,firstName,city,role);
 
 @override
 String toString() {
-  return 'CurrentUser(id: $id, firstName: $firstName, city: $city)';
+  return 'CurrentUser(id: $id, firstName: $firstName, city: $city, role: $role)';
 }
 
 
@@ -245,7 +247,7 @@ abstract mixin class _$CurrentUserCopyWith<$Res> implements $CurrentUserCopyWith
   factory _$CurrentUserCopyWith(_CurrentUser value, $Res Function(_CurrentUser) _then) = __$CurrentUserCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String firstName, String city
+ String id, String firstName, String city, String? role
 });
 
 
@@ -262,12 +264,13 @@ class __$CurrentUserCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? city = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
   return _then(_CurrentUser(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

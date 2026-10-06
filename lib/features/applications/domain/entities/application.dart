@@ -10,7 +10,10 @@ enum ApplicationStatus {
   declined('declined'),
   withdrawn('withdrawn'),
   rejected('rejected'),
-  expired('expired');
+  expired('expired'),
+
+  /// Mission annulée par l'annonceur après la confirmation.
+  cancelled('cancelled');
 
   const ApplicationStatus(this.apiValue);
 

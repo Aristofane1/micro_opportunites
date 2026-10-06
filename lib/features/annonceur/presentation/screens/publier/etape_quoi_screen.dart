@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
-import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/category_chip.dart';
 
 class EtapeQuoiScreen extends ConsumerStatefulWidget {
@@ -149,52 +148,6 @@ class _Label extends StatelessWidget {
     padding: const EdgeInsets.only(bottom: 8),
     child: Text(text, style: const TextStyle(fontWeight: FontWeight.w600)),
   );
-}
-
-// Une case de catégorie (sélectionnée = fond coloré + bordure principale)
-class _CategoryTile extends StatelessWidget {
-  const _CategoryTile({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        padding: const EdgeInsets.all(4),
-        decoration: BoxDecoration(
-          color: selected ? colors.primaryContainer : null,
-          border: Border.all(
-            color: selected ? colors.primary : colors.outlineVariant,
-            width: selected ? 2 : 1,
-          ),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.work_outline, color: selected ? colors.primary : null),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 // Miniature d'une photo avec une croix pour la retirer

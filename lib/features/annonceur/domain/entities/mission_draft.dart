@@ -1,9 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 
 part 'mission_draft.freezed.dart';
 
@@ -33,9 +30,6 @@ abstract class MissionDraft with _$MissionDraft {
     @Default(PayUnit.flat) PayUnit payUnit,
     @Default(1) int slotsTotal,
     DateTime? applyDeadline,
-
-    // Étape 4 : Payer
-    @Default(PaymentMethod.mtnMomo) PaymentMethod paymentMethod,
   }) = _MissionDraft;
 
   /// Montant total à bloquer (hors frais de service).
@@ -43,7 +37,8 @@ abstract class MissionDraft with _$MissionDraft {
     final amount = payAmount ?? 0;
     return switch (payUnit) {
       PayUnit.flat => amount * slotsTotal,
-      PayUnit.hourly => (amount * durationMinutes * slotsTotal / 60).round(),
+      // Même calcul que le serveur : montant d'une place arrondi, × places
+      PayUnit.hourly => (amount * durationMinutes / 60).round() * slotsTotal,
       PayUnit.daily => amount * slotsTotal, // 1 jour par personne (hypothèse)
     };
   }

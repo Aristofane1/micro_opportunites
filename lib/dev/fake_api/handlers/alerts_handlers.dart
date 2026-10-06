@@ -3,7 +3,7 @@ import 'package:micro_opportunites/dev/fake_api/fake_database.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_routing.dart';
 
 Object? listAlerts(FakeDatabase db, FakeRequest request) =>
-    db.alerts.values.toList();
+    db.alerts.values.where((a) => a['ownerId'] == db.currentUserId).toList();
 
 Object? createAlert(FakeDatabase db, FakeRequest request) {
   final body = request.body;
@@ -15,6 +15,7 @@ Object? createAlert(FakeDatabase db, FakeRequest request) {
   final id = db.newId('al');
   db.alerts[id] = {
     'id': id,
+    'ownerId': db.currentUserId,
     'keyword': body['keyword'],
     'category': body['category'],
     'zone': zone,
@@ -25,7 +26,10 @@ Object? createAlert(FakeDatabase db, FakeRequest request) {
 }
 
 Object? deleteAlert(FakeDatabase db, FakeRequest request) {
-  final removed = db.alerts.remove(request.params['id']);
-  if (removed == null) throw const ApiException(404, 'Alerte introuvable.');
+  final alert = db.alerts[request.params['id']];
+  if (alert == null || alert['ownerId'] != db.currentUserId) {
+    throw const ApiException(404, 'Alerte introuvable.');
+  }
+  db.alerts.remove(alert['id']);
   return null;
 }

@@ -6,6 +6,7 @@ enum AssignmentStatus {
   confirmed('confirmed'),
   inProgress('in_progress'),
   submitted('submitted'),
+  contested('contested'),
   paid('paid'),
   cancelled('cancelled');
 
@@ -47,7 +48,14 @@ abstract class Assignment with _$Assignment {
     String? note,
     @Default(<String>[]) List<String> photos,
     DateTime? autoValidateAt,
+    String? contestReason,
+
+    /// Qui a annulé : `poster` (l'annonceur) ou `worker` (désistement).
+    String? cancelledBy,
   }) = _Assignment;
+
+  bool get cancelledByPoster =>
+      status == AssignmentStatus.cancelled && cancelledBy == 'poster';
 
   Duration get duration => Duration(minutes: durationMinutes);
 }

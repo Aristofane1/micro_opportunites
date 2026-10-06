@@ -3,6 +3,7 @@ import 'package:micro_opportunites/dev/fake_api/fake_database.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_routing.dart';
 import 'package:micro_opportunites/dev/fake_api/geo.dart';
 import 'package:micro_opportunites/dev/fake_api/serializers.dart';
+import 'package:micro_opportunites/dev/fake_api/settlement.dart';
 
 /// Rayon maximal du check-in (design : moins de 200 m de l'épingle).
 const checkInRadiusMeters = 200;
@@ -55,9 +56,7 @@ Object? checkOut(FakeDatabase db, FakeRequest request) {
   assignment['note'] = request.body['note'];
   assignment['photos'] = (request.body['photos'] as List<dynamic>? ?? const [])
       .cast<String>();
-  assignment['autoValidateAt'] = now
-      .add(const Duration(hours: 48))
-      .toIso8601String();
+  assignment['autoValidateAt'] = now.add(autoPayDelay).toIso8601String();
   return assignmentJson(db, assignment);
 }
 
@@ -70,6 +69,7 @@ Object? withdrawFromAssignment(FakeDatabase db, FakeRequest request) {
     );
   }
   assignment['status'] = 'cancelled';
+  assignment['cancelledBy'] = 'worker';
   final application = db.applications[assignment['applicationId']];
   if (application != null) application['status'] = 'withdrawn';
   final mission = db.missions[assignment['missionId']];

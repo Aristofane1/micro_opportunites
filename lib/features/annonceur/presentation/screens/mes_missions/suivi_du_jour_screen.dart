@@ -1,232 +1,171 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
+import 'package:micro_opportunites/core/formatting/dates.dart';
+import 'package:micro_opportunites/core/time/clock.dart';
+import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class SuiviDuJourScreen extends ConsumerWidget {
   const SuiviDuJourScreen({super.key, required this.missionId});
 
   final String missionId;
 
-  static const _green = Color(0xFF1F6B4F);
-  static const _blue = Color(0xFF2F5D8A);
-  static const _amber = Color(0xFF9A5B0C);
-
-  void _soon(BuildContext context) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(const SnackBar(content: Text('Bientôt disponible')));
-  }
+  static const _green = AppColors.green;
+  static const _blue = AppColors.blue;
 
   String _hour(DateTime? d) => d == null ? '–' : formatHour(d);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = Theme.of(context).colorScheme;
-    final mission = ref
-        .watch(missionsWithCountsProvider)
-        .where((m) => m.id == missionId)
-        .firstOrNull;
-    final workers = ref
-        .watch(
-          candidatesControllerProvider.select(
-            (m) => m[missionId] ?? const <Candidate>[],
-          ),
-        )
-        .where((c) => c.status == CandidateStatus.confirmed)
-        .toList();
-
-    if (mission == null) {
-      return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('Mission introuvable.')),
-      );
-    }
-
-    final arrived = workers
-        .where(
-          (c) => const {
-            AttendanceStatus.arrived,
-            AttendanceStatus.unconfirmed,
-            AttendanceStatus.finished,
-            AttendanceStatus.validated,
-          }.contains(c.attendance),
-        )
-        .length;
-    final absents = workers
-        .where((c) => c.attendance == AttendanceStatus.absent)
-        .toList();
-    final dayLabel = DateUtils.isSameDay(mission.startAt, DateTime.now())
-        ? 'Aujourd\'hui'
-        : formatDay(mission.startAt);
-
+    final missionProvider = posterMissionProvider(missionId);
+    final candidatesProvider = missionCandidatesProvider(missionId);
+    final missionValue = ref.watch(missionProvider);
+    final candidatesValue = ref.watch(candidatesProvider);
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- En-tête ---
-              Row(
-                children: [
-                  IconButton.outlined(
-                    onPressed: () => context.pop(),
-                    icon: const Icon(Icons.arrow_back),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '$dayLabel · ${formatHour(mission.startAt)} – ${formatHour(mission.endAt)}',
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: colors.onSurfaceVariant,
-                        ),
-                      ),
-                      const Text(
-                        'Suivi du jour',
-                        style: TextStyle(
-                          fontFamily: 'Lora',
-                          fontSize: 26,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-
-              // --- Bandeau « x / y arrivés » ---
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 14,
-                ),
-                decoration: BoxDecoration(
-                  color: _blue,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Mission en cours',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    Text(
-                      '$arrived / ${workers.length} arrivés',
-                      style: const TextStyle(
-                        fontFamily: 'Lora',
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // --- Liste des personnes ---
-              if (workers.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.all(24),
-                  child: Center(
-                    child: Text('Personne n\'est encore confirmé.'),
-                  ),
-                )
-              else
-                Container(
-                  decoration: BoxDecoration(
-                    color: colors.surface,
-                    border: Border.all(color: colors.outlineVariant),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < workers.length; i++) ...[
-                        if (i > 0) const Divider(height: 1),
-                        _buildRow(context, ref, workers[i], colors),
-                      ],
-                    ],
-                  ),
-                ),
-
-              // --- Une carte par absent ---
-              for (final c in absents) ...[
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: colors.surface,
-                    border: Border.all(color: colors.error),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: '${c.name} est absent(e). ',
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const TextSpan(text: 'Que faire de sa place ?'),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: OutlinedButton(
-                              onPressed: () => _soon(context),
-                              child: const Text('Me rembourser'),
-                            ),
-                          ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: _green,
-                                foregroundColor: Colors.white,
-                              ),
-                              onPressed: () => _soon(context),
-                              child: const Text('Trouver un remplaçant'),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ],
+      // Barre de retour tant que l'écran n'a pas ses données (chargement,
+      // erreur) ; sinon l'en-tête de l'écran porte le retour.
+      appBar: missionValue.hasValue && candidatesValue.hasValue
+          ? null
+          : AppBar(),
+      body: AsyncValueView(
+        value: missionValue,
+        onRetry: () => ref.invalidate(missionProvider),
+        data: (mission) => AsyncValueView(
+          value: candidatesValue,
+          onRetry: () => ref.invalidate(candidatesProvider),
+          data: (all) => _buildDay(
+            context,
+            mission,
+            all.where((c) => c.status == CandidateStatus.confirmed).toList(),
+            ref.watch(clockProvider)(),
           ),
         ),
       ),
     );
   }
 
-  // Une ligne de la liste : avatar, nom, sous-titre coloré, état à droite
-  Widget _buildRow(
+  Widget _buildDay(
     BuildContext context,
-    WidgetRef ref,
-    Candidate c,
-    ColorScheme colors,
+    MissionSummary mission,
+    List<Candidate> workers,
+    DateTime now,
   ) {
+    final colors = Theme.of(context).colorScheme;
+    final arrived = workers
+        .where(
+          (c) => const {
+            AttendanceStatus.arrived,
+            AttendanceStatus.finished,
+            AttendanceStatus.validated,
+            AttendanceStatus.contested,
+          }.contains(c.attendance),
+        )
+        .length;
+    final dayLabel = formatDayRelative(mission.startAt, now);
+
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // --- En-tête ---
+            Row(
+              children: [
+                IconButton.outlined(
+                  onPressed: () => context.pop(),
+                  icon: const Icon(Icons.arrow_back),
+                ),
+                const SizedBox(width: 12),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '$dayLabel · ${formatHour(mission.startAt)} – ${formatHour(mission.endAt)}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: colors.onSurfaceVariant,
+                      ),
+                    ),
+                    const Text(
+                      'Suivi du jour',
+                      style: TextStyle(
+                        fontFamily: 'Lora',
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // --- Bandeau « x / y arrivés » ---
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              decoration: BoxDecoration(
+                color: _blue,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Mission en cours',
+                    style: TextStyle(color: AppColors.white),
+                  ),
+                  Text(
+                    '$arrived / ${workers.length} arrivés',
+                    style: const TextStyle(
+                      fontFamily: 'Lora',
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 16),
+
+            // --- Liste des personnes ---
+            if (workers.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(24),
+                child: Center(child: Text('Personne n\'est encore confirmé.')),
+              )
+            else
+              Container(
+                decoration: BoxDecoration(
+                  color: colors.surface,
+                  border: Border.all(color: colors.outlineVariant),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: Column(
+                  children: [
+                    for (var i = 0; i < workers.length; i++) ...[
+                      if (i > 0) const Divider(height: 1),
+                      _buildRow(context, workers[i], colors),
+                    ],
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Une ligne de la liste : avatar, nom, sous-titre coloré, état à droite
+  Widget _buildRow(BuildContext context, Candidate c, ColorScheme colors) {
     final (subtitle, subtitleColor) = switch (c.attendance) {
       AttendanceStatus.finished => (
         'Arrivé ${_hour(c.arrivedAt)}'
@@ -235,14 +174,7 @@ class SuiviDuJourScreen extends ConsumerWidget {
       ),
       AttendanceStatus.arrived => ('Arrivé ${_hour(c.arrivedAt)}', _green),
       AttendanceStatus.validated => ('Travail validé · payé', _green),
-      AttendanceStatus.unconfirmed => (
-        'GPS faible · confirmez-vous sa présence ?',
-        _amber,
-      ),
-      AttendanceStatus.absent => (
-        'Pas de check-in · ${_hour(c.noCheckInAt)}',
-        colors.error,
-      ),
+      AttendanceStatus.contested => ('Travail contesté', colors.error),
       AttendanceStatus.notArrived => (
         'Pas encore arrivé',
         colors.onSurfaceVariant,
@@ -253,45 +185,36 @@ class SuiviDuJourScreen extends ConsumerWidget {
       AttendanceStatus.finished => const _StatePill(
         'À valider',
         bg: _blue,
-        fg: Colors.white,
+        fg: AppColors.white,
       ),
       AttendanceStatus.arrived => const _StatePill(
         'En cours',
-        bg: Color(0xFFE3ECF6),
+        bg: AppColors.softBlue,
         fg: _blue,
       ),
       AttendanceStatus.validated => const _StatePill(
         'Payé',
-        bg: Color(0xFFDDEEE6),
+        bg: AppColors.softGreen,
         fg: _green,
       ),
-      AttendanceStatus.unconfirmed => OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          foregroundColor: _green,
-          side: const BorderSide(color: _green),
-          visualDensity: VisualDensity.compact,
-        ),
-        onPressed: () => ref
-            .read(candidatesControllerProvider.notifier)
-            .confirmPresence(missionId, c.id),
-        child: const Text('Oui, présent(e)'),
+      AttendanceStatus.contested => _StatePill(
+        'Contesté',
+        bg: AppColors.softRed,
+        fg: colors.error,
       ),
       _ => null,
     };
 
-    final absent = c.attendance == AttendanceStatus.absent;
-
     return InkWell(
       // seul le travail terminé ouvre l'écran de validation
       onTap: c.attendance == AttendanceStatus.finished
-          ? () => context.push(AppRoutes.posterValidate(missionId, c.id))
+          ? () => context.push(PosterPaths.validate(missionId, c.assignmentId!))
           : null,
       child: Container(
-        color: absent ? const Color(0xFFFDEAE7) : null,
         padding: const EdgeInsets.all(14),
         child: Row(
           children: [
-            CandidateAvatar(c, size: 44, danger: absent),
+            CandidateAvatar(c, size: 44),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
