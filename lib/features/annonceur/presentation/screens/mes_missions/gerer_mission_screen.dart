@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/app/router/app_routes.dart';
-import 'package:micro_opportunites/features/annonceur/presentation/controllers/my_missions_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/status_chip.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
@@ -20,35 +19,6 @@ class GererMissionScreen extends ConsumerWidget {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(const SnackBar(content: Text('Bientôt disponible')));
-  }
-
-  Future<void> _confirmCancel(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Annuler la mission ?'),
-        content: const Text(
-          'La mission ne sera plus visible par les exécutants.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Non'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Oui, annuler'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !context.mounted) return;
-
-    // On récupère le contrôleur AVANT de quitter l'écran (ref n'est plus
-    // utilisable une fois l'écran fermé), puis on retire la mission.
-    final missions = ref.read(myMissionsControllerProvider.notifier);
-    context.go(AppRoutes.posterMissions);
-    missions.remove(missionId);
   }
 
   String _count(int n, String word) => '$n $word${n > 1 ? 's' : ''}';
@@ -176,7 +146,7 @@ class GererMissionScreen extends ConsumerWidget {
                           style: TextStyle(color: colors.onSurfaceVariant),
                         ),
                         Text(
-                          formatFcfa(mission.blockedAmount),
+                          formatFcfa(mission.blockedNow),
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
                             color: colors.primary,
@@ -231,17 +201,21 @@ class GererMissionScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
 
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: colors.error,
+              if (mission.status.isActive) ...[
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      foregroundColor: colors.error,
+                    ),
+                    onPressed: () =>
+                        context.push(AppRoutes.posterCancel(mission.id)),
+                    child: const Text('Annuler la mission'),
                   ),
-                  onPressed: () => _confirmCancel(context, ref),
-                  child: const Text('Annuler la mission'),
                 ),
-              ),
+              ],
             ],
           ),
         ),

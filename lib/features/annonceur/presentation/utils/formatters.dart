@@ -71,3 +71,6 @@ String formatPayPerUnit(MissionDraft d) {
   };
   return '${formatFcfa(d.payAmount ?? 0)} / $suffix';
 }
+
+/// "27 sept."
+String formatShortDate(DateTime date) => DateFormat('d MMM', 'fr').format(date);

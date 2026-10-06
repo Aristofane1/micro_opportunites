@@ -11,6 +11,9 @@ import 'package:micro_opportunites/features/annonceur/presentation/screens/candi
 import 'package:micro_opportunites/features/annonceur/presentation/screens/candidats/profil_candidat_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/mes_missions/suivi_du_jour_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/validation/valider_travail_screen.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/mes_missions/annuler_mission_screen.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/paiements/paiements_screen.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/validation/signaler_probleme_screen.dart';
 
 /// Écrans plein écran de l'Annonceur (par-dessus la barre du bas).
 final posterFullScreenRoutes = <RouteBase>[
@@ -67,6 +70,22 @@ final posterMissionsTabRoutes = <RouteBase>[
           missionId: state.pathParameters['id']!,
           candidateId: state.pathParameters['candidateId']!,
         ),
+        routes: [
+          GoRoute(
+            path: 'problem',
+            parentNavigatorKey: rootNavigatorKey,
+            builder: (context, state) => SignalerProblemeScreen(
+              missionId: state.pathParameters['id']!,
+              candidateId: state.pathParameters['candidateId']!,
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: 'cancel',
+        parentNavigatorKey: rootNavigatorKey,
+        builder: (context, state) =>
+            AnnulerMissionScreen(missionId: state.pathParameters['id']!),
       ),
     ],
   ),
@@ -83,3 +102,6 @@ Widget buildPublishTab(BuildContext context) {
     ),
   );
 }
+
+/// Page de l'onglet « Paiements ».
+Widget buildPosterPaymentsTab(BuildContext context) => const PaiementsScreen();

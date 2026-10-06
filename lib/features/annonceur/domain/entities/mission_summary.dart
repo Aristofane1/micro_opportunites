@@ -20,16 +20,19 @@ abstract class MissionSummary with _$MissionSummary {
     MissionCategory? category,
     @Default(240) int durationMinutes,
     @Default(0) int slotsConfirmed,
-    @Default(0) int slotsOffered, // place proposée, pas encore acceptée
+    @Default(0) int slotsOffered,
     @Default(0) int applicantsCount,
     @Default(0) int newApplicantsCount,
-    @Default(0) int blockedAmount,
+    @Default(0) int blockedAmount, // total bloqué (compléments compris)
+    @Default(0) int amountPerSlot, // ce que touche chaque personne
+    @Default(0) int paidAmount, // déjà versé
+    DateTime? publishedAt,
   }) = _MissionSummary;
 
   int get slotsFree => slotsTotal - slotsConfirmed - slotsOffered;
 
-  /// Ce que touche chaque personne (montant bloqué ÷ nombre de places)
-  int get amountPerSlot => slotsTotal == 0 ? 0 : blockedAmount ~/ slotsTotal;
+  /// L'argent encore bloqué sur cette mission
+  int get blockedNow => blockedAmount - paidAmount;
 
   DateTime get endAt => startAt.add(Duration(minutes: durationMinutes));
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:micro_opportunites/app/router/app_routes.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/payments_controller.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/validation/complement_sheet.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
 
@@ -25,8 +28,21 @@ class ValiderTravailScreen extends ConsumerWidget {
     ).showSnackBar(const SnackBar(content: Text('Bientôt disponible')));
   }
 
-  void _validate(BuildContext context, WidgetRef ref, Candidate c, int amount) {
+  void _validate(
+    BuildContext context,
+    WidgetRef ref,
+    Candidate c,
+    int amount,
+    String missionTitle,
+  ) {
     ref.read(candidatesControllerProvider.notifier).validate(missionId, c.id);
+    ref
+        .read(paymentsControllerProvider.notifier)
+        .addPaid(
+          missionTitle: missionTitle,
+          workerName: c.name,
+          amount: amount,
+        );
     final messenger = ScaffoldMessenger.of(context);
     context.pop();
     messenger.showSnackBar(
@@ -60,7 +76,7 @@ class ValiderTravailScreen extends ConsumerWidget {
       );
     }
 
-    final amount = mission.amountPerSlot;
+    final amount = mission.amountPerSlot + c.bonusAmount;
     final canValidate = c.attendance == AttendanceStatus.finished;
     final arrived = c.arrivedAt;
     final finished = c.finishedAt;
@@ -156,6 +172,44 @@ class ValiderTravailScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 14),
+
+                    // --- Complément proposé ---
+                    if (c.bonusAmount > 0) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFDDEEE6),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Complément de ${formatFcfa(c.bonusAmount)} proposé · '
+                          'en attente d\'acceptation'
+                          '${c.bonusReason == null ? '' : ' (${c.bonusReason})'}',
+                          style: const TextStyle(color: _green),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
+
+                    // --- Litige ouvert ---
+                    if (c.attendance == AttendanceStatus.disputed) ...[
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFFDEAE7),
+                          border: Border.all(color: const Color(0xFFB42318)),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          'Litige ouvert : ${c.disputeReason ?? ''}. Les '
+                          '${formatFcfa(amount)} restent bloqués pendant l\'examen.',
+                          style: const TextStyle(color: Color(0xFF7A1F16)),
+                        ),
+                      ),
+                      const SizedBox(height: 14),
+                    ],
 
                     // --- Preuves ---
                     Container(
@@ -291,11 +345,19 @@ class ValiderTravailScreen extends ConsumerWidget {
                         foregroundColor: Colors.white,
                       ),
                       onPressed: canValidate
-                          ? () => _validate(context, ref, c, amount)
+                          ? () => _validate(
+                              context,
+                              ref,
+                              c,
+                              amount,
+                              mission.title,
+                            )
                           : null,
                       child: Text(
                         canValidate
                             ? 'Valider et verser ${formatFcfa(amount)}'
+                            : c.attendance == AttendanceStatus.disputed
+                            ? 'Litige en cours'
                             : 'Paiement déjà versé',
                       ),
                     ),
@@ -305,7 +367,13 @@ class ValiderTravailScreen extends ConsumerWidget {
                     children: [
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () => _soon(context),
+                          onPressed: canValidate
+                              ? () => showComplementSheet(
+                                  context,
+                                  missionId: missionId,
+                                  candidate: c,
+                                )
+                              : null,
                           child: const Text('Ajouter un complément'),
                         ),
                       ),
@@ -315,7 +383,11 @@ class ValiderTravailScreen extends ConsumerWidget {
                           style: OutlinedButton.styleFrom(
                             foregroundColor: colors.error,
                           ),
-                          onPressed: () => _soon(context),
+                          onPressed: canValidate
+                              ? () => context.push(
+                                  AppRoutes.posterProblem(missionId, c.id),
+                                )
+                              : null,
                           child: const Text('Signaler un problème'),
                         ),
                       ),
@@ -334,6 +406,7 @@ class ValiderTravailScreen extends ConsumerWidget {
 // Une ligne de preuve : point vert, titre, détail
 class _ProofLine extends StatelessWidget {
   const _ProofLine({required this.title, required this.detail});
+
   final String title;
   final String detail;
 

@@ -18,7 +18,8 @@ mixin _$Candidate {
  String get city; String get memberSince;// « janv. 2026 »
  String get pitch;// le message du candidat
  String get skills; bool get verified; bool get isExpert; double? get rating; int get reviewsCount; int get missionsCount; int? get reliability;// en pourcentage
- int get absences; List<DoneMission> get doneMissions; CandidateReview? get review; CandidateStatus get status; AttendanceStatus get attendance; DateTime? get arrivedAt; DateTime? get finishedAt; DateTime? get noCheckInAt; int? get distanceMeters; bool get gpsPrecise; int get proofPhotos; String? get completionNote;
+ int get absences; List<DoneMission> get doneMissions; CandidateReview? get review; CandidateStatus get status; AttendanceStatus get attendance; DateTime? get arrivedAt; DateTime? get finishedAt; DateTime? get noCheckInAt; int? get distanceMeters; bool get gpsPrecise; int get proofPhotos; String? get completionNote; int get bonusAmount;// complément proposé (FCFA)
+ String? get bonusReason; String? get disputeReason;
 /// Create a copy of Candidate
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +30,16 @@ $CandidateCopyWith<Candidate> get copyWith => _$CandidateCopyWithImpl<Candidate>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Candidate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.city, city) || other.city == city)&&(identical(other.memberSince, memberSince) || other.memberSince == memberSince)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.skills, skills) || other.skills == skills)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.isExpert, isExpert) || other.isExpert == isExpert)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.reviewsCount, reviewsCount) || other.reviewsCount == reviewsCount)&&(identical(other.missionsCount, missionsCount) || other.missionsCount == missionsCount)&&(identical(other.reliability, reliability) || other.reliability == reliability)&&(identical(other.absences, absences) || other.absences == absences)&&const DeepCollectionEquality().equals(other.doneMissions, doneMissions)&&(identical(other.review, review) || other.review == review)&&(identical(other.status, status) || other.status == status)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.finishedAt, finishedAt) || other.finishedAt == finishedAt)&&(identical(other.noCheckInAt, noCheckInAt) || other.noCheckInAt == noCheckInAt)&&(identical(other.distanceMeters, distanceMeters) || other.distanceMeters == distanceMeters)&&(identical(other.gpsPrecise, gpsPrecise) || other.gpsPrecise == gpsPrecise)&&(identical(other.proofPhotos, proofPhotos) || other.proofPhotos == proofPhotos)&&(identical(other.completionNote, completionNote) || other.completionNote == completionNote));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Candidate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.city, city) || other.city == city)&&(identical(other.memberSince, memberSince) || other.memberSince == memberSince)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.skills, skills) || other.skills == skills)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.isExpert, isExpert) || other.isExpert == isExpert)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.reviewsCount, reviewsCount) || other.reviewsCount == reviewsCount)&&(identical(other.missionsCount, missionsCount) || other.missionsCount == missionsCount)&&(identical(other.reliability, reliability) || other.reliability == reliability)&&(identical(other.absences, absences) || other.absences == absences)&&const DeepCollectionEquality().equals(other.doneMissions, doneMissions)&&(identical(other.review, review) || other.review == review)&&(identical(other.status, status) || other.status == status)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.finishedAt, finishedAt) || other.finishedAt == finishedAt)&&(identical(other.noCheckInAt, noCheckInAt) || other.noCheckInAt == noCheckInAt)&&(identical(other.distanceMeters, distanceMeters) || other.distanceMeters == distanceMeters)&&(identical(other.gpsPrecise, gpsPrecise) || other.gpsPrecise == gpsPrecise)&&(identical(other.proofPhotos, proofPhotos) || other.proofPhotos == proofPhotos)&&(identical(other.completionNote, completionNote) || other.completionNote == completionNote)&&(identical(other.bonusAmount, bonusAmount) || other.bonusAmount == bonusAmount)&&(identical(other.bonusReason, bonusReason) || other.bonusReason == bonusReason)&&(identical(other.disputeReason, disputeReason) || other.disputeReason == disputeReason));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,city,memberSince,pitch,skills,verified,isExpert,rating,reviewsCount,missionsCount,reliability,absences,const DeepCollectionEquality().hash(doneMissions),review,status,attendance,arrivedAt,finishedAt,noCheckInAt,distanceMeters,gpsPrecise,proofPhotos,completionNote]);
+int get hashCode => Object.hashAll([runtimeType,id,name,city,memberSince,pitch,skills,verified,isExpert,rating,reviewsCount,missionsCount,reliability,absences,const DeepCollectionEquality().hash(doneMissions),review,status,attendance,arrivedAt,finishedAt,noCheckInAt,distanceMeters,gpsPrecise,proofPhotos,completionNote,bonusAmount,bonusReason,disputeReason]);
 
 @override
 String toString() {
-  return 'Candidate(id: $id, name: $name, city: $city, memberSince: $memberSince, pitch: $pitch, skills: $skills, verified: $verified, isExpert: $isExpert, rating: $rating, reviewsCount: $reviewsCount, missionsCount: $missionsCount, reliability: $reliability, absences: $absences, doneMissions: $doneMissions, review: $review, status: $status, attendance: $attendance, arrivedAt: $arrivedAt, finishedAt: $finishedAt, noCheckInAt: $noCheckInAt, distanceMeters: $distanceMeters, gpsPrecise: $gpsPrecise, proofPhotos: $proofPhotos, completionNote: $completionNote)';
+  return 'Candidate(id: $id, name: $name, city: $city, memberSince: $memberSince, pitch: $pitch, skills: $skills, verified: $verified, isExpert: $isExpert, rating: $rating, reviewsCount: $reviewsCount, missionsCount: $missionsCount, reliability: $reliability, absences: $absences, doneMissions: $doneMissions, review: $review, status: $status, attendance: $attendance, arrivedAt: $arrivedAt, finishedAt: $finishedAt, noCheckInAt: $noCheckInAt, distanceMeters: $distanceMeters, gpsPrecise: $gpsPrecise, proofPhotos: $proofPhotos, completionNote: $completionNote, bonusAmount: $bonusAmount, bonusReason: $bonusReason, disputeReason: $disputeReason)';
 }
 
 
@@ -49,7 +50,7 @@ abstract mixin class $CandidateCopyWith<$Res>  {
   factory $CandidateCopyWith(Candidate value, $Res Function(Candidate) _then) = _$CandidateCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String city, String memberSince, String pitch, String skills, bool verified, bool isExpert, double? rating, int reviewsCount, int missionsCount, int? reliability, int absences, List<DoneMission> doneMissions, CandidateReview? review, CandidateStatus status, AttendanceStatus attendance, DateTime? arrivedAt, DateTime? finishedAt, DateTime? noCheckInAt, int? distanceMeters, bool gpsPrecise, int proofPhotos, String? completionNote
+ String id, String name, String city, String memberSince, String pitch, String skills, bool verified, bool isExpert, double? rating, int reviewsCount, int missionsCount, int? reliability, int absences, List<DoneMission> doneMissions, CandidateReview? review, CandidateStatus status, AttendanceStatus attendance, DateTime? arrivedAt, DateTime? finishedAt, DateTime? noCheckInAt, int? distanceMeters, bool gpsPrecise, int proofPhotos, String? completionNote, int bonusAmount, String? bonusReason, String? disputeReason
 });
 
 
@@ -66,7 +67,7 @@ class _$CandidateCopyWithImpl<$Res>
 
 /// Create a copy of Candidate
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? city = null,Object? memberSince = null,Object? pitch = null,Object? skills = null,Object? verified = null,Object? isExpert = null,Object? rating = freezed,Object? reviewsCount = null,Object? missionsCount = null,Object? reliability = freezed,Object? absences = null,Object? doneMissions = null,Object? review = freezed,Object? status = null,Object? attendance = null,Object? arrivedAt = freezed,Object? finishedAt = freezed,Object? noCheckInAt = freezed,Object? distanceMeters = freezed,Object? gpsPrecise = null,Object? proofPhotos = null,Object? completionNote = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? city = null,Object? memberSince = null,Object? pitch = null,Object? skills = null,Object? verified = null,Object? isExpert = null,Object? rating = freezed,Object? reviewsCount = null,Object? missionsCount = null,Object? reliability = freezed,Object? absences = null,Object? doneMissions = null,Object? review = freezed,Object? status = null,Object? attendance = null,Object? arrivedAt = freezed,Object? finishedAt = freezed,Object? noCheckInAt = freezed,Object? distanceMeters = freezed,Object? gpsPrecise = null,Object? proofPhotos = null,Object? completionNote = freezed,Object? bonusAmount = null,Object? bonusReason = freezed,Object? disputeReason = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -92,6 +93,9 @@ as DateTime?,distanceMeters: freezed == distanceMeters ? _self.distanceMeters : 
 as int?,gpsPrecise: null == gpsPrecise ? _self.gpsPrecise : gpsPrecise // ignore: cast_nullable_to_non_nullable
 as bool,proofPhotos: null == proofPhotos ? _self.proofPhotos : proofPhotos // ignore: cast_nullable_to_non_nullable
 as int,completionNote: freezed == completionNote ? _self.completionNote : completionNote // ignore: cast_nullable_to_non_nullable
+as String?,bonusAmount: null == bonusAmount ? _self.bonusAmount : bonusAmount // ignore: cast_nullable_to_non_nullable
+as int,bonusReason: freezed == bonusReason ? _self.bonusReason : bonusReason // ignore: cast_nullable_to_non_nullable
+as String?,disputeReason: freezed == disputeReason ? _self.disputeReason : disputeReason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -177,10 +181,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote,  int bonusAmount,  String? bonusReason,  String? disputeReason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Candidate() when $default != null:
-return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote);case _:
+return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote,_that.bonusAmount,_that.bonusReason,_that.disputeReason);case _:
   return orElse();
 
 }
@@ -198,10 +202,10 @@ return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote,  int bonusAmount,  String? bonusReason,  String? disputeReason)  $default,) {final _that = this;
 switch (_that) {
 case _Candidate():
-return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote);case _:
+return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote,_that.bonusAmount,_that.bonusReason,_that.disputeReason);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -218,10 +222,10 @@ return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String city,  String memberSince,  String pitch,  String skills,  bool verified,  bool isExpert,  double? rating,  int reviewsCount,  int missionsCount,  int? reliability,  int absences,  List<DoneMission> doneMissions,  CandidateReview? review,  CandidateStatus status,  AttendanceStatus attendance,  DateTime? arrivedAt,  DateTime? finishedAt,  DateTime? noCheckInAt,  int? distanceMeters,  bool gpsPrecise,  int proofPhotos,  String? completionNote,  int bonusAmount,  String? bonusReason,  String? disputeReason)?  $default,) {final _that = this;
 switch (_that) {
 case _Candidate() when $default != null:
-return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote);case _:
+return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_that.skills,_that.verified,_that.isExpert,_that.rating,_that.reviewsCount,_that.missionsCount,_that.reliability,_that.absences,_that.doneMissions,_that.review,_that.status,_that.attendance,_that.arrivedAt,_that.finishedAt,_that.noCheckInAt,_that.distanceMeters,_that.gpsPrecise,_that.proofPhotos,_that.completionNote,_that.bonusAmount,_that.bonusReason,_that.disputeReason);case _:
   return null;
 
 }
@@ -233,7 +237,7 @@ return $default(_that.id,_that.name,_that.city,_that.memberSince,_that.pitch,_th
 
 
 class _Candidate extends Candidate {
-  const _Candidate({required this.id, required this.name, required this.city, required this.memberSince, required this.pitch, required this.skills, this.verified = false, this.isExpert = false, this.rating, this.reviewsCount = 0, this.missionsCount = 0, this.reliability, this.absences = 0, final  List<DoneMission> doneMissions = const [], this.review, this.status = CandidateStatus.pending, this.attendance = AttendanceStatus.notArrived, this.arrivedAt, this.finishedAt, this.noCheckInAt, this.distanceMeters, this.gpsPrecise = true, this.proofPhotos = 0, this.completionNote}): _doneMissions = doneMissions,super._();
+  const _Candidate({required this.id, required this.name, required this.city, required this.memberSince, required this.pitch, required this.skills, this.verified = false, this.isExpert = false, this.rating, this.reviewsCount = 0, this.missionsCount = 0, this.reliability, this.absences = 0, final  List<DoneMission> doneMissions = const [], this.review, this.status = CandidateStatus.pending, this.attendance = AttendanceStatus.notArrived, this.arrivedAt, this.finishedAt, this.noCheckInAt, this.distanceMeters, this.gpsPrecise = true, this.proofPhotos = 0, this.completionNote, this.bonusAmount = 0, this.bonusReason, this.disputeReason}): _doneMissions = doneMissions,super._();
   
 
 @override final  String id;
@@ -270,6 +274,10 @@ class _Candidate extends Candidate {
 @override@JsonKey() final  bool gpsPrecise;
 @override@JsonKey() final  int proofPhotos;
 @override final  String? completionNote;
+@override@JsonKey() final  int bonusAmount;
+// complément proposé (FCFA)
+@override final  String? bonusReason;
+@override final  String? disputeReason;
 
 /// Create a copy of Candidate
 /// with the given fields replaced by the non-null parameter values.
@@ -281,16 +289,16 @@ _$CandidateCopyWith<_Candidate> get copyWith => __$CandidateCopyWithImpl<_Candid
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Candidate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.city, city) || other.city == city)&&(identical(other.memberSince, memberSince) || other.memberSince == memberSince)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.skills, skills) || other.skills == skills)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.isExpert, isExpert) || other.isExpert == isExpert)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.reviewsCount, reviewsCount) || other.reviewsCount == reviewsCount)&&(identical(other.missionsCount, missionsCount) || other.missionsCount == missionsCount)&&(identical(other.reliability, reliability) || other.reliability == reliability)&&(identical(other.absences, absences) || other.absences == absences)&&const DeepCollectionEquality().equals(other._doneMissions, _doneMissions)&&(identical(other.review, review) || other.review == review)&&(identical(other.status, status) || other.status == status)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.finishedAt, finishedAt) || other.finishedAt == finishedAt)&&(identical(other.noCheckInAt, noCheckInAt) || other.noCheckInAt == noCheckInAt)&&(identical(other.distanceMeters, distanceMeters) || other.distanceMeters == distanceMeters)&&(identical(other.gpsPrecise, gpsPrecise) || other.gpsPrecise == gpsPrecise)&&(identical(other.proofPhotos, proofPhotos) || other.proofPhotos == proofPhotos)&&(identical(other.completionNote, completionNote) || other.completionNote == completionNote));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Candidate&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.city, city) || other.city == city)&&(identical(other.memberSince, memberSince) || other.memberSince == memberSince)&&(identical(other.pitch, pitch) || other.pitch == pitch)&&(identical(other.skills, skills) || other.skills == skills)&&(identical(other.verified, verified) || other.verified == verified)&&(identical(other.isExpert, isExpert) || other.isExpert == isExpert)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.reviewsCount, reviewsCount) || other.reviewsCount == reviewsCount)&&(identical(other.missionsCount, missionsCount) || other.missionsCount == missionsCount)&&(identical(other.reliability, reliability) || other.reliability == reliability)&&(identical(other.absences, absences) || other.absences == absences)&&const DeepCollectionEquality().equals(other._doneMissions, _doneMissions)&&(identical(other.review, review) || other.review == review)&&(identical(other.status, status) || other.status == status)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.arrivedAt, arrivedAt) || other.arrivedAt == arrivedAt)&&(identical(other.finishedAt, finishedAt) || other.finishedAt == finishedAt)&&(identical(other.noCheckInAt, noCheckInAt) || other.noCheckInAt == noCheckInAt)&&(identical(other.distanceMeters, distanceMeters) || other.distanceMeters == distanceMeters)&&(identical(other.gpsPrecise, gpsPrecise) || other.gpsPrecise == gpsPrecise)&&(identical(other.proofPhotos, proofPhotos) || other.proofPhotos == proofPhotos)&&(identical(other.completionNote, completionNote) || other.completionNote == completionNote)&&(identical(other.bonusAmount, bonusAmount) || other.bonusAmount == bonusAmount)&&(identical(other.bonusReason, bonusReason) || other.bonusReason == bonusReason)&&(identical(other.disputeReason, disputeReason) || other.disputeReason == disputeReason));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,name,city,memberSince,pitch,skills,verified,isExpert,rating,reviewsCount,missionsCount,reliability,absences,const DeepCollectionEquality().hash(_doneMissions),review,status,attendance,arrivedAt,finishedAt,noCheckInAt,distanceMeters,gpsPrecise,proofPhotos,completionNote]);
+int get hashCode => Object.hashAll([runtimeType,id,name,city,memberSince,pitch,skills,verified,isExpert,rating,reviewsCount,missionsCount,reliability,absences,const DeepCollectionEquality().hash(_doneMissions),review,status,attendance,arrivedAt,finishedAt,noCheckInAt,distanceMeters,gpsPrecise,proofPhotos,completionNote,bonusAmount,bonusReason,disputeReason]);
 
 @override
 String toString() {
-  return 'Candidate(id: $id, name: $name, city: $city, memberSince: $memberSince, pitch: $pitch, skills: $skills, verified: $verified, isExpert: $isExpert, rating: $rating, reviewsCount: $reviewsCount, missionsCount: $missionsCount, reliability: $reliability, absences: $absences, doneMissions: $doneMissions, review: $review, status: $status, attendance: $attendance, arrivedAt: $arrivedAt, finishedAt: $finishedAt, noCheckInAt: $noCheckInAt, distanceMeters: $distanceMeters, gpsPrecise: $gpsPrecise, proofPhotos: $proofPhotos, completionNote: $completionNote)';
+  return 'Candidate(id: $id, name: $name, city: $city, memberSince: $memberSince, pitch: $pitch, skills: $skills, verified: $verified, isExpert: $isExpert, rating: $rating, reviewsCount: $reviewsCount, missionsCount: $missionsCount, reliability: $reliability, absences: $absences, doneMissions: $doneMissions, review: $review, status: $status, attendance: $attendance, arrivedAt: $arrivedAt, finishedAt: $finishedAt, noCheckInAt: $noCheckInAt, distanceMeters: $distanceMeters, gpsPrecise: $gpsPrecise, proofPhotos: $proofPhotos, completionNote: $completionNote, bonusAmount: $bonusAmount, bonusReason: $bonusReason, disputeReason: $disputeReason)';
 }
 
 
@@ -301,7 +309,7 @@ abstract mixin class _$CandidateCopyWith<$Res> implements $CandidateCopyWith<$Re
   factory _$CandidateCopyWith(_Candidate value, $Res Function(_Candidate) _then) = __$CandidateCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String city, String memberSince, String pitch, String skills, bool verified, bool isExpert, double? rating, int reviewsCount, int missionsCount, int? reliability, int absences, List<DoneMission> doneMissions, CandidateReview? review, CandidateStatus status, AttendanceStatus attendance, DateTime? arrivedAt, DateTime? finishedAt, DateTime? noCheckInAt, int? distanceMeters, bool gpsPrecise, int proofPhotos, String? completionNote
+ String id, String name, String city, String memberSince, String pitch, String skills, bool verified, bool isExpert, double? rating, int reviewsCount, int missionsCount, int? reliability, int absences, List<DoneMission> doneMissions, CandidateReview? review, CandidateStatus status, AttendanceStatus attendance, DateTime? arrivedAt, DateTime? finishedAt, DateTime? noCheckInAt, int? distanceMeters, bool gpsPrecise, int proofPhotos, String? completionNote, int bonusAmount, String? bonusReason, String? disputeReason
 });
 
 
@@ -318,7 +326,7 @@ class __$CandidateCopyWithImpl<$Res>
 
 /// Create a copy of Candidate
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? city = null,Object? memberSince = null,Object? pitch = null,Object? skills = null,Object? verified = null,Object? isExpert = null,Object? rating = freezed,Object? reviewsCount = null,Object? missionsCount = null,Object? reliability = freezed,Object? absences = null,Object? doneMissions = null,Object? review = freezed,Object? status = null,Object? attendance = null,Object? arrivedAt = freezed,Object? finishedAt = freezed,Object? noCheckInAt = freezed,Object? distanceMeters = freezed,Object? gpsPrecise = null,Object? proofPhotos = null,Object? completionNote = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? city = null,Object? memberSince = null,Object? pitch = null,Object? skills = null,Object? verified = null,Object? isExpert = null,Object? rating = freezed,Object? reviewsCount = null,Object? missionsCount = null,Object? reliability = freezed,Object? absences = null,Object? doneMissions = null,Object? review = freezed,Object? status = null,Object? attendance = null,Object? arrivedAt = freezed,Object? finishedAt = freezed,Object? noCheckInAt = freezed,Object? distanceMeters = freezed,Object? gpsPrecise = null,Object? proofPhotos = null,Object? completionNote = freezed,Object? bonusAmount = null,Object? bonusReason = freezed,Object? disputeReason = freezed,}) {
   return _then(_Candidate(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -344,6 +352,9 @@ as DateTime?,distanceMeters: freezed == distanceMeters ? _self.distanceMeters : 
 as int?,gpsPrecise: null == gpsPrecise ? _self.gpsPrecise : gpsPrecise // ignore: cast_nullable_to_non_nullable
 as bool,proofPhotos: null == proofPhotos ? _self.proofPhotos : proofPhotos // ignore: cast_nullable_to_non_nullable
 as int,completionNote: freezed == completionNote ? _self.completionNote : completionNote // ignore: cast_nullable_to_non_nullable
+as String?,bonusAmount: null == bonusAmount ? _self.bonusAmount : bonusAmount // ignore: cast_nullable_to_non_nullable
+as int,bonusReason: freezed == bonusReason ? _self.bonusReason : bonusReason // ignore: cast_nullable_to_non_nullable
+as String?,disputeReason: freezed == disputeReason ? _self.disputeReason : disputeReason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

@@ -84,6 +84,7 @@ final posterTabs = <ShellTab>[
     path: AppRoutes.posterPayments,
     label: 'Paiements',
     icon: AppIcons.securePayment,
+    builder: buildPosterPaymentsTab,
   ),
   ShellTab(
     path: AppRoutes.posterMessages,

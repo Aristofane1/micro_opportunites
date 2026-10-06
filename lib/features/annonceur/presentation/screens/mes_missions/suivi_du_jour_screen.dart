@@ -55,6 +55,7 @@ class SuiviDuJourScreen extends ConsumerWidget {
             AttendanceStatus.unconfirmed,
             AttendanceStatus.finished,
             AttendanceStatus.validated,
+            AttendanceStatus.disputed,
           }.contains(c.attendance),
         )
         .length;
@@ -243,6 +244,10 @@ class SuiviDuJourScreen extends ConsumerWidget {
         'Pas de check-in · ${_hour(c.noCheckInAt)}',
         colors.error,
       ),
+      AttendanceStatus.disputed => (
+        'Litige ouvert · en cours d\'examen',
+        colors.error,
+      ),
       AttendanceStatus.notArrived => (
         'Pas encore arrivé',
         colors.onSurfaceVariant,
@@ -275,6 +280,11 @@ class SuiviDuJourScreen extends ConsumerWidget {
             .read(candidatesControllerProvider.notifier)
             .confirmPresence(missionId, c.id),
         child: const Text('Oui, présent(e)'),
+      ),
+      AttendanceStatus.disputed => _StatePill(
+        'Litige',
+        bg: const Color(0xFFF8E1DE),
+        fg: colors.error,
       ),
       _ => null,
     };
