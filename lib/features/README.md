@@ -82,4 +82,13 @@ Page → Contrôleur (@riverpod) → Repository → RemoteDataSource → ApiClie
 | onboarding | A01 Splash, A02–A04 Présentation | fait (fusion branche onboarding) |
 | auth | A05 Téléphone, A06 Code SMS, A07 Infos, A08 Pièce, A09 Photo (simulée), A11 Vérification | fait (faux serveur) |
 | preferences | A13 Profil de départ, A14 Autorisations (affichage) | fait |
-| A10 selfie · A12 refus KYC · profile · publish · payment · chat · reviews · disputes · notifications · safety | modules A, C, D, E | à venir |
+| annonceur | C01 Mes missions, C02–C04 Publier en 3 étapes, C07 Mission publiée, C08 Gérer, C09 Candidats, C10 Profil candidat, C11 Suivi du jour, C12 Valider, C13 Contester, C14 Annuler, C15 Paiements (C05/C06 retirés) | fait (faux serveur) |
+| A10 selfie · A12 refus KYC · profile · payment · chat · reviews · notifications · safety | modules A, D, E | à venir |
+
+### Comptes de démo
+
+Mot de passe `demo123` : `executant@demo.bj` (Rodrigue),
+`executant2@demo.bj` (Sènami), `annonceur@demo.bj` (Mireille, solde 200 000 FCFA).
+Le faux serveur applique les règles annonceur : argent bloqué à la
+publication, adresse précise visible après confirmation, versement à la
+validation, débloquage à l'annulation.
