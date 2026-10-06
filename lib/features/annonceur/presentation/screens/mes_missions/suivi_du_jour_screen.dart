@@ -25,12 +25,19 @@ class SuiviDuJourScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final missionProvider = posterMissionProvider(missionId);
     final candidatesProvider = missionCandidatesProvider(missionId);
+    final missionValue = ref.watch(missionProvider);
+    final candidatesValue = ref.watch(candidatesProvider);
     return Scaffold(
+      // Barre de retour tant que l'écran n'a pas ses données (chargement,
+      // erreur) ; sinon l'en-tête de l'écran porte le retour.
+      appBar: missionValue.hasValue && candidatesValue.hasValue
+          ? null
+          : AppBar(),
       body: AsyncValueView(
-        value: ref.watch(missionProvider),
+        value: missionValue,
         onRetry: () => ref.invalidate(missionProvider),
         data: (mission) => AsyncValueView(
-          value: ref.watch(candidatesProvider),
+          value: candidatesValue,
           onRetry: () => ref.invalidate(candidatesProvider),
           data: (all) => _buildDay(
             context,

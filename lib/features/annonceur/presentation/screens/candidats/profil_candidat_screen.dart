@@ -60,9 +60,14 @@ class ProfilCandidatScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = missionCandidatesProvider(missionId);
+    final value = ref.watch(provider);
+    final found = value.value?.any((x) => x.id == candidateId) ?? false;
     return Scaffold(
+      // En-tête de l'écran affiché seulement avec les données ; sinon
+      // (chargement, erreur, introuvable) une barre garde le retour.
+      appBar: found ? null : AppBar(),
       body: AsyncValueView(
-        value: ref.watch(provider),
+        value: value,
         onRetry: () => ref.invalidate(provider),
         data: (all) {
           final c = all.where((x) => x.id == candidateId).firstOrNull;
@@ -77,6 +82,11 @@ class ProfilCandidatScreen extends ConsumerWidget {
 
   Widget _buildProfile(BuildContext context, WidgetRef ref, Candidate c) {
     final colors = Theme.of(context).colorScheme;
+    final category = ref
+        .watch(posterMissionProvider(missionId))
+        .value
+        ?.category;
+    final busy = ref.watch(annonceurActionsProvider).isLoading;
     return SafeArea(
       child: Column(
         children: [
@@ -120,11 +130,20 @@ class ProfilCandidatScreen extends ConsumerWidget {
                                     bg: AppColors.softGreen,
                                     fg: _green,
                                   ),
+                                if (c.isExpert)
+                                  const _Tag(
+                                    'Expert',
+                                    bg: AppColors.ink,
+                                    fg: AppColors.ochre,
+                                  ),
                               ],
                             ),
                             const SizedBox(height: 6),
                             Text(
-                              '${c.city} · membre depuis ${formatMonthYear(c.memberSince)}',
+                              c.memberSince == null
+                                  ? c.city
+                                  : '${c.city} · membre depuis '
+                                        '${formatMonthYear(c.memberSince!)}',
                               style: TextStyle(
                                 fontSize: 13,
                                 color: colors.onSurfaceVariant,
@@ -170,6 +189,34 @@ class ProfilCandidatScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 20),
 
+                  // --- Missions réalisées ---
+                  const Text(
+                    'Missions réalisées',
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  if (c.doneMissions.isEmpty)
+                    Text(
+                      'Aucune mission réalisée pour le moment.',
+                      style: TextStyle(color: colors.onSurfaceVariant),
+                    )
+                  else
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (final d in c.doneMissions)
+                          _DoneChip(
+                            // en couleur quand c'est la même catégorie que la mission
+                            highlighted: d.category == category,
+                            label:
+                                '${d.category.label} × ${d.count}'
+                                '${d.category == category ? ' · confirmée' : ''}',
+                          ),
+                      ],
+                    ),
+                  const SizedBox(height: 20),
+
                   // --- Compétences ---
                   const Text(
                     'Compétences déclarées',
@@ -178,6 +225,48 @@ class ProfilCandidatScreen extends ConsumerWidget {
                   const SizedBox(height: 6),
                   Text(c.skills),
                   const SizedBox(height: 20),
+
+                  // --- Dernier avis ---
+                  if (c.review != null)
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: colors.outlineVariant),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                c.review!.author,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              Text(
+                                '★' * c.review!.stars,
+                                style: TextStyle(color: colors.primary),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(c.review!.text),
+                          const SizedBox(height: 8),
+                          Text(
+                            'Ponctualité ${c.review!.punctuality} · '
+                            'Qualité ${c.review!.quality} · '
+                            'Communication ${c.review!.communication}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: colors.onSurfaceVariant,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -198,7 +287,7 @@ class ProfilCandidatScreen extends ConsumerWidget {
                     child: SizedBox(
                       height: 52,
                       child: OutlinedButton(
-                        onPressed: () => _refuse(context, ref, c),
+                        onPressed: busy ? null : () => _refuse(context, ref, c),
                         child: const Text('Refuser'),
                       ),
                     ),
@@ -213,7 +302,7 @@ class ProfilCandidatScreen extends ConsumerWidget {
                           backgroundColor: _green,
                           foregroundColor: AppColors.white,
                         ),
-                        onPressed: () => _retain(context, ref, c),
+                        onPressed: busy ? null : () => _retain(context, ref, c),
                         child: Text('Retenir ${c.firstName}'),
                       ),
                     ),
@@ -291,6 +380,33 @@ class _Stat extends StatelessWidget {
             style: TextStyle(fontSize: 12, color: colors.onSurfaceVariant),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DoneChip extends StatelessWidget {
+  const _DoneChip({required this.label, required this.highlighted});
+  final String label;
+  final bool highlighted;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
+      decoration: BoxDecoration(
+        color: highlighted ? AppColors.softGreen : colors.surface,
+        border: highlighted ? null : Border.all(color: colors.outlineVariant),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: highlighted ? AppColors.green : colors.onSurface,
+        ),
       ),
     );
   }

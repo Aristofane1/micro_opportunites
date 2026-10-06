@@ -51,6 +51,7 @@ class CandidateCard extends StatelessWidget {
     this.onRefuse,
     this.onRetain,
     this.statusLabel,
+    this.busy = false,
   });
 
   final Candidate candidate;
@@ -59,6 +60,7 @@ class CandidateCard extends StatelessWidget {
   onRefuse; // boutons affichés seulement si onRetain != null
   final VoidCallback? onRetain;
   final String? statusLabel; // texte affiché à la place des boutons
+  final bool busy; // action en cours : boutons désactivés
 
   @override
   Widget build(BuildContext context) {
@@ -121,7 +123,13 @@ class CandidateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  if (c.isNew)
+                  if (c.isExpert)
+                    const _Badge(
+                      'Expert',
+                      bg: AppColors.ink,
+                      fg: AppColors.ochre,
+                    )
+                  else if (c.isNew)
                     _Badge(
                       'Nouveau',
                       bg: colors.surfaceContainerHigh,
@@ -139,7 +147,7 @@ class CandidateCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: onRefuse,
+                        onPressed: busy ? null : onRefuse,
                         child: const Text('Refuser'),
                       ),
                     ),
@@ -150,7 +158,7 @@ class CandidateCard extends StatelessWidget {
                           backgroundColor: _green,
                           foregroundColor: AppColors.white,
                         ),
-                        onPressed: onRetain,
+                        onPressed: busy ? null : onRetain,
                         child: const Text('Retenir'),
                       ),
                     ),

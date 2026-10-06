@@ -44,6 +44,7 @@ Object? signup(FakeDatabase db, FakeRequest request) {
     'lat': 6.4485,
     'lng': 2.3557,
     'role': null,
+    'createdAt': request.now.toUtc().toIso8601String(),
     'payoutAccount': {
       'operator': 'MTN MoMo',
       'maskedNumber': '•• •• •• ••',

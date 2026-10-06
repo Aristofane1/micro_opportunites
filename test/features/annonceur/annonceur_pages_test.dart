@@ -28,6 +28,25 @@ void main() {
     expect(find.text('Accueil au salon de l’artisanat'), findsOneWidget);
     expect(find.text('Tri de vêtements pour une vente'), findsOneWidget);
     expect(find.text('Travail à valider'), findsOneWidget);
+    expect(find.text('En cours (2)'), findsOneWidget);
+    expect(find.text('Terminées'), findsOneWidget);
+  });
+
+  testWidgets('C10 : profil avec expert, missions réalisées et avis', (
+    tester,
+  ) async {
+    await _pumpPoster(tester);
+    await tester.tap(find.text('Accueil au salon de l’artisanat'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Candidats'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Sènami O.'));
+    await tester.pumpAndSettle();
+    expect(find.text('Expert'), findsOneWidget);
+    expect(find.text('Événement × 9 · confirmée'), findsOneWidget);
+    expect(find.text('Saisie de données × 12'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('Cabinet Hounkpè'), 200);
+    expect(find.text('Cabinet Hounkpè'), findsOneWidget);
   });
 
   testWidgets('Publier : 3 étapes puis C07 « Montant bloqué »', (tester) async {

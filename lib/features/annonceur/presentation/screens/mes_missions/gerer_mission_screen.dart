@@ -30,9 +30,13 @@ class GererMissionScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = posterMissionProvider(missionId);
+    final value = ref.watch(provider);
     return Scaffold(
+      // Barre de retour tant que l'écran n'a pas ses données (chargement,
+      // erreur) ; sinon l'en-tête de l'écran porte le retour.
+      appBar: value.hasValue ? null : AppBar(),
       body: AsyncValueView(
-        value: ref.watch(provider),
+        value: value,
         onRetry: () => ref.invalidate(provider),
         data: (mission) => _buildMission(context, mission),
       ),

@@ -63,8 +63,8 @@ class MesMissionsScreen extends ConsumerWidget {
                 isScrollable: true,
                 tabAlignment: TabAlignment.start,
                 tabs: [
-                  Tab(text: 'Actives (${active.length})'),
-                  const Tab(text: 'Passées'),
+                  Tab(text: 'En cours (${active.length})'),
+                  const Tab(text: 'Terminées'),
                 ],
               ),
               Expanded(

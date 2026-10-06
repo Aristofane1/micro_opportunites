@@ -305,4 +305,58 @@ void main() {
       }
     },
   );
+
+  test(
+    'candidat sans profil (compte créé dans l’app) : valeurs par défaut',
+    () async {
+      await api.post(
+        '/auth/signup',
+        body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
+      );
+      await api.post('/me/role', body: {'role': 'worker'});
+      await api.post(
+        '/missions/m20/applications',
+        body: {'message': 'Je débute, très motivé.'},
+      );
+
+      await loginAs('annonceur@demo.bj');
+      final candidates = await api.get('/missions/m20/candidates') as List;
+      final fresh = candidates.cast<Map>().last;
+      expect(fresh['memberSince'], fixedNow.toUtc().toIso8601String());
+      expect(fresh['pitch'], 'Je débute, très motivé.');
+      expect(fresh['rating'], isNull);
+      expect(fresh['missionsCount'], 0);
+      expect(fresh['reviewsCount'], 0);
+      expect(fresh['skills'], isEmpty);
+      expect(fresh['verified'], isFalse);
+      expect(fresh['isExpert'], isFalse);
+      expect(fresh['doneMissions'], isEmpty);
+      expect(fresh['review'], isNull);
+    },
+  );
+
+  test('C10 : expert, missions réalisées et dernier avis', () async {
+    await loginAs('annonceur@demo.bj');
+    final candidates = (await api.get('/missions/m20/candidates') as List)
+        .cast<Map>();
+    final senami = candidates.firstWhere((c) => c['workerId'] == 'u2');
+    expect(senami['isExpert'], isTrue);
+    expect(senami['doneMissions'], [
+      {'category': 'data_entry', 'count': 12},
+      {'category': 'event', 'count': 9},
+    ]);
+    expect((senami['review'] as Map)['author'], 'Cabinet Hounkpè');
+    final ganiou = candidates.firstWhere((c) => c['workerId'] == 'u3');
+    expect(ganiou['isExpert'], isFalse);
+    expect(ganiou['review'], isNull);
+
+    // Une affectation payée compte dans sa catégorie (m21 : « other »).
+    await api.post('/assignments/m21/validate');
+    final done = (await api.get('/missions/m21/candidates') as List).single;
+    expect(done['doneMissions'], [
+      {'category': 'data_entry', 'count': 12},
+      {'category': 'event', 'count': 9},
+      {'category': 'other', 'count': 1},
+    ]);
+  });
 }

@@ -58,12 +58,21 @@ class ValiderTravailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final missionProvider = posterMissionProvider(missionId);
     final candidatesProvider = missionCandidatesProvider(missionId);
+    final missionValue = ref.watch(missionProvider);
+    final candidatesValue = ref.watch(candidatesProvider);
+    final found =
+        missionValue.hasValue &&
+        (candidatesValue.value?.any((x) => x.assignmentId == assignmentId) ??
+            false);
     return Scaffold(
+      // Barre de retour tant que l'écran n'a pas ses données (chargement,
+      // erreur, introuvable) ; sinon l'en-tête de l'écran porte le retour.
+      appBar: found ? null : AppBar(),
       body: AsyncValueView(
-        value: ref.watch(missionProvider),
+        value: missionValue,
         onRetry: () => ref.invalidate(missionProvider),
         data: (mission) => AsyncValueView(
-          value: ref.watch(candidatesProvider),
+          value: candidatesValue,
           onRetry: () => ref.invalidate(candidatesProvider),
           data: (all) {
             final c = all
@@ -84,6 +93,7 @@ class ValiderTravailScreen extends ConsumerWidget {
     Candidate c,
   ) {
     final colors = Theme.of(context).colorScheme;
+    final busy = ref.watch(annonceurActionsProvider).isLoading;
     final amount = mission.amountPerSlot;
     final canValidate = c.attendance == AttendanceStatus.finished;
     final arrived = c.arrivedAt;
@@ -312,7 +322,7 @@ class ValiderTravailScreen extends ConsumerWidget {
                       backgroundColor: _green,
                       foregroundColor: AppColors.white,
                     ),
-                    onPressed: canValidate
+                    onPressed: canValidate && !busy
                         ? () => _validate(context, ref, c, amount)
                         : null,
                     child: Text(

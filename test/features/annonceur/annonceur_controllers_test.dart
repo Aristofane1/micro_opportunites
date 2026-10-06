@@ -2,8 +2,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/mission_draft.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
@@ -93,5 +96,59 @@ void main() {
       (validated as Success<Candidate>).value.attendance,
       AttendanceStatus.validated,
     );
+  });
+
+  test('un candidat sans profil ne casse pas la liste des candidats', () async {
+    final container = createTestContainer(session: null);
+    final api = container.read(apiClientProvider);
+    await api.post(
+      '/auth/signup',
+      body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
+    );
+    await api.post('/me/role', body: {'role': 'worker'});
+    await api.post(
+      '/missions/m20/applications',
+      body: {'message': 'Je débute, très motivé.'},
+    );
+    await api.post(
+      '/auth/login',
+      body: {'email': 'annonceur@demo.bj', 'password': 'demo123'},
+    );
+
+    final candidates = await container.read(
+      missionCandidatesProvider('m20').future,
+    );
+    expect(candidates, hasLength(3));
+    final fresh = candidates.last;
+    expect(fresh.memberSince, fixedNow);
+    expect(fresh.pitch, 'Je débute, très motivé.');
+    expect(fresh.isNew, isTrue);
+    expect(fresh.isExpert, isFalse);
+    expect(fresh.review, isNull);
+  });
+
+  test('C10 : expert, missions réalisées et dernier avis', () async {
+    final container = createTestContainer(session: 'u10');
+    final candidates = await container.read(
+      missionCandidatesProvider('m20').future,
+    );
+    final senami = candidates.firstWhere((c) => c.name == 'Sènami O.');
+    expect(senami.isExpert, isTrue);
+    expect(senami.doneMissions.map((d) => (d.category, d.count)), [
+      (MissionCategory.dataEntry, 12),
+      (MissionCategory.event, 9),
+    ]);
+    expect(senami.review?.author, 'Cabinet Hounkpè');
+  });
+
+  test('montant à bloquer à l’heure : arrondi par place, × places', () {
+    const draft = MissionDraft(
+      payAmount: 1001,
+      payUnit: PayUnit.hourly,
+      durationMinutes: 90,
+      slotsTotal: 3,
+    );
+    // Serveur : (1001 × 90 / 60).round() = 1502 par place.
+    expect(draft.totalToBlock, 1502 * 3);
   });
 }

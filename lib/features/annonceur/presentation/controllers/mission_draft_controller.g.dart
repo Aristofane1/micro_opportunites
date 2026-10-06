@@ -42,7 +42,7 @@ final class MissionDraftControllerProvider
 }
 
 String _$missionDraftControllerHash() =>
-    r'71cd93dd3091c0b80490cb8828b4e19fe7624291';
+    r'be804f475709b88cba2cab855c363226fb0911d6';
 
 abstract class _$MissionDraftController extends $Notifier<MissionDraft> {
   MissionDraft build();

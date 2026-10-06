@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 
 part 'candidate.freezed.dart';
 
@@ -14,6 +15,31 @@ enum AttendanceStatus {
   contested, // l'annonceur a contesté le travail
 }
 
+/// « Événement × 9 »
+class DoneMission {
+  const DoneMission(this.category, this.count);
+  final MissionCategory category;
+  final int count;
+}
+
+class CandidateReview {
+  const CandidateReview({
+    required this.author,
+    required this.stars,
+    required this.text,
+    required this.punctuality,
+    required this.quality,
+    required this.communication,
+  });
+
+  final String author;
+  final int stars;
+  final String text;
+  final int punctuality;
+  final int quality;
+  final int communication;
+}
+
 @freezed
 abstract class Candidate with _$Candidate {
   const Candidate._();
@@ -22,15 +48,18 @@ abstract class Candidate with _$Candidate {
     required String id, // identifiant de la candidature
     required String name, // « Sènami O. »
     required String city,
-    required DateTime memberSince,
+    DateTime? memberSince, // null pour un compte sans profil
     required String pitch, // la présentation du candidat
     required String skills,
     @Default(false) bool verified,
+    @Default(false) bool isExpert,
     double? rating,
     @Default(0) int reviewsCount,
     @Default(0) int missionsCount,
     int? reliability, // en pourcentage
     @Default(0) int absences,
+    @Default([]) List<DoneMission> doneMissions,
+    CandidateReview? review,
     @Default(CandidateStatus.pending) CandidateStatus status,
     @Default(AttendanceStatus.notArrived) AttendanceStatus attendance,
     String? assignmentId,

@@ -119,10 +119,33 @@ Json posterMissionJson(FakeDatabase db, Json mission) {
   };
 }
 
-/// Candidat vu par l'annonceur : profil, statut et présence.
+/// Missions réalisées par catégorie : celles du profil, plus une par
+/// affectation payée de ce travailleur (catégorie de la mission).
+List<Json> _doneMissions(FakeDatabase db, String workerId, Json profile) {
+  final counts = <String, int>{
+    for (final d in (profile['doneMissions'] as List?) ?? const [])
+      (d as Json)['category'] as String: d['count'] as int,
+  };
+  for (final a in db.assignments.values) {
+    if (a['workerId'] != workerId || a['status'] != 'paid') continue;
+    final category = db.missions[a['missionId']]?['category'] as String?;
+    if (category == null) continue;
+    counts[category] = (counts[category] ?? 0) + 1;
+  }
+  return [
+    for (final entry in counts.entries)
+      {'category': entry.key, 'count': entry.value},
+  ];
+}
+
+/// Candidat vu par l'annonceur : profil, statut et présence. Un compte
+/// créé dans l'app n'a pas encore de profil : valeurs par défaut.
 Json candidateJson(FakeDatabase db, Json application) {
-  final worker = db.users[application['workerId']]!;
+  final workerId = application['workerId'] as String;
+  final worker = db.users[workerId]!;
   final profile = (worker['worker'] as Json?) ?? const <String, dynamic>{};
+  final rating = (profile['rating'] as num?)?.toDouble();
+  final missionsCount = profile['missionsCount'] as int? ?? 0;
   final assignment = db.assignments[application['assignmentId']];
   final status = switch (application['status']) {
     'pending' || 'pending_sync' => 'pending',
@@ -139,16 +162,19 @@ Json candidateJson(FakeDatabase db, Json application) {
   };
   return {
     'id': application['id'],
-    'workerId': application['workerId'],
-    'name': '${worker['firstName']} ${worker['lastName']}',
-    'city': worker['city'],
-    'memberSince': profile['memberSince'],
-    'pitch': profile['pitch'],
+    'workerId': workerId,
+    'name': '${worker['firstName'] ?? ''} ${worker['lastName'] ?? ''}'.trim(),
+    'city': worker['city'] ?? '',
+    'memberSince': profile['memberSince'] ?? worker['createdAt'],
+    'pitch': profile['pitch'] ?? application['message'] ?? '',
     'skills': profile['skills'] ?? const <String>[],
     'verified': profile['verified'] ?? false,
-    'rating': profile['rating'],
+    'isExpert': rating != null && rating >= 4.8 && missionsCount >= 20,
+    'rating': rating,
     'reviewsCount': profile['reviewsCount'] ?? 0,
-    'missionsCount': profile['missionsCount'] ?? 0,
+    'missionsCount': missionsCount,
+    'doneMissions': _doneMissions(db, workerId, profile),
+    'review': profile['lastReview'],
     'reliability': profile['reliability'],
     'absences': profile['absences'] ?? 0,
     'status': status,

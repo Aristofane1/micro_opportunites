@@ -37,7 +37,8 @@ abstract class MissionDraft with _$MissionDraft {
     final amount = payAmount ?? 0;
     return switch (payUnit) {
       PayUnit.flat => amount * slotsTotal,
-      PayUnit.hourly => (amount * durationMinutes * slotsTotal / 60).round(),
+      // Même calcul que le serveur : montant d'une place arrondi, × places
+      PayUnit.hourly => (amount * durationMinutes / 60).round() * slotsTotal,
       PayUnit.daily => amount * slotsTotal, // 1 jour par personne (hypothèse)
     };
   }

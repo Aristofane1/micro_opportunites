@@ -44,6 +44,18 @@ FakeDatabase seedDatabase(DateTime now, {String? sessionUserId = 'u1'}) {
       'pitch': 'Ponctuel, à l’aise avec le public.',
       'memberSince': t.ago(const Duration(days: 300)),
       'verified': true,
+      'doneMissions': [
+        {'category': 'flyers', 'count': 6},
+        {'category': 'computer', 'count': 4},
+      ],
+      'lastReview': {
+        'author': 'Boutique Lumière',
+        'stars': 5,
+        'text': 'Ponctuel et efficace, flyers tous distribués.',
+        'punctuality': 5,
+        'quality': 5,
+        'communication': 4,
+      },
     },
     'firstName': 'Rodrigue',
     'lastName': 'K.',
@@ -82,6 +94,18 @@ FakeDatabase seedDatabase(DateTime now, {String? sessionUserId = 'u1'}) {
       'pitch': 'Expérience en saisie et accueil.',
       'memberSince': t.ago(const Duration(days: 420)),
       'verified': true,
+      'doneMissions': [
+        {'category': 'data_entry', 'count': 12},
+        {'category': 'event', 'count': 9},
+      ],
+      'lastReview': {
+        'author': 'Cabinet Hounkpè',
+        'stars': 5,
+        'text': 'Saisie rapide et sans erreur, très à l’aise à l’accueil.',
+        'punctuality': 5,
+        'quality': 5,
+        'communication': 5,
+      },
     },
   };
   db.users['u3'] = {

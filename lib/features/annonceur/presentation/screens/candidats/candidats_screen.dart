@@ -66,12 +66,17 @@ class _CandidatsScreenState extends ConsumerState<CandidatsScreen> {
   Widget build(BuildContext context) {
     final missionProvider = posterMissionProvider(widget.missionId);
     final candidatesProvider = missionCandidatesProvider(widget.missionId);
+    final mission = ref.watch(missionProvider);
+    final candidates = ref.watch(candidatesProvider);
     return Scaffold(
+      // Barre de retour tant que l'écran n'a pas ses données (chargement,
+      // erreur) ; sinon l'en-tête de l'écran porte le retour.
+      appBar: mission.hasValue && candidates.hasValue ? null : AppBar(),
       body: AsyncValueView(
-        value: ref.watch(missionProvider),
+        value: mission,
         onRetry: () => ref.invalidate(missionProvider),
         data: (mission) => AsyncValueView(
-          value: ref.watch(candidatesProvider),
+          value: candidates,
           onRetry: () => ref.invalidate(candidatesProvider),
           data: (all) => _buildList(context, mission, all),
         ),
@@ -97,6 +102,7 @@ class _CandidatsScreenState extends ConsumerState<CandidatsScreen> {
         .toList();
     final items = _showRetained ? retained : _sorted(pending);
     final free = mission.slotsFree;
+    final busy = ref.watch(annonceurActionsProvider).isLoading;
 
     return SafeArea(
       child: Column(
@@ -193,6 +199,7 @@ class _CandidatsScreenState extends ConsumerState<CandidatsScreen> {
                             onTap: () => context.push(
                               PosterPaths.candidate(widget.missionId, c.id),
                             ),
+                            busy: busy,
                             onRefuse: () => _refuse(c),
                             onRetain: _showRetained ? null : () => _retain(c),
                             statusLabel: _showRetained
