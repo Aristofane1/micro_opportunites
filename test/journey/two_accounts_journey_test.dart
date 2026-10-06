@@ -115,6 +115,11 @@ void main() {
 
     // 5. L'annonceur valide et paie.
     await login('annonceur@demo.bj');
+    await _tapText(tester, 'Paiements');
+    expect(
+      tester.widget<Text>(find.byKey(const Key('wallet.balance'))).data,
+      formatFcfa(200000),
+    );
     await _tapText(tester, 'Mes missions');
     await _tapText(tester, 'Travail à valider');
     await _tap(
@@ -125,7 +130,10 @@ void main() {
       ),
     );
     await _tapText(tester, 'Paiements');
-    expect(find.text(formatFcfa(195000)), findsWidgets);
+    expect(
+      tester.widget<Text>(find.byKey(const Key('wallet.balance'))).data,
+      formatFcfa(195000),
+    );
     await logout('Mes missions');
 
     // 6. L'exécutant voit la ligne versée.
@@ -134,7 +142,9 @@ void main() {
     final row = find.ancestor(
       of: find.text('Aide déménagement'),
       matching: find.byWidgetPredicate(
-        (w) => w.runtimeType.toString() == '_EarningRow',
+        (w) =>
+            w.key is ValueKey<String> &&
+            (w.key! as ValueKey<String>).value.startsWith('earning.'),
       ),
     );
     expect(row, findsOneWidget);

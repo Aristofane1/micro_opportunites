@@ -81,7 +81,7 @@ class _BalanceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget line(String label, int amount) => Row(
+    Widget line(String label, int amount, {Key? amountKey}) => Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: AppTypography.label),
@@ -89,7 +89,11 @@ class _BalanceCard extends StatelessWidget {
         Flexible(
           child: FittedBox(
             fit: BoxFit.scaleDown,
-            child: Text(formatFcfa(amount), style: AppTypography.amount),
+            child: Text(
+              formatFcfa(amount),
+              key: amountKey,
+              style: AppTypography.amount,
+            ),
           ),
         ),
       ],
@@ -97,7 +101,7 @@ class _BalanceCard extends StatelessWidget {
     return InfoCard(
       child: Column(
         children: [
-          line('Solde', wallet.balance),
+          line('Solde', wallet.balance, amountKey: const Key('wallet.balance')),
           const SizedBox(height: AppSpacing.sm),
           line('Disponible', wallet.available),
         ],

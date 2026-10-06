@@ -99,6 +99,7 @@ class EarningsPage extends ConsumerWidget {
             const SizedBox(height: 10),
             for (final line in summary.lines) ...[
               _EarningRow(
+                key: Key('earning.${line.id}'),
                 line: line,
                 onTap: line.payoutId == null
                     ? null
@@ -162,7 +163,7 @@ class _TotalTile extends StatelessWidget {
 }
 
 class _EarningRow extends StatelessWidget {
-  const _EarningRow({required this.line, required this.onTap});
+  const _EarningRow({super.key, required this.line, required this.onTap});
 
   final EarningLine line;
   final VoidCallback? onTap;
