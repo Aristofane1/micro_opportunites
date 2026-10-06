@@ -151,4 +151,52 @@ void main() {
     // Serveur : (1001 × 90 / 60).round() = 1502 par place.
     expect(draft.totalToBlock, 1502 * 3);
   });
+
+  group('date limite par défaut du brouillon', () {
+    // Horloge locale : mardi 29 sept. 2026, 9 h.
+    final now = DateTime(2026, 9, 29, 9);
+
+    MissionDraftController controller() => createTestContainer(
+      session: 'u10',
+      clock: () => now,
+    ).read(missionDraftControllerProvider.notifier);
+
+    test('la veille à 18 h', () {
+      final draft = controller()..updateDate(DateTime(2026, 10, 1));
+      expect(draft.state.startAt, DateTime(2026, 10, 1, 8));
+      expect(draft.state.applyDeadline, DateTime(2026, 9, 30, 18));
+    });
+
+    test('mission du jour : 1 h avant le début', () {
+      final draft = controller()
+        ..updateDate(DateTime(2026, 9, 29))
+        ..updateTime(15, 0);
+      expect(draft.state.applyDeadline, DateTime(2026, 9, 29, 14));
+    });
+
+    test('jamais dans le passé : à choisir', () {
+      final draft = controller()
+        ..updateDate(DateTime(2026, 9, 29))
+        ..updateTime(9, 30);
+      expect(draft.state.applyDeadline, isNull);
+    });
+
+    test('recalculée quand la date change, sauf si elle a été choisie', () {
+      final draft = controller()
+        ..updateDate(DateTime(2026, 9, 29))
+        ..updateTime(15, 0)
+        ..updateDate(DateTime(2026, 10, 2));
+      expect(draft.state.applyDeadline, DateTime(2026, 10, 1, 18));
+      draft
+        ..updateApplyDeadline(DateTime(2026, 9, 30, 12))
+        ..updateDate(DateTime(2026, 10, 5));
+      expect(draft.state.applyDeadline, DateTime(2026, 9, 30, 12));
+    });
+
+    test('heure sans date : lendemain selon l’horloge injectée', () {
+      final draft = controller()..updateTime(10, 0);
+      expect(draft.state.startAt, DateTime(2026, 9, 30, 10));
+      expect(draft.state.applyDeadline, DateTime(2026, 9, 29, 18));
+    });
+  });
 }

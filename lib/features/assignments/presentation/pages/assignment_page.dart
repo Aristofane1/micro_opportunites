@@ -32,7 +32,9 @@ class AssignmentPage extends ConsumerWidget {
         AssignmentStatus.cancelled => Padding(
           padding: const EdgeInsets.all(AppSpacing.screen),
           child: EmptyState(
-            title: 'Vous vous êtes désisté de cette mission',
+            title: value.cancelledByPoster
+                ? 'Mission annulée par l’annonceur'
+                : 'Vous vous êtes désisté de cette mission',
             actionLabel: 'Mes candidatures',
             onAction: () => context.go(WorkerPaths.applications),
           ),

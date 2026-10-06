@@ -6,7 +6,11 @@ import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_toast.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 import 'package:micro_opportunites/features/auth/presentation/controllers/auth_controller.dart';
+import 'package:micro_opportunites/features/auth/presentation/controllers/entry_draft_controller.dart';
+import 'package:micro_opportunites/features/missions/presentation/controllers/mission_filters_controller.dart';
 import 'package:micro_opportunites/app/role/role_switcher.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
 import 'package:micro_opportunites/core/ui/widgets/coming_soon.dart';
@@ -24,9 +28,24 @@ class RoleHeader extends ConsumerWidget {
       case Err(:final failure):
         showAppToast(context, failure.message);
       case Success():
-        ref.read(activeRoleProvider.notifier).switchTo(ActiveRole.worker);
+        ScaffoldMessenger.of(context).clearSnackBars();
+        // Naviguer d'abord : changer de rôle avant ferait passer la
+        // redirection par l'accueil de l'autre profil.
         context.go(EntryPaths.email);
+        ref.read(activeRoleProvider.notifier).switchTo(ActiveRole.worker);
+        _resetLocalState(ref);
     }
+  }
+
+  /// Oublie ce que le compte précédent avait saisi sur cet appareil ;
+  /// l'écran e-mail s'ouvre en mode connexion.
+  void _resetLocalState(WidgetRef ref) {
+    ref
+      ..invalidate(missionDraftControllerProvider)
+      ..invalidate(missionFiltersControllerProvider)
+      ..invalidate(lastPublishedProvider)
+      ..invalidate(entryDraftControllerProvider);
+    ref.read(entryDraftControllerProvider.notifier).setCreatingAccount(false);
   }
 
   @override

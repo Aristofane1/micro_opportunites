@@ -3,6 +3,7 @@ import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
 import 'package:micro_opportunites/dev/fake_api/seed.dart';
+import 'package:micro_opportunites/dev/fake_api/settlement.dart';
 
 import '../../helpers/test_clock.dart';
 
@@ -46,6 +47,19 @@ Map<String, Object?> draft({
   'slots': slots,
   'applyDeadline': fixedNow.add(const Duration(days: 1)).toIso8601String(),
 };
+
+/// [email] postule à [missionId] ; l'annonceur le retient ; il confirme.
+/// Renvoie la candidature confirmée.
+Future<Map> confirmedOn(String missionId, String email) async {
+  await loginAs(email);
+  final application =
+      await api.post('/missions/$missionId/applications', body: {'message': ''})
+          as Map;
+  await loginAs('annonceur@demo.bj');
+  await api.post('/applications/${application['id']}/offer');
+  await loginAs(email);
+  return await api.post('/applications/${application['id']}/confirm') as Map;
+}
 
 int balance() => api.db.wallets['u10']!['balance'] as int;
 
@@ -358,5 +372,143 @@ void main() {
       {'category': 'event', 'count': 9},
       {'category': 'other', 'count': 1},
     ]);
+  });
+
+  test(
+    'annulation par l’annonceur : affectation et candidature annulées côté exécutant',
+    () async {
+      await loginAs('annonceur@demo.bj');
+      final mission = await api.post('/missions', body: draft()) as Map;
+      final id = mission['id'] as String;
+      final confirmed = await confirmedOn(id, 'executant@demo.bj');
+
+      await loginAs('annonceur@demo.bj');
+      await api.post('/missions/$id/cancel');
+      final e = await error(api.post('/missions/$id/cancel'));
+      expect(
+        (e.statusCode, e.message),
+        (409, 'Cette mission est déjà annulée.'),
+      );
+
+      await loginAs('executant@demo.bj');
+      final applications = await api.get('/me/applications') as List;
+      final application = applications.firstWhere(
+        (a) => a['id'] == confirmed['id'],
+      );
+      expect(application['status'], 'cancelled');
+      final assignment =
+          await api.get('/assignments/${confirmed['assignmentId']}') as Map;
+      expect(assignment['status'], 'cancelled');
+      expect(assignment['cancelledBy'], 'poster');
+    },
+  );
+
+  test('désistement : l’affectation garde cancelledBy = worker', () async {
+    await loginAs('executant@demo.bj');
+    await api.post('/assignments/as1/withdraw');
+    final assignment = await api.get('/assignments/as1') as Map;
+    expect(assignment['cancelledBy'], 'worker');
+  });
+
+  test(
+    'mission complète : hors Explorer et carte, candidatures en attente refusées',
+    () async {
+      await loginAs('annonceur@demo.bj');
+      final mission = await api.post('/missions', body: draft(slots: 1)) as Map;
+      final id = mission['id'] as String;
+      await loginAs('executant2@demo.bj');
+      final other =
+          await api.post('/missions/$id/applications', body: {'message': ''})
+              as Map;
+
+      await loginAs('executant@demo.bj');
+      Future<List> exploreIds() async =>
+          ((await api.get('/missions', query: {'km': '20'}) as Map)['items']
+                  as List)
+              .map((m) => m['id'])
+              .toList();
+      Future<int> calaviCount() async =>
+          ((await api.get('/missions/cities') as Map)['items'] as List)
+                  .cast<Map>()
+                  .firstWhere((c) => c['city'] == 'Abomey-Calavi')['count']
+              as int;
+      expect(await exploreIds(), contains(id));
+      final countBefore = await calaviCount();
+
+      await confirmedOn(id, 'executant@demo.bj');
+      expect(await exploreIds(), isNot(contains(id)));
+      expect(await calaviCount(), countBefore - 1);
+      expect(api.db.applications[other['id']]!['status'], 'rejected');
+    },
+  );
+
+  test(
+    'mission à l’heure : l’exécutant voit le montant par personne partout',
+    () async {
+      await loginAs('annonceur@demo.bj');
+      final mission =
+          await api.post(
+                '/missions',
+                body: draft(pay: 1000, slots: 1, payUnit: 'hourly'),
+              )
+              as Map;
+      final id = mission['id'] as String;
+
+      await loginAs('executant@demo.bj');
+      final explore = await api.get('/missions', query: {'km': '20'}) as Map;
+      final listed = (explore['items'] as List).firstWhere(
+        (m) => m['id'] == id,
+      );
+      expect((listed['pay'] as Map)['amount'], 3000);
+      final detail = await api.get('/missions/$id') as Map;
+      expect((detail['pay'] as Map)['amount'], 3000);
+      final filtered =
+          await api.get('/missions', query: {'km': '20', 'min': '2000'}) as Map;
+      expect((filtered['items'] as List).map((m) => m['id']), contains(id));
+
+      final confirmed = await confirmedOn(id, 'executant@demo.bj');
+      final applications = await api.get('/me/applications') as List;
+      expect(
+        (applications.firstWhere((a) => a['id'] == confirmed['id'])['mission']
+            as Map)['payAmount'],
+        3000,
+      );
+      final assignmentId = confirmed['assignmentId'];
+      final assignment = await api.get('/assignments/$assignmentId') as Map;
+      expect(assignment['payAmount'], 3000);
+
+      await api.post(
+        '/assignments/$assignmentId/check-in',
+        body: {'lat': 6.4491, 'lng': 2.3560},
+      );
+      final submitted =
+          await api.post(
+                '/assignments/$assignmentId/check-out',
+                body: {'note': 'Fait', 'photos': <String>[]},
+              )
+              as Map;
+      expect(
+        DateTime.parse(submitted['autoValidateAt'] as String),
+        fixedNow.add(autoPayDelay),
+      );
+    },
+  );
+
+  test('date limite de candidature passée ou après le début → 422', () async {
+    await loginAs('annonceur@demo.bj');
+    const message =
+        'La date limite de candidature doit être avant le début et dans le futur.';
+    for (final deadline in [
+      fixedNow.subtract(const Duration(hours: 1)),
+      fixedNow.add(const Duration(days: 3)),
+    ]) {
+      final e = await error(
+        api.post(
+          '/missions',
+          body: {...draft(), 'applyDeadline': deadline.toIso8601String()},
+        ),
+      );
+      expect((e.statusCode, e.message), (422, message));
+    }
   });
 }

@@ -170,4 +170,42 @@ void main() {
     expect(find.text(formatFcfa(180000)), findsOneWidget);
     expect(find.text('Accueil au salon de l’artisanat'), findsOneWidget);
   });
+
+  Future<void> manage(WidgetTester tester, String id, {String? status}) =>
+      pumpWorkerApp(
+        tester,
+        session: 'u10',
+        role: ActiveRole.poster,
+        initialLocation: PosterPaths.missionManage(id),
+        beforePump: status == null
+            ? null
+            : (container) =>
+                  (container.read(apiClientProvider) as FakeApiClient)
+                          .db
+                          .missions[id]!['status'] =
+                      status,
+      );
+
+  testWidgets('C05 : « Annuler la mission » sur une mission publiée', (
+    tester,
+  ) async {
+    await manage(tester, 'm20');
+    expect(find.text('Annuler la mission'), findsOneWidget);
+  });
+
+  testWidgets('C05 : pas d’annulation une fois la mission commencée', (
+    tester,
+  ) async {
+    await manage(tester, 'm21');
+    expect(find.text('Tri de vêtements pour une vente'), findsOneWidget);
+    expect(find.text('Annuler la mission'), findsNothing);
+  });
+
+  testWidgets('C05 : pas d’annulation d’une mission déjà annulée', (
+    tester,
+  ) async {
+    await manage(tester, 'm20', status: 'cancelled');
+    expect(find.text('Accueil au salon de l’artisanat'), findsOneWidget);
+    expect(find.text('Annuler la mission'), findsNothing);
+  });
 }

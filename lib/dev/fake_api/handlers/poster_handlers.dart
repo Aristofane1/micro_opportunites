@@ -231,6 +231,13 @@ Object? publishMission(FakeDatabase db, FakeRequest request) {
   final lat = asDouble(body['lat']);
   final lng = asDouble(body['lng']);
   final deadline = DateTime.tryParse(body['applyDeadline'] as String? ?? '');
+  if (deadline != null &&
+      (!deadline.isAfter(request.now) || !deadline.isBefore(startAt))) {
+    throw const ApiException(
+      422,
+      'La date limite de candidature doit être avant le début et dans le futur.',
+    );
+  }
   final id = db.newId('m');
   db.missions[id] = {
     'id': id,
@@ -358,6 +365,9 @@ Object? contestAssignment(FakeDatabase db, FakeRequest request) {
 Object? cancelMission(FakeDatabase db, FakeRequest request) {
   final mission = _ownMission(db, request.params['id']);
   final id = mission['id'] as String;
+  if (mission['status'] == 'cancelled') {
+    throw const ApiException(409, 'Cette mission est déjà annulée.');
+  }
   final started = db.assignments.values.any(
     (a) =>
         a['missionId'] == id &&
@@ -379,6 +389,9 @@ Object? cancelMission(FakeDatabase db, FakeRequest request) {
     (a) => a['missionId'] == id && a['status'] == 'confirmed',
   )) {
     a['status'] = 'cancelled';
+    a['cancelledBy'] = 'poster';
+    final application = db.applications[a['applicationId']];
+    if (application != null) application['status'] = 'cancelled';
   }
   for (final a in _applicationsOf(db, id).where(
     (a) => const {'pending', 'pending_sync', 'offered'}.contains(a['status']),

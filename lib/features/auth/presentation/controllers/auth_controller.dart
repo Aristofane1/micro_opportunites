@@ -29,13 +29,9 @@ class AuthActions extends _$AuthActions {
   Future<Result<Account>> signup(String email, String password) =>
       _run(() => _repository.signup(email: email, password: password));
 
-  Future<Result<void>> logout() async {
-    final result = await _run(_repository.logout);
-    if (result.isSuccess && ref.mounted) {
-      ref.invalidate(entryDraftControllerProvider);
-    }
-    return result;
-  }
+  /// Le nettoyage de l'état local (brouillons, filtres…) est fait par
+  /// l'en-tête de l'app, qui connaît toutes les fonctionnalités.
+  Future<Result<void>> logout() => _run(_repository.logout);
 
   Future<Result<UserProfile>> saveProfile({
     required String firstName,

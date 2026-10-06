@@ -16,6 +16,6 @@ enum MissionStatus {
   bool get isActive =>
       this == published || this == selected || this == inProgress;
 
-  /// Missions affichées dans l'onglet « Passées »
+  /// Missions affichées dans l'onglet « Terminées »
   bool get isPast => this == completed || this == cancelled;
 }

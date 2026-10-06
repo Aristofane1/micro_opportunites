@@ -7,6 +7,7 @@ import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/core/formatting/dates.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
+import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/status_chip.dart';
@@ -200,17 +201,22 @@ class GererMissionScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-
-            SizedBox(
-              width: double.infinity,
-              height: 52,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(foregroundColor: colors.error),
-                onPressed: () => context.push(PosterPaths.cancel(mission.id)),
-                child: const Text('Annuler la mission'),
+            // Annulable tant que personne n'a commencé.
+            if (mission.status == MissionStatus.published ||
+                mission.status == MissionStatus.selected) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                height: 52,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: colors.error,
+                  ),
+                  onPressed: () => context.push(PosterPaths.cancel(mission.id)),
+                  child: const Text('Annuler la mission'),
+                ),
               ),
-            ),
+            ],
           ],
         ),
       ),

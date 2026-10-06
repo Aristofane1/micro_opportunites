@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
+import 'package:micro_opportunites/core/routing/worker_paths.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_button.dart';
 import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
 
@@ -119,16 +120,18 @@ void main() {
   testWidgets('B05 : mission complète → bouton « Complet » désactivé', (
     tester,
   ) async {
+    // Une mission complète ne figure plus dans Explorer ; sa fiche reste
+    // accessible par lien direct.
     await pumpWorkerApp(
       tester,
+      initialLocation: WorkerPaths.missionDetail('m1'),
       beforePump: (container) =>
           (container.read(apiClientProvider) as FakeApiClient)
                   .db
                   .missions['m1']!['slotsFree'] =
               0,
     );
-    await tester.tap(find.text('Distribution de flyers au carrefour'));
-    await tester.pumpAndSettle();
+    expect(find.text('Distribution de flyers au carrefour'), findsWidgets);
     expect(find.text('Postuler'), findsNothing);
     final button = find.widgetWithText(AppButton, 'Complet');
     expect(button, findsOneWidget);

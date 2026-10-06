@@ -116,6 +116,16 @@ Object? confirmOffer(FakeDatabase db, FakeRequest request) {
   application['status'] = 'confirmed';
   application['assignmentId'] = assignmentId;
   mission['slotsFree'] = ((mission['slotsFree'] as int) - 1).clamp(0, 999);
+  // Mission complète : les autres candidatures en attente sont closes.
+  if ((mission['slotsFree'] as int) <= 0) {
+    for (final other in db.applications.values.where(
+      (a) =>
+          a['missionId'] == mission['id'] &&
+          const {'pending', 'pending_sync'}.contains(a['status']),
+    )) {
+      other['status'] = 'rejected';
+    }
+  }
   return applicationJson(db, application);
 }
 

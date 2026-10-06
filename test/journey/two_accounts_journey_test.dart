@@ -29,11 +29,18 @@ void main() {
       size: const Size(1000, 1600),
     );
 
+    var firstLogin = true;
     Future<void> login(String email) async {
-      // Laisse partir les messages éphémères de la session précédente.
-      await tester.pump(const Duration(seconds: 6));
       await tester.pumpAndSettle();
-      await _tapText(tester, 'J’ai déjà un compte');
+      // Au premier lancement l'écran propose la création de compte ; après
+      // une déconnexion il s'ouvre directement en mode connexion.
+      if (firstLogin) {
+        await _tapText(tester, 'J’ai déjà un compte');
+        firstLogin = false;
+      } else {
+        expect(find.text('Créer un compte'), findsOneWidget);
+        expect(find.byType(SnackBar), findsNothing);
+      }
       await tester.enterText(find.byKey(const Key('email.field')), email);
       await tester.enterText(
         find.byKey(const Key('password.field')),

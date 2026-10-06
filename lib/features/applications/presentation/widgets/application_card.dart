@@ -99,6 +99,13 @@ class ApplicationCard extends StatelessWidget {
         const StatusBadge(MissionStatusKind.expired),
         null,
       ),
+      ApplicationStatus.cancelled => (
+        const StatusBadge(
+          MissionStatusKind.cancelled,
+          label: 'Annulée par l’annonceur',
+        ),
+        null,
+      ),
     };
     final subtitle = switch (status) {
       ApplicationStatus.confirmed =>
