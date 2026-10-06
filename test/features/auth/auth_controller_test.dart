@@ -10,39 +10,41 @@ import '../../helpers/pump_worker_app.dart';
 import '../../helpers/test_clock.dart';
 
 void main() {
-  test('demande de code : code de démo et numéro masqué', () async {
-    final container = createTestContainer();
+  test('connexion correcte : compte annonceur avec son rôle', () async {
+    final container = createTestContainer(session: null);
     final result = await container
         .read(authActionsProvider.notifier)
-        .requestCode('+22997123456');
-    final verification = (result as Success<PhoneVerification>).value;
-    expect(verification.demoCode, '12345');
-    expect(verification.maskedPhone, '+229 •• •• •• 56');
-    expect(
-      container.read(entryDraftControllerProvider).verification,
-      verification,
-    );
-  }, skip: 'réécrit en Task 3');
+        .login('annonceur@demo.bj', 'demo123');
+    final account = (result as Success<Account>).value;
+    expect(account.role, 'poster');
+    expect(account.email, 'annonceur@demo.bj');
+  });
 
-  test('numéro trop court refusé', () async {
-    final container = createTestContainer();
+  test('mauvais mot de passe refusé', () async {
+    final container = createTestContainer(session: null);
     final result = await container
         .read(authActionsProvider.notifier)
-        .requestCode('+2291');
+        .login('annonceur@demo.bj', 'mauvais');
     expect(
       (result as Err).failure,
-      const ValidationFailure('Numéro de téléphone invalide.'),
+      const ValidationFailure('E-mail ou mot de passe incorrect.'),
     );
-  }, skip: 'réécrit en Task 3');
+  });
 
-  test('Review focus : mauvais code puis bon code', () async {
-    final container = createTestContainer();
+  test('inscription puis profil : le prénom est celui du profil', () async {
+    final container = createTestContainer(session: null);
     final actions = container.read(authActionsProvider.notifier);
-    await actions.requestCode('+22997123456');
-    final wrong = await actions.verifyCode('00000');
-    expect((wrong as Err).failure, const ValidationFailure('Code incorrect.'));
-    expect(await actions.verifyCode('12345'), isA<Success<void>>());
-  }, skip: 'réécrit en Task 3');
+    final signed = await actions.signup('awa@demo.bj', 'secret1');
+    expect((signed as Success<Account>).value.role, isNull);
+    await actions.saveProfile(
+      firstName: 'Awa',
+      lastName: 'Dossou',
+      birthDate: DateTime.utc(2000, 1, 1),
+      acceptTerms: true,
+      acceptNewsletter: false,
+    );
+    expect((await container.read(currentUserProvider.future)).firstName, 'Awa');
+  });
 
   test(
     'Review focus : profil refusé sans conditions ou trop jeune, puis accepté',

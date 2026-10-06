@@ -1,5 +1,4 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:micro_opportunites/features/auth/domain/entities/auth_entities.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'entry_draft_controller.freezed.dart';
@@ -9,8 +8,7 @@ part 'entry_draft_controller.g.dart';
 @freezed
 abstract class EntryDraft with _$EntryDraft {
   const factory EntryDraft({
-    String? phone,
-    PhoneVerification? verification,
+    @Default(true) bool creatingAccount,
     @Default('id_card') String documentType,
     @Default('BJ') String countryCode,
     @Default(false) bool frontCaptured,
@@ -23,8 +21,8 @@ class EntryDraftController extends _$EntryDraftController {
   @override
   EntryDraft build() => const EntryDraft();
 
-  void setVerification(String phone, PhoneVerification verification) =>
-      state = state.copyWith(phone: phone, verification: verification);
+  void setCreatingAccount(bool value) =>
+      state = state.copyWith(creatingAccount: value);
 
   void setDocument(String documentType, String countryCode) =>
       state = state.copyWith(

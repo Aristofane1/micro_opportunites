@@ -47,7 +47,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  onPressed: () => context.go(EntryPaths.phone),
+                  onPressed: () => context.go(EntryPaths.email),
                   child: const Text('Passer'),
                 ),
               ),
@@ -124,7 +124,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                       curve: Curves.easeInOut,
                     );
                   } else {
-                    context.go(EntryPaths.phone);
+                    context.go(EntryPaths.email);
                   }
                 },
                 child: Text(

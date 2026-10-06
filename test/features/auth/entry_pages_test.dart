@@ -5,26 +5,50 @@ import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import '../../helpers/pump_worker_app.dart';
 
 void main() {
-  testWidgets('Review focus : « Envoyer le code » sans numéro', (tester) async {
-    await pumpWorkerApp(tester, initialLocation: EntryPaths.phone);
-    await tester.tap(find.text('Envoyer le code'));
+  testWidgets('A05 : e-mail vide → message, pas de navigation', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      initialLocation: EntryPaths.email,
+      session: null,
+    );
+    await tester.tap(find.text('Créer mon compte'));
     await tester.pumpAndSettle();
-    expect(find.text('Saisissez votre numéro.'), findsOneWidget);
-    expect(find.text('Entrez le code reçu'), findsNothing);
+    expect(find.text('Saisissez votre e-mail.'), findsOneWidget);
   });
 
-  testWidgets('Review focus : mauvais code SMS', (tester) async {
-    await pumpWorkerApp(tester, initialLocation: EntryPaths.phone);
-    await tester.enterText(find.byType(TextField).first, '97123456');
-    await tester.tap(find.text('Envoyer le code'));
+  testWidgets('A05 : connexion annonceur → Mes missions', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      initialLocation: EntryPaths.email,
+      session: null,
+    );
+    await tester.tap(find.text('J’ai déjà un compte'));
     await tester.pumpAndSettle();
-    expect(find.text('Code de démonstration : 12345'), findsOneWidget);
-    for (var i = 0; i < 5; i++) {
-      await tester.enterText(find.byKey(Key('otp.digit.$i')), '0');
-    }
-    await tester.tap(find.text('Valider'));
+    await tester.enterText(
+      find.byKey(const Key('email.field')),
+      'annonceur@demo.bj',
+    );
+    await tester.enterText(find.byKey(const Key('password.field')), 'demo123');
+    await tester.tap(find.text('Me connecter'));
     await tester.pumpAndSettle();
-    expect(find.text('Code incorrect.'), findsOneWidget);
-    expect(find.text('Entrez le code reçu'), findsOneWidget);
-  }, skip: true); // skip : réécrit en Task 3
+    expect(find.text('Mes missions'), findsWidgets);
+  });
+
+  testWidgets('A05 : mauvais mot de passe', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      initialLocation: EntryPaths.email,
+      session: null,
+    );
+    await tester.tap(find.text('J’ai déjà un compte'));
+    await tester.pumpAndSettle();
+    await tester.enterText(
+      find.byKey(const Key('email.field')),
+      'annonceur@demo.bj',
+    );
+    await tester.enterText(find.byKey(const Key('password.field')), 'mauvais');
+    await tester.tap(find.text('Me connecter'));
+    await tester.pumpAndSettle();
+    expect(find.text('E-mail ou mot de passe incorrect.'), findsOneWidget);
+  });
 }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
+import 'package:micro_opportunites/features/account/data/account_providers.dart';
 import 'package:micro_opportunites/core/theme/app_palette.dart';
 import 'package:micro_opportunites/core/theme/app_radius.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
@@ -40,8 +41,10 @@ class RoleSwitcher extends ConsumerWidget {
                     color: role == ActiveRole.worker
                         ? palette.worker
                         : palette.poster,
-                    onTap: () =>
-                        ref.read(activeRoleProvider.notifier).switchTo(role),
+                    onTap: () {
+                      ref.read(activeRoleProvider.notifier).switchTo(role);
+                      ref.read(accountRepositoryProvider).saveRole(role.name);
+                    },
                   ),
               ],
             ),

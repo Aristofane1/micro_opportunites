@@ -6,21 +6,23 @@ part of 'auth_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_PhoneVerificationModel _$PhoneVerificationModelFromJson(
-  Map<String, dynamic> json,
-) => _PhoneVerificationModel(
-  requestId: json['requestId'] as String,
-  demoCode: json['demoCode'] as String,
-  maskedPhone: json['maskedPhone'] as String,
-);
+_AccountModel _$AccountModelFromJson(Map<String, dynamic> json) =>
+    _AccountModel(
+      id: json['id'] as String,
+      email: json['email'] as String,
+      firstName: json['firstName'] as String,
+      city: json['city'] as String,
+      role: json['role'] as String?,
+    );
 
-Map<String, dynamic> _$PhoneVerificationModelToJson(
-  _PhoneVerificationModel instance,
-) => <String, dynamic>{
-  'requestId': instance.requestId,
-  'demoCode': instance.demoCode,
-  'maskedPhone': instance.maskedPhone,
-};
+Map<String, dynamic> _$AccountModelToJson(_AccountModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'email': instance.email,
+      'firstName': instance.firstName,
+      'city': instance.city,
+      'role': instance.role,
+    };
 
 _UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
     _UserProfileModel(

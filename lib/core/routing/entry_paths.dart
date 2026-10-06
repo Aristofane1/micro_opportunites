@@ -2,8 +2,7 @@
 abstract final class EntryPaths {
   static const splash = '/';
   static const onboarding = '/onboarding';
-  static const phone = '/auth/phone';
-  static const otp = '/auth/otp';
+  static const email = '/auth/email';
   static const profile = '/auth/profile';
   static const idDocument = '/auth/id-document';
   static const cameraFront = '/auth/camera-front';

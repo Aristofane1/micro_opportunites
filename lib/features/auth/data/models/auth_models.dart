@@ -5,22 +5,26 @@ part 'auth_models.freezed.dart';
 part 'auth_models.g.dart';
 
 @freezed
-abstract class PhoneVerificationModel with _$PhoneVerificationModel {
-  const PhoneVerificationModel._();
+abstract class AccountModel with _$AccountModel {
+  const AccountModel._();
 
-  const factory PhoneVerificationModel({
-    required String requestId,
-    required String demoCode,
-    required String maskedPhone,
-  }) = _PhoneVerificationModel;
+  const factory AccountModel({
+    required String id,
+    required String email,
+    required String firstName,
+    required String city,
+    String? role,
+  }) = _AccountModel;
 
-  factory PhoneVerificationModel.fromJson(Map<String, dynamic> json) =>
-      _$PhoneVerificationModelFromJson(json);
+  factory AccountModel.fromJson(Map<String, dynamic> json) =>
+      _$AccountModelFromJson(json);
 
-  PhoneVerification toEntity() => PhoneVerification(
-    requestId: requestId,
-    demoCode: demoCode,
-    maskedPhone: maskedPhone,
+  Account toEntity() => Account(
+    id: id,
+    email: email,
+    firstName: firstName,
+    city: city,
+    role: role,
   );
 }
 

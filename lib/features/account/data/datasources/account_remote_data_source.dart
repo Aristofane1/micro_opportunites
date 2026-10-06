@@ -8,4 +8,10 @@ class AccountRemoteDataSource {
 
   Future<CurrentUserModel> fetchMe() async =>
       CurrentUserModel.fromJson(await _api.get('/me') as Map<String, dynamic>);
+
+  Future<CurrentUserModel> saveRole(String role) async =>
+      CurrentUserModel.fromJson(
+        await _api.post('/me/role', body: {'role': role})
+            as Map<String, dynamic>,
+      );
 }

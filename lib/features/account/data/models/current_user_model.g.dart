@@ -11,6 +11,7 @@ _CurrentUserModel _$CurrentUserModelFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       firstName: json['firstName'] as String,
       city: json['city'] as String,
+      role: json['role'] as String?,
     );
 
 Map<String, dynamic> _$CurrentUserModelToJson(_CurrentUserModel instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$CurrentUserModelToJson(_CurrentUserModel instance) =>
       'id': instance.id,
       'firstName': instance.firstName,
       'city': instance.city,
+      'role': instance.role,
     };

@@ -12,4 +12,8 @@ class AccountRepositoryImpl implements AccountRepository {
   @override
   Future<Result<CurrentUser>> fetchCurrentUser() =>
       guardResult(() async => (await _remote.fetchMe()).toEntity());
+
+  @override
+  Future<Result<CurrentUser>> saveRole(String role) =>
+      guardResult(() async => (await _remote.saveRole(role)).toEntity());
 }

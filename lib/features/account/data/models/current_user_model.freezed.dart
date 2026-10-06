@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CurrentUserModel {
 
- String get id; String get firstName; String get city;
+ String get id; String get firstName; String get city; String? get role;
 /// Create a copy of CurrentUserModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CurrentUserModelCopyWith<CurrentUserModel> get copyWith => _$CurrentUserModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,city);
+int get hashCode => Object.hash(runtimeType,id,firstName,city,role);
 
 @override
 String toString() {
-  return 'CurrentUserModel(id: $id, firstName: $firstName, city: $city)';
+  return 'CurrentUserModel(id: $id, firstName: $firstName, city: $city, role: $role)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CurrentUserModelCopyWith<$Res>  {
   factory $CurrentUserModelCopyWith(CurrentUserModel value, $Res Function(CurrentUserModel) _then) = _$CurrentUserModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String firstName, String city
+ String id, String firstName, String city, String? role
 });
 
 
@@ -65,12 +65,13 @@ class _$CurrentUserModelCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUserModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? city = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String firstName,  String city)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String firstName,  String city,  String? role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CurrentUserModel() when $default != null:
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String firstName,  String city)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String firstName,  String city,  String? role)  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUserModel():
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String firstName,  String city)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String firstName,  String city,  String? role)?  $default,) {final _that = this;
 switch (_that) {
 case _CurrentUserModel() when $default != null:
-return $default(_that.id,_that.firstName,_that.city);case _:
+return $default(_that.id,_that.firstName,_that.city,_that.role);case _:
   return null;
 
 }
@@ -211,12 +212,13 @@ return $default(_that.id,_that.firstName,_that.city);case _:
 @JsonSerializable()
 
 class _CurrentUserModel extends CurrentUserModel {
-  const _CurrentUserModel({required this.id, required this.firstName, required this.city}): super._();
+  const _CurrentUserModel({required this.id, required this.firstName, required this.city, this.role}): super._();
   factory _CurrentUserModel.fromJson(Map<String, dynamic> json) => _$CurrentUserModelFromJson(json);
 
 @override final  String id;
 @override final  String firstName;
 @override final  String city;
+@override final  String? role;
 
 /// Create a copy of CurrentUserModel
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUserModel&&(identical(other.id, id) || other.id == id)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,firstName,city);
+int get hashCode => Object.hash(runtimeType,id,firstName,city,role);
 
 @override
 String toString() {
-  return 'CurrentUserModel(id: $id, firstName: $firstName, city: $city)';
+  return 'CurrentUserModel(id: $id, firstName: $firstName, city: $city, role: $role)';
 }
 
 
@@ -251,7 +253,7 @@ abstract mixin class _$CurrentUserModelCopyWith<$Res> implements $CurrentUserMod
   factory _$CurrentUserModelCopyWith(_CurrentUserModel value, $Res Function(_CurrentUserModel) _then) = __$CurrentUserModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String firstName, String city
+ String id, String firstName, String city, String? role
 });
 
 
@@ -268,12 +270,13 @@ class __$CurrentUserModelCopyWithImpl<$Res>
 
 /// Create a copy of CurrentUserModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? city = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
   return _then(_CurrentUserModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
 as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
-as String,
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

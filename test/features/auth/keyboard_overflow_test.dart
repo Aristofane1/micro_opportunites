@@ -10,7 +10,8 @@ void main() {
   ) async {
     await pumpWorkerApp(
       tester,
-      initialLocation: EntryPaths.phone,
+      initialLocation: EntryPaths.email,
+      session: null,
       size: const Size(360, 640),
     );
     tester.view.viewInsets = const FakeViewPadding(bottom: 300);
@@ -18,7 +19,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    final button = find.text('Envoyer le code');
+    final button = find.text('Créer mon compte');
     await tester.ensureVisible(button);
     await tester.pumpAndSettle();
     await tester.tap(button);

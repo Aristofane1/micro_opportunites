@@ -138,17 +138,18 @@ Object? submitKyc(FakeDatabase db, FakeRequest request) {
   if (body['frontCaptured'] != true || body['backCaptured'] != true) {
     throw const ApiException(422, 'Photographiez le recto et le verso.');
   }
-  db.kyc = {
+  final kyc = <String, dynamic>{
     'status': 'pending',
     'documentType': body['documentType'],
     'countryCode': body['countryCode'],
     'submittedAt': request.now.toUtc().toIso8601String(),
   };
-  return {'status': 'pending', 'submittedAt': db.kyc!['submittedAt']};
+  db.currentUser['kyc'] = kyc;
+  return {'status': 'pending', 'submittedAt': kyc['submittedAt']};
 }
 
 Object? getKyc(FakeDatabase db, FakeRequest request) {
-  final kyc = db.kyc;
+  final kyc = db.currentUser['kyc'] as Json?;
   return kyc == null
       ? {'status': 'none', 'submittedAt': null}
       : {'status': kyc['status'], 'submittedAt': kyc['submittedAt']};

@@ -3,12 +3,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'auth_entities.freezed.dart';
 
 @freezed
-abstract class PhoneVerification with _$PhoneVerification {
-  const factory PhoneVerification({
-    required String requestId,
-    required String demoCode,
-    required String maskedPhone,
-  }) = _PhoneVerification;
+abstract class Account with _$Account {
+  const factory Account({
+    required String id,
+    required String email,
+    required String firstName,
+    required String city,
+    String? role,
+  }) = _Account;
 }
 
 @freezed

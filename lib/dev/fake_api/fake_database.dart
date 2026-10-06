@@ -20,9 +20,6 @@ class FakeDatabase {
   /// Portefeuille de chaque annonceur : solde et montants bloqués par mission.
   final wallets = <String, Json>{};
 
-  /// Dossier KYC de l'utilisateur courant (null tant que rien n'est soumis).
-  Json? kyc;
-
   int _sequence = 100;
 
   String get currentUserId =>

@@ -10,14 +10,23 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remote;
 
   @override
-  Future<Result<PhoneVerification>> requestCode(String phone) =>
-      guardResult(() async => (await _remote.requestCode(phone)).toEntity());
+  Future<Result<Account>> login({
+    required String email,
+    required String password,
+  }) => guardResult(
+    () async => (await _remote.login(email, password)).toEntity(),
+  );
 
   @override
-  Future<Result<void>> verifyCode({
-    required String requestId,
-    required String code,
-  }) => guardResult(() => _remote.verifyCode(requestId, code));
+  Future<Result<Account>> signup({
+    required String email,
+    required String password,
+  }) => guardResult(
+    () async => (await _remote.signup(email, password)).toEntity(),
+  );
+
+  @override
+  Future<Result<void>> logout() => guardResult(_remote.logout);
 
   @override
   Future<Result<UserProfile>> saveProfile({

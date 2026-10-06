@@ -4,7 +4,11 @@ import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/app/role/role_switcher.dart';
 
-import '../../helpers/pump_app.dart';
+import 'package:flutter/material.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
+import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+
+import '../../helpers/pump_worker_app.dart';
 
 void main() {
   test('rôle initial Exécutant, bascule vers Annonceur', () {
@@ -30,16 +34,28 @@ void main() {
     expect(notifications, 0);
   });
 
-  testWidgets('RoleSwitcher change le rôle actif', (tester) async {
-    await tester.pumpThemed(const RoleSwitcher());
-    final container = ProviderScope.containerOf(
-      tester.element(find.byType(RoleSwitcher)),
+  testWidgets('RoleSwitcher change le rôle actif et l’enregistre', (
+    tester,
+  ) async {
+    final container = createTestContainer();
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: const MaterialApp(home: Scaffold(body: RoleSwitcher())),
+      ),
     );
     await tester.tap(find.text('Annonceur'));
     await tester.pump();
     expect(container.read(activeRoleProvider), ActiveRole.poster);
+    await tester.pumpAndSettle();
+    expect(
+      (container.read(apiClientProvider) as FakeApiClient)
+          .db
+          .currentUser['role'],
+      'poster',
+    );
     await tester.tap(find.text('Annonceur'));
-    await tester.pump();
+    await tester.pumpAndSettle();
     expect(container.read(activeRoleProvider), ActiveRole.poster);
   });
 }

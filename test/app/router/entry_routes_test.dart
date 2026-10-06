@@ -1,8 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/app/role/active_role_provider.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
+import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 
@@ -56,4 +59,17 @@ void main() {
       );
     },
   );
+
+  testWidgets('Se déconnecter → écran e-mail ; route protégée refusée', (
+    tester,
+  ) async {
+    final container = await pumpWorkerApp(tester);
+    await tester.tap(find.byKey(const Key('roleHeader.signOut')));
+    await tester.pumpAndSettle();
+    expect(find.text('Votre e-mail'), findsOneWidget);
+    expect(
+      (container.read(apiClientProvider) as FakeApiClient).db.sessionUserId,
+      isNull,
+    );
+  });
 }

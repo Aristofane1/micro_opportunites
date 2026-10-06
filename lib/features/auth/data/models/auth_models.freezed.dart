@@ -13,42 +13,42 @@ part of 'auth_models.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$PhoneVerificationModel {
+mixin _$AccountModel {
 
- String get requestId; String get demoCode; String get maskedPhone;
-/// Create a copy of PhoneVerificationModel
+ String get id; String get email; String get firstName; String get city; String? get role;
+/// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$PhoneVerificationModelCopyWith<PhoneVerificationModel> get copyWith => _$PhoneVerificationModelCopyWithImpl<PhoneVerificationModel>(this as PhoneVerificationModel, _$identity);
+$AccountModelCopyWith<AccountModel> get copyWith => _$AccountModelCopyWithImpl<AccountModel>(this as AccountModel, _$identity);
 
-  /// Serializes this PhoneVerificationModel to a JSON map.
+  /// Serializes this AccountModel to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PhoneVerificationModel&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.demoCode, demoCode) || other.demoCode == demoCode)&&(identical(other.maskedPhone, maskedPhone) || other.maskedPhone == maskedPhone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AccountModel&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,demoCode,maskedPhone);
+int get hashCode => Object.hash(runtimeType,id,email,firstName,city,role);
 
 @override
 String toString() {
-  return 'PhoneVerificationModel(requestId: $requestId, demoCode: $demoCode, maskedPhone: $maskedPhone)';
+  return 'AccountModel(id: $id, email: $email, firstName: $firstName, city: $city, role: $role)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $PhoneVerificationModelCopyWith<$Res>  {
-  factory $PhoneVerificationModelCopyWith(PhoneVerificationModel value, $Res Function(PhoneVerificationModel) _then) = _$PhoneVerificationModelCopyWithImpl;
+abstract mixin class $AccountModelCopyWith<$Res>  {
+  factory $AccountModelCopyWith(AccountModel value, $Res Function(AccountModel) _then) = _$AccountModelCopyWithImpl;
 @useResult
 $Res call({
- String requestId, String demoCode, String maskedPhone
+ String id, String email, String firstName, String city, String? role
 });
 
 
@@ -56,29 +56,31 @@ $Res call({
 
 }
 /// @nodoc
-class _$PhoneVerificationModelCopyWithImpl<$Res>
-    implements $PhoneVerificationModelCopyWith<$Res> {
-  _$PhoneVerificationModelCopyWithImpl(this._self, this._then);
+class _$AccountModelCopyWithImpl<$Res>
+    implements $AccountModelCopyWith<$Res> {
+  _$AccountModelCopyWithImpl(this._self, this._then);
 
-  final PhoneVerificationModel _self;
-  final $Res Function(PhoneVerificationModel) _then;
+  final AccountModel _self;
+  final $Res Function(AccountModel) _then;
 
-/// Create a copy of PhoneVerificationModel
+/// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? requestId = null,Object? demoCode = null,Object? maskedPhone = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? email = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
   return _then(_self.copyWith(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,demoCode: null == demoCode ? _self.demoCode : demoCode // ignore: cast_nullable_to_non_nullable
-as String,maskedPhone: null == maskedPhone ? _self.maskedPhone : maskedPhone // ignore: cast_nullable_to_non_nullable
-as String,
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
 }
 
 
-/// Adds pattern-matching-related methods to [PhoneVerificationModel].
-extension PhoneVerificationModelPatterns on PhoneVerificationModel {
+/// Adds pattern-matching-related methods to [AccountModel].
+extension AccountModelPatterns on AccountModel {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -91,10 +93,10 @@ extension PhoneVerificationModelPatterns on PhoneVerificationModel {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PhoneVerificationModel value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AccountModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _PhoneVerificationModel() when $default != null:
+case _AccountModel() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -113,10 +115,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PhoneVerificationModel value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AccountModel value)  $default,){
 final _that = this;
 switch (_that) {
-case _PhoneVerificationModel():
+case _AccountModel():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -134,10 +136,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PhoneVerificationModel value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AccountModel value)?  $default,){
 final _that = this;
 switch (_that) {
-case _PhoneVerificationModel() when $default != null:
+case _AccountModel() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String requestId,  String demoCode,  String maskedPhone)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String email,  String firstName,  String city,  String? role)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _PhoneVerificationModel() when $default != null:
-return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
+case _AccountModel() when $default != null:
+return $default(_that.id,_that.email,_that.firstName,_that.city,_that.role);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String requestId,  String demoCode,  String maskedPhone)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String email,  String firstName,  String city,  String? role)  $default,) {final _that = this;
 switch (_that) {
-case _PhoneVerificationModel():
-return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
+case _AccountModel():
+return $default(_that.id,_that.email,_that.firstName,_that.city,_that.role);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String requestId,  String demoCode,  String maskedPhone)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String email,  String firstName,  String city,  String? role)?  $default,) {final _that = this;
 switch (_that) {
-case _PhoneVerificationModel() when $default != null:
-return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
+case _AccountModel() when $default != null:
+return $default(_that.id,_that.email,_that.firstName,_that.city,_that.role);case _:
   return null;
 
 }
@@ -210,48 +212,50 @@ return $default(_that.requestId,_that.demoCode,_that.maskedPhone);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _PhoneVerificationModel extends PhoneVerificationModel {
-  const _PhoneVerificationModel({required this.requestId, required this.demoCode, required this.maskedPhone}): super._();
-  factory _PhoneVerificationModel.fromJson(Map<String, dynamic> json) => _$PhoneVerificationModelFromJson(json);
+class _AccountModel extends AccountModel {
+  const _AccountModel({required this.id, required this.email, required this.firstName, required this.city, this.role}): super._();
+  factory _AccountModel.fromJson(Map<String, dynamic> json) => _$AccountModelFromJson(json);
 
-@override final  String requestId;
-@override final  String demoCode;
-@override final  String maskedPhone;
+@override final  String id;
+@override final  String email;
+@override final  String firstName;
+@override final  String city;
+@override final  String? role;
 
-/// Create a copy of PhoneVerificationModel
+/// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$PhoneVerificationModelCopyWith<_PhoneVerificationModel> get copyWith => __$PhoneVerificationModelCopyWithImpl<_PhoneVerificationModel>(this, _$identity);
+_$AccountModelCopyWith<_AccountModel> get copyWith => __$AccountModelCopyWithImpl<_AccountModel>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$PhoneVerificationModelToJson(this, );
+  return _$AccountModelToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PhoneVerificationModel&&(identical(other.requestId, requestId) || other.requestId == requestId)&&(identical(other.demoCode, demoCode) || other.demoCode == demoCode)&&(identical(other.maskedPhone, maskedPhone) || other.maskedPhone == maskedPhone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AccountModel&&(identical(other.id, id) || other.id == id)&&(identical(other.email, email) || other.email == email)&&(identical(other.firstName, firstName) || other.firstName == firstName)&&(identical(other.city, city) || other.city == city)&&(identical(other.role, role) || other.role == role));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,requestId,demoCode,maskedPhone);
+int get hashCode => Object.hash(runtimeType,id,email,firstName,city,role);
 
 @override
 String toString() {
-  return 'PhoneVerificationModel(requestId: $requestId, demoCode: $demoCode, maskedPhone: $maskedPhone)';
+  return 'AccountModel(id: $id, email: $email, firstName: $firstName, city: $city, role: $role)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$PhoneVerificationModelCopyWith<$Res> implements $PhoneVerificationModelCopyWith<$Res> {
-  factory _$PhoneVerificationModelCopyWith(_PhoneVerificationModel value, $Res Function(_PhoneVerificationModel) _then) = __$PhoneVerificationModelCopyWithImpl;
+abstract mixin class _$AccountModelCopyWith<$Res> implements $AccountModelCopyWith<$Res> {
+  factory _$AccountModelCopyWith(_AccountModel value, $Res Function(_AccountModel) _then) = __$AccountModelCopyWithImpl;
 @override @useResult
 $Res call({
- String requestId, String demoCode, String maskedPhone
+ String id, String email, String firstName, String city, String? role
 });
 
 
@@ -259,21 +263,23 @@ $Res call({
 
 }
 /// @nodoc
-class __$PhoneVerificationModelCopyWithImpl<$Res>
-    implements _$PhoneVerificationModelCopyWith<$Res> {
-  __$PhoneVerificationModelCopyWithImpl(this._self, this._then);
+class __$AccountModelCopyWithImpl<$Res>
+    implements _$AccountModelCopyWith<$Res> {
+  __$AccountModelCopyWithImpl(this._self, this._then);
 
-  final _PhoneVerificationModel _self;
-  final $Res Function(_PhoneVerificationModel) _then;
+  final _AccountModel _self;
+  final $Res Function(_AccountModel) _then;
 
-/// Create a copy of PhoneVerificationModel
+/// Create a copy of AccountModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? requestId = null,Object? demoCode = null,Object? maskedPhone = null,}) {
-  return _then(_PhoneVerificationModel(
-requestId: null == requestId ? _self.requestId : requestId // ignore: cast_nullable_to_non_nullable
-as String,demoCode: null == demoCode ? _self.demoCode : demoCode // ignore: cast_nullable_to_non_nullable
-as String,maskedPhone: null == maskedPhone ? _self.maskedPhone : maskedPhone // ignore: cast_nullable_to_non_nullable
-as String,
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? email = null,Object? firstName = null,Object? city = null,Object? role = freezed,}) {
+  return _then(_AccountModel(
+id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String,email: null == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String,firstName: null == firstName ? _self.firstName : firstName // ignore: cast_nullable_to_non_nullable
+as String,city: null == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

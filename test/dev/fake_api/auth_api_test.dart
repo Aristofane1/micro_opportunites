@@ -128,4 +128,28 @@ void main() {
     );
     expect(e.statusCode, 404);
   });
+
+  test('le KYC est propre à chaque compte', () async {
+    final api = client();
+    await api.post(
+      '/auth/login',
+      body: {'email': 'executant@demo.bj', 'password': 'demo123'},
+    );
+    await api.post(
+      '/auth/kyc',
+      body: {
+        'documentType': 'id_card',
+        'countryCode': 'BJ',
+        'frontCaptured': true,
+        'backCaptured': true,
+      },
+    );
+    expect(((await api.get('/auth/kyc')) as Map)['status'], 'pending');
+    await api.post('/auth/logout');
+    await api.post(
+      '/auth/signup',
+      body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
+    );
+    expect(((await api.get('/auth/kyc')) as Map)['status'], 'none');
+  });
 }
