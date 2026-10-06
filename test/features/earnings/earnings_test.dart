@@ -35,5 +35,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Reçu de versement'), findsOneWidget);
     expect(find.text('MO-2026-004812'), findsOneWidget);
+    expect(find.text('Commission'), findsOneWidget);
+    expect(find.text('Aucune (démo)'), findsOneWidget);
   });
 }

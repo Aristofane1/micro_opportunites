@@ -27,6 +27,7 @@ class AssignmentPage extends ConsumerWidget {
         AssignmentStatus.confirmed => ConfirmedView(assignment: value),
         AssignmentStatus.inProgress => InProgressView(assignment: value),
         AssignmentStatus.submitted ||
+        AssignmentStatus.contested ||
         AssignmentStatus.paid => AwaitingValidationView(assignment: value),
         AssignmentStatus.cancelled => Padding(
           padding: const EdgeInsets.all(AppSpacing.screen),

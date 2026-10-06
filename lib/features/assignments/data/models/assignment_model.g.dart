@@ -36,6 +36,7 @@ _AssignmentModel _$AssignmentModelFromJson(Map<String, dynamic> json) =>
               .toList() ??
           const <String>[],
       autoValidateAt: json['autoValidateAt'] as String?,
+      contestReason: json['contestReason'] as String?,
     );
 
 Map<String, dynamic> _$AssignmentModelToJson(_AssignmentModel instance) =>
@@ -64,4 +65,5 @@ Map<String, dynamic> _$AssignmentModelToJson(_AssignmentModel instance) =>
       'note': instance.note,
       'photos': instance.photos,
       'autoValidateAt': instance.autoValidateAt,
+      'contestReason': instance.contestReason,
     };

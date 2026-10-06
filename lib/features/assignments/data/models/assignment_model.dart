@@ -34,6 +34,7 @@ abstract class AssignmentModel with _$AssignmentModel {
     String? note,
     @Default(<String>[]) List<String> photos,
     String? autoValidateAt,
+    String? contestReason,
   }) = _AssignmentModel;
 
   factory AssignmentModel.fromJson(Map<String, dynamic> json) =>
@@ -66,5 +67,6 @@ abstract class AssignmentModel with _$AssignmentModel {
     autoValidateAt: autoValidateAt == null
         ? null
         : DateTime.parse(autoValidateAt!),
+    contestReason: contestReason,
   );
 }

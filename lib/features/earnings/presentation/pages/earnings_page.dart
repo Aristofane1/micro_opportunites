@@ -108,7 +108,7 @@ class EarningsPage extends ConsumerWidget {
             ],
             const SizedBox(height: AppSpacing.xs),
             const Text(
-              'Montants affichés avant commission.',
+              'Aucune commission pendant la démo.',
               style: AppTypography.caption,
             ),
           ],

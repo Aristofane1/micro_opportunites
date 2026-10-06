@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AssignmentModel {
 
- String get id; String get missionId; String get title; String get status; String get startAt; int get durationMin; int get payAmount; String get city; String get district; String get address; String get landmark; double get lat; double get lng; String get briefing; String get posterName; String get payoutOperator; double get distanceKm; int get travelMinutes; String? get checkInAt; int? get checkInDistanceM; String? get checkOutAt; String? get note; List<String> get photos; String? get autoValidateAt;
+ String get id; String get missionId; String get title; String get status; String get startAt; int get durationMin; int get payAmount; String get city; String get district; String get address; String get landmark; double get lat; double get lng; String get briefing; String get posterName; String get payoutOperator; double get distanceKm; int get travelMinutes; String? get checkInAt; int? get checkInDistanceM; String? get checkOutAt; String? get note; List<String> get photos; String? get autoValidateAt; String? get contestReason;
 /// Create a copy of AssignmentModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AssignmentModelCopyWith<AssignmentModel> get copyWith => _$AssignmentModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AssignmentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.missionId, missionId) || other.missionId == missionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.briefing, briefing) || other.briefing == briefing)&&(identical(other.posterName, posterName) || other.posterName == posterName)&&(identical(other.payoutOperator, payoutOperator) || other.payoutOperator == payoutOperator)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.travelMinutes, travelMinutes) || other.travelMinutes == travelMinutes)&&(identical(other.checkInAt, checkInAt) || other.checkInAt == checkInAt)&&(identical(other.checkInDistanceM, checkInDistanceM) || other.checkInDistanceM == checkInDistanceM)&&(identical(other.checkOutAt, checkOutAt) || other.checkOutAt == checkOutAt)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.photos, photos)&&(identical(other.autoValidateAt, autoValidateAt) || other.autoValidateAt == autoValidateAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AssignmentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.missionId, missionId) || other.missionId == missionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.briefing, briefing) || other.briefing == briefing)&&(identical(other.posterName, posterName) || other.posterName == posterName)&&(identical(other.payoutOperator, payoutOperator) || other.payoutOperator == payoutOperator)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.travelMinutes, travelMinutes) || other.travelMinutes == travelMinutes)&&(identical(other.checkInAt, checkInAt) || other.checkInAt == checkInAt)&&(identical(other.checkInDistanceM, checkInDistanceM) || other.checkInDistanceM == checkInDistanceM)&&(identical(other.checkOutAt, checkOutAt) || other.checkOutAt == checkOutAt)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other.photos, photos)&&(identical(other.autoValidateAt, autoValidateAt) || other.autoValidateAt == autoValidateAt)&&(identical(other.contestReason, contestReason) || other.contestReason == contestReason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,missionId,title,status,startAt,durationMin,payAmount,city,district,address,landmark,lat,lng,briefing,posterName,payoutOperator,distanceKm,travelMinutes,checkInAt,checkInDistanceM,checkOutAt,note,const DeepCollectionEquality().hash(photos),autoValidateAt]);
+int get hashCode => Object.hashAll([runtimeType,id,missionId,title,status,startAt,durationMin,payAmount,city,district,address,landmark,lat,lng,briefing,posterName,payoutOperator,distanceKm,travelMinutes,checkInAt,checkInDistanceM,checkOutAt,note,const DeepCollectionEquality().hash(photos),autoValidateAt,contestReason]);
 
 @override
 String toString() {
-  return 'AssignmentModel(id: $id, missionId: $missionId, title: $title, status: $status, startAt: $startAt, durationMin: $durationMin, payAmount: $payAmount, city: $city, district: $district, address: $address, landmark: $landmark, lat: $lat, lng: $lng, briefing: $briefing, posterName: $posterName, payoutOperator: $payoutOperator, distanceKm: $distanceKm, travelMinutes: $travelMinutes, checkInAt: $checkInAt, checkInDistanceM: $checkInDistanceM, checkOutAt: $checkOutAt, note: $note, photos: $photos, autoValidateAt: $autoValidateAt)';
+  return 'AssignmentModel(id: $id, missionId: $missionId, title: $title, status: $status, startAt: $startAt, durationMin: $durationMin, payAmount: $payAmount, city: $city, district: $district, address: $address, landmark: $landmark, lat: $lat, lng: $lng, briefing: $briefing, posterName: $posterName, payoutOperator: $payoutOperator, distanceKm: $distanceKm, travelMinutes: $travelMinutes, checkInAt: $checkInAt, checkInDistanceM: $checkInDistanceM, checkOutAt: $checkOutAt, note: $note, photos: $photos, autoValidateAt: $autoValidateAt, contestReason: $contestReason)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AssignmentModelCopyWith<$Res>  {
   factory $AssignmentModelCopyWith(AssignmentModel value, $Res Function(AssignmentModel) _then) = _$AssignmentModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String missionId, String title, String status, String startAt, int durationMin, int payAmount, String city, String district, String address, String landmark, double lat, double lng, String briefing, String posterName, String payoutOperator, double distanceKm, int travelMinutes, String? checkInAt, int? checkInDistanceM, String? checkOutAt, String? note, List<String> photos, String? autoValidateAt
+ String id, String missionId, String title, String status, String startAt, int durationMin, int payAmount, String city, String district, String address, String landmark, double lat, double lng, String briefing, String posterName, String payoutOperator, double distanceKm, int travelMinutes, String? checkInAt, int? checkInDistanceM, String? checkOutAt, String? note, List<String> photos, String? autoValidateAt, String? contestReason
 });
 
 
@@ -65,7 +65,7 @@ class _$AssignmentModelCopyWithImpl<$Res>
 
 /// Create a copy of AssignmentModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? missionId = null,Object? title = null,Object? status = null,Object? startAt = null,Object? durationMin = null,Object? payAmount = null,Object? city = null,Object? district = null,Object? address = null,Object? landmark = null,Object? lat = null,Object? lng = null,Object? briefing = null,Object? posterName = null,Object? payoutOperator = null,Object? distanceKm = null,Object? travelMinutes = null,Object? checkInAt = freezed,Object? checkInDistanceM = freezed,Object? checkOutAt = freezed,Object? note = freezed,Object? photos = null,Object? autoValidateAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? missionId = null,Object? title = null,Object? status = null,Object? startAt = null,Object? durationMin = null,Object? payAmount = null,Object? city = null,Object? district = null,Object? address = null,Object? landmark = null,Object? lat = null,Object? lng = null,Object? briefing = null,Object? posterName = null,Object? payoutOperator = null,Object? distanceKm = null,Object? travelMinutes = null,Object? checkInAt = freezed,Object? checkInDistanceM = freezed,Object? checkOutAt = freezed,Object? note = freezed,Object? photos = null,Object? autoValidateAt = freezed,Object? contestReason = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,missionId: null == missionId ? _self.missionId : missionId // ignore: cast_nullable_to_non_nullable
@@ -91,6 +91,7 @@ as int?,checkOutAt: freezed == checkOutAt ? _self.checkOutAt : checkOutAt // ign
 as String?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,photos: null == photos ? _self.photos : photos // ignore: cast_nullable_to_non_nullable
 as List<String>,autoValidateAt: freezed == autoValidateAt ? _self.autoValidateAt : autoValidateAt // ignore: cast_nullable_to_non_nullable
+as String?,contestReason: freezed == contestReason ? _self.contestReason : contestReason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -176,10 +177,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt,  String? contestReason)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AssignmentModel() when $default != null:
-return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt);case _:
+return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt,_that.contestReason);case _:
   return orElse();
 
 }
@@ -197,10 +198,10 @@ return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt,  String? contestReason)  $default,) {final _that = this;
 switch (_that) {
 case _AssignmentModel():
-return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt);case _:
+return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt,_that.contestReason);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -217,10 +218,10 @@ return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String missionId,  String title,  String status,  String startAt,  int durationMin,  int payAmount,  String city,  String district,  String address,  String landmark,  double lat,  double lng,  String briefing,  String posterName,  String payoutOperator,  double distanceKm,  int travelMinutes,  String? checkInAt,  int? checkInDistanceM,  String? checkOutAt,  String? note,  List<String> photos,  String? autoValidateAt,  String? contestReason)?  $default,) {final _that = this;
 switch (_that) {
 case _AssignmentModel() when $default != null:
-return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt);case _:
+return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,_that.durationMin,_that.payAmount,_that.city,_that.district,_that.address,_that.landmark,_that.lat,_that.lng,_that.briefing,_that.posterName,_that.payoutOperator,_that.distanceKm,_that.travelMinutes,_that.checkInAt,_that.checkInDistanceM,_that.checkOutAt,_that.note,_that.photos,_that.autoValidateAt,_that.contestReason);case _:
   return null;
 
 }
@@ -232,7 +233,7 @@ return $default(_that.id,_that.missionId,_that.title,_that.status,_that.startAt,
 @JsonSerializable()
 
 class _AssignmentModel extends AssignmentModel {
-  const _AssignmentModel({required this.id, required this.missionId, required this.title, required this.status, required this.startAt, required this.durationMin, required this.payAmount, required this.city, required this.district, required this.address, required this.landmark, required this.lat, required this.lng, required this.briefing, required this.posterName, required this.payoutOperator, required this.distanceKm, required this.travelMinutes, this.checkInAt, this.checkInDistanceM, this.checkOutAt, this.note, final  List<String> photos = const <String>[], this.autoValidateAt}): _photos = photos,super._();
+  const _AssignmentModel({required this.id, required this.missionId, required this.title, required this.status, required this.startAt, required this.durationMin, required this.payAmount, required this.city, required this.district, required this.address, required this.landmark, required this.lat, required this.lng, required this.briefing, required this.posterName, required this.payoutOperator, required this.distanceKm, required this.travelMinutes, this.checkInAt, this.checkInDistanceM, this.checkOutAt, this.note, final  List<String> photos = const <String>[], this.autoValidateAt, this.contestReason}): _photos = photos,super._();
   factory _AssignmentModel.fromJson(Map<String, dynamic> json) => _$AssignmentModelFromJson(json);
 
 @override final  String id;
@@ -265,6 +266,7 @@ class _AssignmentModel extends AssignmentModel {
 }
 
 @override final  String? autoValidateAt;
+@override final  String? contestReason;
 
 /// Create a copy of AssignmentModel
 /// with the given fields replaced by the non-null parameter values.
@@ -279,16 +281,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AssignmentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.missionId, missionId) || other.missionId == missionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.briefing, briefing) || other.briefing == briefing)&&(identical(other.posterName, posterName) || other.posterName == posterName)&&(identical(other.payoutOperator, payoutOperator) || other.payoutOperator == payoutOperator)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.travelMinutes, travelMinutes) || other.travelMinutes == travelMinutes)&&(identical(other.checkInAt, checkInAt) || other.checkInAt == checkInAt)&&(identical(other.checkInDistanceM, checkInDistanceM) || other.checkInDistanceM == checkInDistanceM)&&(identical(other.checkOutAt, checkOutAt) || other.checkOutAt == checkOutAt)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._photos, _photos)&&(identical(other.autoValidateAt, autoValidateAt) || other.autoValidateAt == autoValidateAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AssignmentModel&&(identical(other.id, id) || other.id == id)&&(identical(other.missionId, missionId) || other.missionId == missionId)&&(identical(other.title, title) || other.title == title)&&(identical(other.status, status) || other.status == status)&&(identical(other.startAt, startAt) || other.startAt == startAt)&&(identical(other.durationMin, durationMin) || other.durationMin == durationMin)&&(identical(other.payAmount, payAmount) || other.payAmount == payAmount)&&(identical(other.city, city) || other.city == city)&&(identical(other.district, district) || other.district == district)&&(identical(other.address, address) || other.address == address)&&(identical(other.landmark, landmark) || other.landmark == landmark)&&(identical(other.lat, lat) || other.lat == lat)&&(identical(other.lng, lng) || other.lng == lng)&&(identical(other.briefing, briefing) || other.briefing == briefing)&&(identical(other.posterName, posterName) || other.posterName == posterName)&&(identical(other.payoutOperator, payoutOperator) || other.payoutOperator == payoutOperator)&&(identical(other.distanceKm, distanceKm) || other.distanceKm == distanceKm)&&(identical(other.travelMinutes, travelMinutes) || other.travelMinutes == travelMinutes)&&(identical(other.checkInAt, checkInAt) || other.checkInAt == checkInAt)&&(identical(other.checkInDistanceM, checkInDistanceM) || other.checkInDistanceM == checkInDistanceM)&&(identical(other.checkOutAt, checkOutAt) || other.checkOutAt == checkOutAt)&&(identical(other.note, note) || other.note == note)&&const DeepCollectionEquality().equals(other._photos, _photos)&&(identical(other.autoValidateAt, autoValidateAt) || other.autoValidateAt == autoValidateAt)&&(identical(other.contestReason, contestReason) || other.contestReason == contestReason));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,missionId,title,status,startAt,durationMin,payAmount,city,district,address,landmark,lat,lng,briefing,posterName,payoutOperator,distanceKm,travelMinutes,checkInAt,checkInDistanceM,checkOutAt,note,const DeepCollectionEquality().hash(_photos),autoValidateAt]);
+int get hashCode => Object.hashAll([runtimeType,id,missionId,title,status,startAt,durationMin,payAmount,city,district,address,landmark,lat,lng,briefing,posterName,payoutOperator,distanceKm,travelMinutes,checkInAt,checkInDistanceM,checkOutAt,note,const DeepCollectionEquality().hash(_photos),autoValidateAt,contestReason]);
 
 @override
 String toString() {
-  return 'AssignmentModel(id: $id, missionId: $missionId, title: $title, status: $status, startAt: $startAt, durationMin: $durationMin, payAmount: $payAmount, city: $city, district: $district, address: $address, landmark: $landmark, lat: $lat, lng: $lng, briefing: $briefing, posterName: $posterName, payoutOperator: $payoutOperator, distanceKm: $distanceKm, travelMinutes: $travelMinutes, checkInAt: $checkInAt, checkInDistanceM: $checkInDistanceM, checkOutAt: $checkOutAt, note: $note, photos: $photos, autoValidateAt: $autoValidateAt)';
+  return 'AssignmentModel(id: $id, missionId: $missionId, title: $title, status: $status, startAt: $startAt, durationMin: $durationMin, payAmount: $payAmount, city: $city, district: $district, address: $address, landmark: $landmark, lat: $lat, lng: $lng, briefing: $briefing, posterName: $posterName, payoutOperator: $payoutOperator, distanceKm: $distanceKm, travelMinutes: $travelMinutes, checkInAt: $checkInAt, checkInDistanceM: $checkInDistanceM, checkOutAt: $checkOutAt, note: $note, photos: $photos, autoValidateAt: $autoValidateAt, contestReason: $contestReason)';
 }
 
 
@@ -299,7 +301,7 @@ abstract mixin class _$AssignmentModelCopyWith<$Res> implements $AssignmentModel
   factory _$AssignmentModelCopyWith(_AssignmentModel value, $Res Function(_AssignmentModel) _then) = __$AssignmentModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String missionId, String title, String status, String startAt, int durationMin, int payAmount, String city, String district, String address, String landmark, double lat, double lng, String briefing, String posterName, String payoutOperator, double distanceKm, int travelMinutes, String? checkInAt, int? checkInDistanceM, String? checkOutAt, String? note, List<String> photos, String? autoValidateAt
+ String id, String missionId, String title, String status, String startAt, int durationMin, int payAmount, String city, String district, String address, String landmark, double lat, double lng, String briefing, String posterName, String payoutOperator, double distanceKm, int travelMinutes, String? checkInAt, int? checkInDistanceM, String? checkOutAt, String? note, List<String> photos, String? autoValidateAt, String? contestReason
 });
 
 
@@ -316,7 +318,7 @@ class __$AssignmentModelCopyWithImpl<$Res>
 
 /// Create a copy of AssignmentModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? missionId = null,Object? title = null,Object? status = null,Object? startAt = null,Object? durationMin = null,Object? payAmount = null,Object? city = null,Object? district = null,Object? address = null,Object? landmark = null,Object? lat = null,Object? lng = null,Object? briefing = null,Object? posterName = null,Object? payoutOperator = null,Object? distanceKm = null,Object? travelMinutes = null,Object? checkInAt = freezed,Object? checkInDistanceM = freezed,Object? checkOutAt = freezed,Object? note = freezed,Object? photos = null,Object? autoValidateAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? missionId = null,Object? title = null,Object? status = null,Object? startAt = null,Object? durationMin = null,Object? payAmount = null,Object? city = null,Object? district = null,Object? address = null,Object? landmark = null,Object? lat = null,Object? lng = null,Object? briefing = null,Object? posterName = null,Object? payoutOperator = null,Object? distanceKm = null,Object? travelMinutes = null,Object? checkInAt = freezed,Object? checkInDistanceM = freezed,Object? checkOutAt = freezed,Object? note = freezed,Object? photos = null,Object? autoValidateAt = freezed,Object? contestReason = freezed,}) {
   return _then(_AssignmentModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,missionId: null == missionId ? _self.missionId : missionId // ignore: cast_nullable_to_non_nullable
@@ -342,6 +344,7 @@ as int?,checkOutAt: freezed == checkOutAt ? _self.checkOutAt : checkOutAt // ign
 as String?,note: freezed == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String?,photos: null == photos ? _self._photos : photos // ignore: cast_nullable_to_non_nullable
 as List<String>,autoValidateAt: freezed == autoValidateAt ? _self.autoValidateAt : autoValidateAt // ignore: cast_nullable_to_non_nullable
+as String?,contestReason: freezed == contestReason ? _self.contestReason : contestReason // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
