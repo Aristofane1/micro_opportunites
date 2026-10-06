@@ -6,6 +6,7 @@ import 'package:micro_opportunites/features/annonceur/presentation/controllers/a
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class ProfilCandidatScreen extends ConsumerWidget {
   const ProfilCandidatScreen({
@@ -17,7 +18,7 @@ class ProfilCandidatScreen extends ConsumerWidget {
   final String missionId;
   final String candidateId;
 
-  static const _green = Color(0xFF1F6B4F);
+  static const _green = AppColors.green;
 
   void _retain(BuildContext context, WidgetRef ref, Candidate c) {
     final messenger = ScaffoldMessenger.of(context);
@@ -106,14 +107,14 @@ class ProfilCandidatScreen extends ConsumerWidget {
                                     const _Tag(
                                       'Vérifiée',
                                       icon: Icons.check,
-                                      bg: Color(0xFFDDEEE6),
+                                      bg: AppColors.softGreen,
                                       fg: _green,
                                     ),
                                   if (c.isExpert)
                                     const _Tag(
                                       'Expert',
-                                      bg: Color(0xFF1B1A17),
-                                      fg: Color(0xFFE8B66B),
+                                      bg: AppColors.ink,
+                                      fg: AppColors.ochre,
                                     ),
                                 ],
                               ),
@@ -282,7 +283,7 @@ class ProfilCandidatScreen extends ConsumerWidget {
                         child: FilledButton(
                           style: FilledButton.styleFrom(
                             backgroundColor: _green,
-                            foregroundColor: Colors.white,
+                            foregroundColor: AppColors.white,
                           ),
                           onPressed: () => _retain(context, ref, c),
                           child: Text('Retenir ${c.firstName}'),
@@ -379,7 +380,7 @@ class _DoneChip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 7),
       decoration: BoxDecoration(
-        color: highlighted ? const Color(0xFFDDEEE6) : colors.surface,
+        color: highlighted ? AppColors.softGreen : colors.surface,
         border: highlighted ? null : Border.all(color: colors.outlineVariant),
         borderRadius: BorderRadius.circular(20),
       ),
@@ -388,7 +389,7 @@ class _DoneChip extends StatelessWidget {
         style: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: highlighted ? const Color(0xFF1F6B4F) : colors.onSurface,
+          color: highlighted ? AppColors.green : colors.onSurface,
         ),
       ),
     );

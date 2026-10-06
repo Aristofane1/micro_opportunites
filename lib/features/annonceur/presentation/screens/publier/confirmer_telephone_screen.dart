@@ -3,10 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/published_mission_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class ConfirmerTelephoneScreen extends ConsumerStatefulWidget {
   const ConfirmerTelephoneScreen({super.key});
@@ -61,7 +62,7 @@ class _ConfirmerTelephoneScreenState
           .read(publishedMissionControllerProvider.notifier)
           .payAndPublish();
       if (!mounted) return;
-      context.go(AppRoutes.posterPublishDone);
+      context.go(PosterPaths.publishDone);
     } catch (_) {
       if (!mounted) return;
       setState(() => _loading = false);
@@ -190,7 +191,9 @@ class _ConfirmerTelephoneScreenState
                                 height: 10,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: expired ? colors.error : Colors.amber,
+                                  color: expired
+                                      ? colors.error
+                                      : AppColors.ochre,
                                 ),
                               ),
                               const SizedBox(width: 8),

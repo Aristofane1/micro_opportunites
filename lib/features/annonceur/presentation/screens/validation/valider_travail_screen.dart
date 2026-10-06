@@ -6,6 +6,7 @@ import 'package:micro_opportunites/features/annonceur/presentation/controllers/a
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class ValiderTravailScreen extends ConsumerWidget {
   const ValiderTravailScreen({
@@ -17,7 +18,7 @@ class ValiderTravailScreen extends ConsumerWidget {
   final String missionId;
   final String candidateId;
 
-  static const _green = Color(0xFF1F6B4F);
+  static const _green = AppColors.green;
 
   void _soon(BuildContext context) {
     ScaffoldMessenger.of(
@@ -244,13 +245,15 @@ class ValiderTravailScreen extends ConsumerWidget {
                       Container(
                         padding: const EdgeInsets.all(14),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFBEFE0),
-                          border: Border.all(color: const Color(0xFFE8B66B)),
+                          color: AppColors.softOchre,
+                          border: Border.all(color: AppColors.ochre),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text.rich(
                           TextSpan(
-                            style: const TextStyle(color: Color(0xFF7A4A0A)),
+                            style: const TextStyle(
+                              color: AppColors.bannerOchreText,
+                            ),
                             children: [
                               const TextSpan(text: 'Sans réponse avant '),
                               TextSpan(
@@ -288,7 +291,7 @@ class ValiderTravailScreen extends ConsumerWidget {
                     child: FilledButton(
                       style: FilledButton.styleFrom(
                         backgroundColor: _green,
-                        foregroundColor: Colors.white,
+                        foregroundColor: AppColors.white,
                       ),
                       onPressed: canValidate
                           ? () => _validate(context, ref, c, amount)
@@ -348,7 +351,7 @@ class _ProofLine extends StatelessWidget {
             width: 10,
             height: 10,
             decoration: const BoxDecoration(
-              color: Color(0xFF1F6B4F),
+              color: AppColors.green,
               shape: BoxShape.circle,
             ),
           ),

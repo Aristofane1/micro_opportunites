@@ -3,6 +3,7 @@ import 'package:micro_opportunites/features/annonceur/domain/entities/mission_st
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/status_chip.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class MissionCard extends StatelessWidget {
   const MissionCard({super.key, required this.mission, required this.onTap});
@@ -10,7 +11,7 @@ class MissionCard extends StatelessWidget {
   final MissionSummary mission;
   final VoidCallback onTap;
 
-  static const _green = Color(0xFF1F6B4F);
+  static const _green = AppColors.green;
 
   @override
   Widget build(BuildContext context) {

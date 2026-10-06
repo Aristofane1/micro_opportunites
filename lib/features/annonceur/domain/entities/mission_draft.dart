@@ -2,8 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/pay_unit.dart';
-import 'package:micro_opportunites/features/annonceur/domain/entities/payment_method.dart';
 
 part 'mission_draft.freezed.dart';
 

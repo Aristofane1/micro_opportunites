@@ -6,9 +6,12 @@ import 'package:micro_opportunites/features/annonceur/presentation/widgets/step_
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_quoi_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_ou_screen.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_quand_combien_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/etape_payer_screen.dart';
+
+/// Chemin de l'écran de confirmation (supprimé avec l'étape de confirmation).
+const _confirmPath = '/poster/publish/confirm';
 
 class PublierShellScreen extends ConsumerStatefulWidget {
   const PublierShellScreen({super.key});
@@ -49,7 +52,7 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
     if (_step < _labels.length - 1) {
       setState(() => _step++);
     } else {
-      context.push(AppRoutes.posterPublishConfirm);
+      context.push(_confirmPath);
     }
   }
 
@@ -69,7 +72,7 @@ class _PublierShellScreenState extends ConsumerState<PublierShellScreen> {
       context.pop(); // ouvert depuis l'onglet : on revient
     } else {
       context.go(
-        AppRoutes.posterPublish,
+        PosterPaths.publish,
       ); // ouvert directement : on va à l'onglet Publier
     }
   }

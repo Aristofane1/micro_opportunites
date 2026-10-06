@@ -7,6 +7,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'annonceur_providers.g.dart';
 
+/// Données de démonstration : faux par défaut, activé par le raccourci de dev.
+@Riverpod(keepAlive: true)
+bool annonceurDemoData(Ref ref) => false;
+
 /// Les missions avec leurs compteurs calculés à partir des candidats.
 /// C'est CETTE liste que les écrans doivent lire.
 @Riverpod(keepAlive: true)

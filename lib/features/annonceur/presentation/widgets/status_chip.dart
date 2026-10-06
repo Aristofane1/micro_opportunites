@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class StatusChip extends StatelessWidget {
   const StatusChip(this.status, {super.key});
@@ -11,19 +12,13 @@ class StatusChip extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     // (couleur de fond, couleur du texte)
     final (bg, fg) = switch (status) {
-      MissionStatus.published => (
-        const Color(0xFFDDEEE6),
-        const Color(0xFF1F6B4F),
-      ),
-      MissionStatus.inProgress => (
-        const Color(0xFFE3ECF6),
-        const Color(0xFF2F5D8A),
-      ),
+      MissionStatus.published => (AppColors.softGreen, AppColors.green),
+      MissionStatus.inProgress => (AppColors.softBlue, AppColors.blue),
       MissionStatus.selected => (
-        const Color(0xFFFBEBD3),
-        const Color(0xFF9A5B0C),
+        AppColors.pendingBackground,
+        AppColors.ochreDeep,
       ),
-      MissionStatus.cancelled => (const Color(0xFFF8E1DE), colors.error),
+      MissionStatus.cancelled => (AppColors.softRed, colors.error),
       _ => (colors.surfaceContainerHigh, colors.onSurfaceVariant),
     };
 

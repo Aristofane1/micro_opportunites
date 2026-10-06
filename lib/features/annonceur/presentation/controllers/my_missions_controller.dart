@@ -1,4 +1,4 @@
-import 'package:micro_opportunites/core/dev/dev_start.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_status.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -12,7 +12,8 @@ part 'my_missions_controller.g.dart';
 @Riverpod(keepAlive: true)
 class MyMissionsController extends _$MyMissionsController {
   @override
-  List<MissionSummary> build() => startOnPublish ? _demoMissions() : const [];
+  List<MissionSummary> build() =>
+      ref.watch(annonceurDemoDataProvider) ? _demoMissions() : const [];
 
   void add(MissionSummary mission) => state = [mission, ...state];
 

@@ -1,4 +1,4 @@
-import 'package:micro_opportunites/core/dev/dev_start.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/my_missions_controller.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
@@ -12,7 +12,7 @@ part 'candidates_controller.g.dart';
 class CandidatesController extends _$CandidatesController {
   @override
   Map<String, List<Candidate>> build() =>
-      startOnPublish ? _demoCandidates() : const {};
+      ref.watch(annonceurDemoDataProvider) ? _demoCandidates() : const {};
 
   void _update(
     String missionId,
@@ -165,7 +165,7 @@ Map<String, List<Candidate>> _demoCandidates() {
     ],
     // Mission publiée : candidats à examiner
     'demo-2': [
-      Candidate(
+      const Candidate(
         id: 'so2',
         name: 'Sènami O.',
         city: 'Godomey',
@@ -179,12 +179,12 @@ Map<String, List<Candidate>> _demoCandidates() {
         reviewsCount: 16,
         missionsCount: 18,
         reliability: 99,
-        doneMissions: const [
+        doneMissions: [
           DoneMission(MissionCategory.event, 9),
           DoneMission(MissionCategory.flyers, 5),
           DoneMission(MissionCategory.shopping, 4),
         ],
-        review: const CandidateReview(
+        review: CandidateReview(
           author: 'Boutique Lumière',
           stars: 5,
           text: 'Ponctuelle, très à l\'aise avec les clients.',

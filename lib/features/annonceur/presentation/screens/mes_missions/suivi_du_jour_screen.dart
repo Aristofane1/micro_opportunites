@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/candidate_card.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class SuiviDuJourScreen extends ConsumerWidget {
   const SuiviDuJourScreen({super.key, required this.missionId});
 
   final String missionId;
 
-  static const _green = Color(0xFF1F6B4F);
-  static const _blue = Color(0xFF2F5D8A);
-  static const _amber = Color(0xFF9A5B0C);
+  static const _green = AppColors.green;
+  static const _blue = AppColors.blue;
+  static const _amber = AppColors.ochreDeep;
 
   void _soon(BuildContext context) {
     ScaffoldMessenger.of(
@@ -119,7 +120,7 @@ class SuiviDuJourScreen extends ConsumerWidget {
                   children: [
                     const Text(
                       'Mission en cours',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.white),
                     ),
                     Text(
                       '$arrived / ${workers.length} arrivés',
@@ -127,7 +128,7 @@ class SuiviDuJourScreen extends ConsumerWidget {
                         fontFamily: 'Lora',
                         fontSize: 24,
                         fontWeight: FontWeight.w700,
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                   ],
@@ -201,7 +202,7 @@ class SuiviDuJourScreen extends ConsumerWidget {
                             child: FilledButton(
                               style: FilledButton.styleFrom(
                                 backgroundColor: _green,
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppColors.white,
                               ),
                               onPressed: () => _soon(context),
                               child: const Text('Trouver un remplaçant'),
@@ -253,16 +254,16 @@ class SuiviDuJourScreen extends ConsumerWidget {
       AttendanceStatus.finished => const _StatePill(
         'À valider',
         bg: _blue,
-        fg: Colors.white,
+        fg: AppColors.white,
       ),
       AttendanceStatus.arrived => const _StatePill(
         'En cours',
-        bg: Color(0xFFE3ECF6),
+        bg: AppColors.softBlue,
         fg: _blue,
       ),
       AttendanceStatus.validated => const _StatePill(
         'Payé',
-        bg: Color(0xFFDDEEE6),
+        bg: AppColors.softGreen,
         fg: _green,
       ),
       AttendanceStatus.unconfirmed => OutlinedButton(
@@ -284,10 +285,10 @@ class SuiviDuJourScreen extends ConsumerWidget {
     return InkWell(
       // seul le travail terminé ouvre l'écran de validation
       onTap: c.attendance == AttendanceStatus.finished
-          ? () => context.push(AppRoutes.posterValidate(missionId, c.id))
+          ? () => context.push(PosterPaths.validate(missionId, c.id))
           : null,
       child: Container(
-        color: absent ? const Color(0xFFFDEAE7) : null,
+        color: absent ? AppColors.softRed : null,
         padding: const EdgeInsets.all(14),
         child: Row(
           children: [

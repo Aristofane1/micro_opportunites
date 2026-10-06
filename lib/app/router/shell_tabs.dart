@@ -74,21 +74,25 @@ final posterTabs = <ShellTab>[
     builder: buildPosterMissionsTab,
     routes: posterMissionsTabRoutes,
   ),
-  ShellTab(
+  const ShellTab(
     path: AppRoutes.posterPublish,
     label: 'Publier',
     icon: AppIcons.publish,
     builder: buildPublishTab,
   ),
-  ShellTab(
+  const ShellTab(
     path: AppRoutes.posterPayments,
     label: 'Paiements',
     icon: AppIcons.securePayment,
   ),
-  ShellTab(
+  const ShellTab(
     path: AppRoutes.posterMessages,
     label: 'Messages',
     icon: AppIcons.messages,
   ),
-  ShellTab(path: AppRoutes.posterProfile, label: 'Moi', icon: AppIcons.profile),
+  const ShellTab(
+    path: AppRoutes.posterProfile,
+    label: 'Moi',
+    icon: AppIcons.profile,
+  ),
 ];

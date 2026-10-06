@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
-const _green = Color(0xFF1F6B4F);
+const _green = AppColors.green;
 
 /// Cercle avec les initiales (« SO »).
 class CandidateAvatar extends StatelessWidget {
@@ -23,14 +24,14 @@ class CandidateAvatar extends StatelessWidget {
   Widget build(BuildContext context) {
     final isNew = candidate.isNew;
     final bg = danger
-        ? const Color(0xFFF3D4D0)
+        ? AppColors.softRed
         : isNew
-        ? const Color(0xFFF8E6D4)
-        : const Color(0xFFE3EFE8);
+        ? AppColors.pendingBackground
+        : AppColors.softGreen;
     final fg = danger
-        ? const Color(0xFFB3261E)
+        ? AppColors.red
         : isNew
-        ? const Color(0xFF9A5B0C)
+        ? AppColors.ochreDeep
         : _green;
 
     return Container(
@@ -133,8 +134,8 @@ class CandidateCard extends StatelessWidget {
                   if (c.isExpert)
                     const _Badge(
                       'Expert',
-                      bg: Color(0xFF1B1A17),
-                      fg: Color(0xFFE8B66B),
+                      bg: AppColors.ink,
+                      fg: AppColors.ochre,
                     )
                   else if (c.isNew)
                     _Badge(
@@ -163,7 +164,7 @@ class CandidateCard extends StatelessWidget {
                       child: FilledButton(
                         style: FilledButton.styleFrom(
                           backgroundColor: _green,
-                          foregroundColor: Colors.white,
+                          foregroundColor: AppColors.white,
                         ),
                         onPressed: onRetain,
                         child: const Text('Retenir'),

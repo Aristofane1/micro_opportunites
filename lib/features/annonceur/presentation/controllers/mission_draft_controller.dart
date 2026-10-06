@@ -3,7 +3,7 @@ import 'package:micro_opportunites/features/annonceur/domain/entities/payment_me
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_draft.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
-import 'package:micro_opportunites/core/dev/dev_start.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 
 part 'mission_draft_controller.g.dart';
 
@@ -33,8 +33,9 @@ MissionDraft _buildTestDraft() {
 @Riverpod(keepAlive: true)
 class MissionDraftController extends _$MissionDraftController {
   @override
-  MissionDraft build() =>
-      startOnPublish ? _buildTestDraft() : const MissionDraft();
+  MissionDraft build() => ref.watch(annonceurDemoDataProvider)
+      ? _buildTestDraft()
+      : const MissionDraft();
   // Étape 1 : Quoi ??
   void updateTitle(String value) => state = state.copyWith(title: value);
 

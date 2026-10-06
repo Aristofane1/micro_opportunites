@@ -70,7 +70,7 @@ class EtapePayerScreen extends ConsumerWidget {
                 const SizedBox(height: 12),
                 _Line(_calcLabel(draft), formatFcfa(draft.totalToBlock)),
                 const SizedBox(height: 6),
-                _Line('Frais de service', '[à définir]', muted: true),
+                const _Line('Frais de service', '[à définir]', muted: true),
                 const Divider(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,8 +132,8 @@ class EtapePayerScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text.rich(
-              TextSpan(
-                children: const [
+              const TextSpan(
+                children: [
                   TextSpan(text: 'L\'argent reste '),
                   TextSpan(
                     text: 'bloqué',

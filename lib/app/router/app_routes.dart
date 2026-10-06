@@ -1,4 +1,5 @@
 import 'package:micro_opportunites/app/role/active_role.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
 
 abstract final class AppRoutes {
@@ -11,26 +12,26 @@ abstract final class AppRoutes {
   static const workerMessages = WorkerPaths.messages;
   static const workerProfile = WorkerPaths.profile;
 
-  static const posterMissions = '/poster/missions';
-  static const posterPublish = '/poster/publish';
-  static const posterPayments = '/poster/payments';
-  static const posterMessages = '/poster/messages';
-  static const posterProfile = '/poster/me';
-  static const posterPublishNew = '/poster/publish/new';
+  static const posterMissions = PosterPaths.missions;
+  static const posterPublish = PosterPaths.publish;
+  static const posterPayments = PosterPaths.payments;
+  static const posterMessages = PosterPaths.messages;
+  static const posterProfile = PosterPaths.profile;
+  static const posterPublishNew = PosterPaths.publishNew;
   static const posterPublishConfirm = '/poster/publish/confirm';
-  static const posterPublishDone = '/poster/publish/done';
-  static String posterMissionManage(String id) => '/poster/missions/manage/$id';
+  static const posterPublishDone = PosterPaths.publishDone;
+  static String posterMissionManage(String id) => PosterPaths.missionManage(id);
+  static String posterCandidates(String id) => PosterPaths.candidates(id);
+  static String posterCandidate(String id, String candidateId) =>
+      PosterPaths.candidate(id, candidateId);
+  static String posterToday(String id) => PosterPaths.today(id);
+  static String posterValidate(String id, String candidateId) =>
+      PosterPaths.validate(id, candidateId);
+
   static String homeFor(ActiveRole role) => switch (role) {
     ActiveRole.worker => workerExplore,
     ActiveRole.poster => posterMissions,
   };
-  static String posterCandidates(String id) =>
-      '${posterMissionManage(id)}/candidates';
-  static String posterCandidate(String id, String candidateId) =>
-      '${posterMissionManage(id)}/candidate/$candidateId';
-  static String posterToday(String id) => '${posterMissionManage(id)}/today';
-  static String posterValidate(String id, String candidateId) =>
-      '${posterMissionManage(id)}/validate/$candidateId';
 
   /// Rôle auquel appartient [location], ou null hors des shells.
   static ActiveRole? roleOf(String location) {

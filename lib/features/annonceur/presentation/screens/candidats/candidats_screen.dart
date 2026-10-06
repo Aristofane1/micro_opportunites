@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/candidates_controller.dart';
@@ -177,10 +177,7 @@ class _CandidatsScreenState extends ConsumerState<CandidatsScreen> {
                             child: CandidateCard(
                               candidate: c,
                               onTap: () => context.push(
-                                AppRoutes.posterCandidate(
-                                  widget.missionId,
-                                  c.id,
-                                ),
+                                PosterPaths.candidate(widget.missionId, c.id),
                               ),
                               onRefuse: () =>
                                   _controller.refuse(widget.missionId, c.id),

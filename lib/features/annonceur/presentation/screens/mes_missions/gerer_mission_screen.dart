@@ -3,18 +3,19 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:micro_opportunites/app/router/app_routes.dart';
+import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/my_missions_controller.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/utils/formatters.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/widgets/status_chip.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_providers.dart';
+import 'package:micro_opportunites/core/theme/app_colors.dart';
 
 class GererMissionScreen extends ConsumerWidget {
   const GererMissionScreen({super.key, required this.missionId});
 
   final String missionId;
 
-  static const _green = Color(0xFF1F6B4F);
+  static const _green = AppColors.green;
 
   void _soon(BuildContext context) {
     ScaffoldMessenger.of(
@@ -47,7 +48,7 @@ class GererMissionScreen extends ConsumerWidget {
     // On récupère le contrôleur AVANT de quitter l'écran (ref n'est plus
     // utilisable une fois l'écran fermé), puis on retire la mission.
     final missions = ref.read(myMissionsControllerProvider.notifier);
-    context.go(AppRoutes.posterMissions);
+    context.go(PosterPaths.missions);
     missions.remove(missionId);
   }
 
@@ -68,7 +69,7 @@ class GererMissionScreen extends ConsumerWidget {
               const Text('Mission introuvable.'),
               const SizedBox(height: 12),
               FilledButton(
-                onPressed: () => context.go(AppRoutes.posterMissions),
+                onPressed: () => context.go(PosterPaths.missions),
                 child: const Text('Retour'),
               ),
             ],
@@ -93,7 +94,7 @@ class GererMissionScreen extends ConsumerWidget {
                   IconButton.outlined(
                     onPressed: () => context.canPop()
                         ? context.pop()
-                        : context.go(AppRoutes.posterMissions),
+                        : context.go(PosterPaths.missions),
                     icon: const Icon(Icons.arrow_back),
                   ),
                   StatusChip(mission.status),
@@ -205,13 +206,12 @@ class GererMissionScreen extends ConsumerWidget {
                                 '${mission.newApplicantsCount > 1 ? 'nouveaux' : 'nouveau'}'
                           : null,
                       onTap: () =>
-                          context.push(AppRoutes.posterCandidates(mission.id)),
+                          context.push(PosterPaths.candidates(mission.id)),
                     ),
                     const Divider(height: 1),
                     _MenuRow(
                       title: 'Suivi du jour',
-                      onTap: () =>
-                          context.push(AppRoutes.posterToday(mission.id)),
+                      onTap: () => context.push(PosterPaths.today(mission.id)),
                     ),
                     const Divider(height: 1),
                     _MenuRow(
@@ -289,7 +289,7 @@ class _MenuRow extends StatelessWidget {
               child: Text(
                 badge!,
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),
@@ -324,7 +324,7 @@ class _FilledSlot extends StatelessWidget {
       color: GererMissionScreen._green,
       shape: BoxShape.circle,
     ),
-    child: const Icon(Icons.person, color: Colors.white),
+    child: const Icon(Icons.person, color: AppColors.white),
   );
 }
 
