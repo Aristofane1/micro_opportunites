@@ -3,7 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
+import 'package:micro_opportunites/core/ui/widgets/app_button.dart';
+import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 
@@ -100,5 +103,71 @@ void main() {
       find.textContaining('est retenu(e) : 12 h pour confirmer.'),
       findsOneWidget,
     );
+  });
+
+  testWidgets('C13 : contester exige un motif puis suspend le versement', (
+    tester,
+  ) async {
+    final container = await pumpWorkerApp(
+      tester,
+      session: 'u10',
+      role: ActiveRole.poster,
+      initialLocation: PosterPaths.contest('m21', 'm21'),
+    );
+    await tester.tap(find.widgetWithText(AppButton, 'Contester'));
+    await tester.pumpAndSettle();
+    expect(find.text('Indiquez le motif.'), findsOneWidget);
+    await tester.enterText(find.byType(TextField), 'Travail incomplet');
+    await tester.tap(find.widgetWithText(AppButton, 'Contester'));
+    await tester.pumpAndSettle();
+    expect(
+      (container.read(apiClientProvider) as FakeApiClient)
+          .db
+          .assignments['m21']!['status'],
+      'contested',
+    );
+  });
+
+  testWidgets('C14 : annuler une mission débloque l’argent', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      session: 'u10',
+      role: ActiveRole.poster,
+      initialLocation: PosterPaths.cancel('m20'),
+    );
+    expect(find.text(formatFcfa(12000)), findsWidgets);
+    await tester.tap(find.widgetWithText(AppButton, 'Annuler la mission'));
+    await tester.pumpAndSettle();
+    // La mission annulée est dans l'onglet « Terminées ».
+    await tester.tap(find.text('Terminées'));
+    await tester.pumpAndSettle();
+    expect(find.text('Annulée'), findsWidgets);
+  });
+
+  testWidgets('C14 : refus si la mission a commencé', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      session: 'u10',
+      role: ActiveRole.poster,
+      initialLocation: PosterPaths.cancel('m21'),
+    );
+    await tester.tap(find.widgetWithText(AppButton, 'Annuler la mission'));
+    await tester.pumpAndSettle();
+    expect(
+      find.text('Impossible d’annuler : la mission a commencé.'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('C15 : solde, disponible et montants bloqués', (tester) async {
+    await pumpWorkerApp(
+      tester,
+      session: 'u10',
+      role: ActiveRole.poster,
+      initialLocation: PosterPaths.payments,
+    );
+    expect(find.text(formatFcfa(200000)), findsOneWidget);
+    expect(find.text(formatFcfa(180000)), findsOneWidget);
+    expect(find.text('Accueil au salon de l’artisanat'), findsOneWidget);
   });
 }

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
 import 'package:micro_opportunites/app/router/app_routes.dart';
-import 'package:micro_opportunites/app/router/placeholder_page.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/mes_missions/annuler_mission_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/mes_missions/gerer_mission_screen.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/validation/contester_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/mission_publiee_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/publier/publier_shell_screen.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/screens/mes_missions/mes_missions_screen.dart';
@@ -63,22 +64,19 @@ final posterMissionsTabRoutes = <RouteBase>[
           assignmentId: state.pathParameters['assignmentId']!,
         ),
       ),
-      // Écrans de contestation et d'annulation : à venir.
       GoRoute(
         path: 'contest/:assignmentId',
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(),
-          body: const PlaceholderPage(title: 'Contester'),
+        builder: (context, state) => ContesterScreen(
+          missionId: state.pathParameters['id']!,
+          assignmentId: state.pathParameters['assignmentId']!,
         ),
       ),
       GoRoute(
         path: 'cancel',
         parentNavigatorKey: rootNavigatorKey,
-        builder: (context, state) => Scaffold(
-          appBar: AppBar(),
-          body: const PlaceholderPage(title: 'Annuler la mission'),
-        ),
+        builder: (context, state) =>
+            AnnulerMissionScreen(missionId: state.pathParameters['id']!),
       ),
     ],
   ),

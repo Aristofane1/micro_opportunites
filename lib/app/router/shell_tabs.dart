@@ -6,6 +6,7 @@ import 'package:micro_opportunites/app/router/routes/applications_routes.dart';
 import 'package:micro_opportunites/app/router/routes/earnings_routes.dart';
 import 'package:micro_opportunites/app/router/routes/missions_routes.dart';
 import 'package:micro_opportunites/core/assets/app_icons.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/screens/paiements/paiements_screen.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_navigation_bar.dart';
 import 'package:micro_opportunites/app/router/routes/poster_routes.dart';
 
@@ -80,10 +81,11 @@ final posterTabs = <ShellTab>[
     icon: AppIcons.publish,
     builder: buildPublishTab,
   ),
-  const ShellTab(
+  ShellTab(
     path: AppRoutes.posterPayments,
     label: 'Paiements',
     icon: AppIcons.securePayment,
+    builder: (_) => const PaiementsScreen(),
   ),
   const ShellTab(
     path: AppRoutes.posterMessages,
