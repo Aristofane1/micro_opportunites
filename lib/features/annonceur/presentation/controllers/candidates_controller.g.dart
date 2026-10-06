@@ -49,7 +49,7 @@ final class CandidatesControllerProvider
 }
 
 String _$candidatesControllerHash() =>
-    r'5a3a8677ce583e848621c1dfe6755c0b6c2de853';
+    r'f703b776c49779bb23a141c4c0923b58b8ac57aa';
 
 /// Les candidats de chaque mission : identifiant de mission -> liste.
 /// À REMPLACER par Firestore quand Firebase sera branché.

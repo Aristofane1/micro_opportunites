@@ -17,6 +17,10 @@ class MyMissionsController extends _$MyMissionsController {
   void add(MissionSummary mission) => state = [mission, ...state];
 
   void remove(String id) => state = state.where((m) => m.id != id).toList();
+  void cancel(String id) => state = [
+    for (final m in state)
+      m.id == id ? m.copyWith(status: MissionStatus.cancelled) : m,
+  ];
 }
 
 // Deux missions d'exemple (celles de la maquette), seulement avec START=publish
@@ -32,7 +36,9 @@ List<MissionSummary> _demoMissions() {
       city: 'Godomey',
       payLabel: '5 000 FCFA / pers.',
       slotsTotal: 5,
-      blockedAmount: 25000,
+      blockedAmount: 25000, // à ajouter dans la mission 'demo-1'
+      amountPerSlot: 5000,
+      publishedAt: now.subtract(const Duration(days: 7)),
     ),
     MissionSummary(
       id: 'demo-2',
@@ -43,7 +49,9 @@ List<MissionSummary> _demoMissions() {
       city: 'Cotonou',
       payLabel: '15 000 FCFA / pers.',
       slotsTotal: 3,
-      blockedAmount: 45000,
+      blockedAmount: 45000, // à ajouter dans la mission 'demo-2'
+      amountPerSlot: 15000,
+      publishedAt: now.subtract(const Duration(days: 3)),
     ),
   ];
 }

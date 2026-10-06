@@ -69,6 +69,29 @@ class CandidatesController extends _$CandidatesController {
     ),
   );
 
+  /// Propose un complément (heures en plus, pourboire…). Il est bloqué tout de suite.
+  void proposeBonus(
+    String missionId,
+    String candidateId,
+    int amount,
+    String reason,
+  ) => _update(
+    missionId,
+    candidateId,
+    (c) => c.copyWith(bonusAmount: c.bonusAmount + amount, bonusReason: reason),
+  );
+
+  /// Ouvre un litige : le paiement reste bloqué.
+  void openDispute(String missionId, String candidateId, String reason) =>
+      _update(
+        missionId,
+        candidateId,
+        (c) => c.copyWith(
+          attendance: AttendanceStatus.disputed,
+          disputeReason: reason,
+        ),
+      );
+
   /// Valide le travail : le paiement est versé (SIMULATION).
   void validate(String missionId, String candidateId) => _update(
     missionId,

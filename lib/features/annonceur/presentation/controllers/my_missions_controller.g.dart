@@ -42,7 +42,7 @@ final class MyMissionsControllerProvider
 }
 
 String _$myMissionsControllerHash() =>
-    r'f7e75f1a9bd8a763daf0227eb7820f338d077a3a';
+    r'0b8380429bceb533533b8817b7011d676d2695cd';
 
 abstract class _$MyMissionsController extends $Notifier<List<MissionSummary>> {
   List<MissionSummary> build();

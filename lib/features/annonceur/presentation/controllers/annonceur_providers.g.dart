@@ -111,3 +111,58 @@ final class PendingValidationsProvider
 
 String _$pendingValidationsHash() =>
     r'2fe987256040d8adef9517581c2ca5d09352539c';
+
+/// Les lignes de l'écran Paiements : l'argent bloqué (calculé à partir des
+/// missions actives) + les paiements déjà faits, du plus récent au plus ancien.
+
+@ProviderFor(paymentRows)
+final paymentRowsProvider = PaymentRowsProvider._();
+
+/// Les lignes de l'écran Paiements : l'argent bloqué (calculé à partir des
+/// missions actives) + les paiements déjà faits, du plus récent au plus ancien.
+
+final class PaymentRowsProvider
+    extends
+        $FunctionalProvider<
+          List<PaymentEntry>,
+          List<PaymentEntry>,
+          List<PaymentEntry>
+        >
+    with $Provider<List<PaymentEntry>> {
+  /// Les lignes de l'écran Paiements : l'argent bloqué (calculé à partir des
+  /// missions actives) + les paiements déjà faits, du plus récent au plus ancien.
+  PaymentRowsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'paymentRowsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$paymentRowsHash();
+
+  @$internal
+  @override
+  $ProviderElement<List<PaymentEntry>> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  List<PaymentEntry> create(Ref ref) {
+    return paymentRows(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(List<PaymentEntry> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<List<PaymentEntry>>(value),
+    );
+  }
+}
+
+String _$paymentRowsHash() => r'0f443976134866249b060956150bb7f1e531ff5e';

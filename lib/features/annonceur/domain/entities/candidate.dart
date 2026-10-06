@@ -14,6 +14,7 @@ enum AttendanceStatus {
   finished, // a signalé la fin : travail à valider
   validated, // travail validé, paiement versé
   absent,
+  disputed,
 }
 
 /// « Événement × 9 »
@@ -70,6 +71,9 @@ abstract class Candidate with _$Candidate {
     @Default(true) bool gpsPrecise,
     @Default(0) int proofPhotos,
     String? completionNote,
+    @Default(0) int bonusAmount, // complément proposé (FCFA)
+    String? bonusReason,
+    String? disputeReason,
   }) = _Candidate;
 
   /// « Sènami O. » -> « SO »

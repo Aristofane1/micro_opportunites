@@ -43,7 +43,7 @@ final class PublishedMissionControllerProvider
 }
 
 String _$publishedMissionControllerHash() =>
-    r'd24a4e86d34afa4b88847e31641745c2bb445890';
+    r'a81c652d0027d1d0dcfdeab444197965216f9c0b';
 
 abstract class _$PublishedMissionController
     extends $Notifier<PublishedMission?> {

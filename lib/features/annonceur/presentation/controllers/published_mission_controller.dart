@@ -47,6 +47,8 @@ class PublishedMissionController extends _$PublishedMissionController {
             blockedAmount: draft.totalToBlock,
             category: draft.category,
             durationMinutes: draft.durationMinutes,
+            amountPerSlot: draft.totalToBlock ~/ draft.slotsTotal,
+            publishedAt: now,
           ),
         );
 

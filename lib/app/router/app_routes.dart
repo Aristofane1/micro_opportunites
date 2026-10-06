@@ -24,6 +24,9 @@ abstract final class AppRoutes {
     ActiveRole.worker => workerExplore,
     ActiveRole.poster => posterMissions,
   };
+  static String posterProblem(String id, String candidateId) =>
+      '${posterValidate(id, candidateId)}/problem';
+  static String posterCancel(String id) => '${posterMissionManage(id)}/cancel';
   static String posterCandidates(String id) =>
       '${posterMissionManage(id)}/candidates';
   static String posterCandidate(String id, String candidateId) =>
