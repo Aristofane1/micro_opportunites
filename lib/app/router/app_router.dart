@@ -10,6 +10,7 @@ import 'package:micro_opportunites/app/router/shell_tabs.dart';
 import 'package:micro_opportunites/app/router/worker_routes.dart';
 import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:micro_opportunites/app/router/routes/poster_routes.dart';
 
 part 'app_router.g.dart';
 
@@ -50,6 +51,7 @@ GoRouter appRouter(Ref ref) {
       _roleShell(posterTabs),
       ...entryRoutes,
       ...workerFullScreenRoutes,
+      ...posterFullScreenRoutes,
     ],
   );
   ref.onDispose(() {

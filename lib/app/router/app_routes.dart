@@ -16,11 +16,21 @@ abstract final class AppRoutes {
   static const posterPayments = '/poster/payments';
   static const posterMessages = '/poster/messages';
   static const posterProfile = '/poster/me';
-
+  static const posterPublishNew = '/poster/publish/new';
+  static const posterPublishConfirm = '/poster/publish/confirm';
+  static const posterPublishDone = '/poster/publish/done';
+  static String posterMissionManage(String id) => '/poster/missions/manage/$id';
   static String homeFor(ActiveRole role) => switch (role) {
     ActiveRole.worker => workerExplore,
     ActiveRole.poster => posterMissions,
   };
+  static String posterCandidates(String id) =>
+      '${posterMissionManage(id)}/candidates';
+  static String posterCandidate(String id, String candidateId) =>
+      '${posterMissionManage(id)}/candidate/$candidateId';
+  static String posterToday(String id) => '${posterMissionManage(id)}/today';
+  static String posterValidate(String id, String candidateId) =>
+      '${posterMissionManage(id)}/validate/$candidateId';
 
   /// Rôle auquel appartient [location], ou null hors des shells.
   static ActiveRole? roleOf(String location) {
