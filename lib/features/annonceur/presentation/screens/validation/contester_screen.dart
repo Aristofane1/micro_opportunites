@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/formatting/dates.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
-import 'package:micro_opportunites/core/theme/app_colors.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
 import 'package:micro_opportunites/core/theme/app_typography.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_banner.dart';
@@ -14,6 +13,7 @@ import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/widgets/info_card.dart';
 
 /// C13 : l'annonceur conteste le travail ; le versement est suspendu.
 class ContesterScreen extends ConsumerStatefulWidget {
@@ -81,7 +81,11 @@ class _ContesterScreenState extends ConsumerState<ContesterScreen> {
             final c = all
                 .where((x) => x.assignmentId == widget.assignmentId)
                 .firstOrNull;
-            if (c == null) return const Center(child: Text('Introuvable.'));
+            if (c == null) {
+              return const Center(
+                child: Text('Introuvable.', style: AppTypography.body),
+              );
+            }
             return _form(mission, c);
           },
         ),
@@ -105,14 +109,7 @@ class _ContesterScreenState extends ConsumerState<ContesterScreen> {
           children: [
             const Text('Contester le travail', style: AppTypography.title),
             const SizedBox(height: AppSpacing.md),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                border: Border.all(color: AppColors.line),
-                borderRadius: BorderRadius.circular(12),
-              ),
+            InfoCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

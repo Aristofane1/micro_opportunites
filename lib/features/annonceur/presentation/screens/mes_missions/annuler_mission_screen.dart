@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
-import 'package:micro_opportunites/core/theme/app_colors.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
 import 'package:micro_opportunites/core/theme/app_typography.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_banner.dart';
@@ -13,6 +12,7 @@ import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/candidate.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/mission_summary.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/widgets/info_card.dart';
 
 /// C14 : annulation d'une mission ; l'argent bloqué est débloqué.
 class AnnulerMissionScreen extends ConsumerStatefulWidget {
@@ -27,9 +27,15 @@ class AnnulerMissionScreen extends ConsumerStatefulWidget {
 
 class _AnnulerMissionScreenState extends ConsumerState<AnnulerMissionScreen> {
   String? _error;
+  int? _amountBefore;
 
   Future<void> _cancel() async {
     setState(() => _error = null);
+    // Montant lu avant l'action : après l'annulation il retombe à 0.
+    _amountBefore = ref
+        .read(posterMissionProvider(widget.missionId))
+        .value
+        ?.blockedAmount;
     final result = await ref
         .read(annonceurActionsProvider.notifier)
         .cancel(widget.missionId);
@@ -86,21 +92,14 @@ class _AnnulerMissionScreenState extends ConsumerState<AnnulerMissionScreen> {
             const SizedBox(height: AppSpacing.xs),
             Text(mission.title, style: AppTypography.caption),
             const SizedBox(height: AppSpacing.md),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(AppSpacing.md),
-              decoration: BoxDecoration(
-                color: AppColors.card,
-                border: Border.all(color: AppColors.line),
-                borderRadius: BorderRadius.circular(12),
-              ),
+            InfoCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text('Argent débloqué', style: AppTypography.label),
                   const SizedBox(height: AppSpacing.xxs),
                   Text(
-                    formatFcfa(mission.blockedAmount),
+                    formatFcfa(_amountBefore ?? mission.blockedAmount),
                     style: AppTypography.amount,
                   ),
                 ],
@@ -111,7 +110,7 @@ class _AnnulerMissionScreenState extends ConsumerState<AnnulerMissionScreen> {
             const SizedBox(height: AppSpacing.xs),
             if (notified.isEmpty)
               const Text(
-                'Personne n’a encore été retenu.',
+                'Personne n’a encore été retenu(e).',
                 style: AppTypography.caption,
               )
             else

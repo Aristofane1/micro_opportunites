@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:micro_opportunites/core/formatting/dates.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
-import 'package:micro_opportunites/core/theme/app_colors.dart';
 import 'package:micro_opportunites/core/theme/app_spacing.dart';
 import 'package:micro_opportunites/core/theme/app_typography.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_list_tile.dart';
@@ -10,6 +9,7 @@ import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/core/ui/widgets/empty_state.dart';
 import 'package:micro_opportunites/features/annonceur/domain/entities/wallet.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/annonceur_controllers.dart';
+import 'package:micro_opportunites/features/annonceur/presentation/widgets/info_card.dart';
 
 /// C15 : onglet Paiements de l'annonceur.
 class PaiementsScreen extends ConsumerWidget {
@@ -94,13 +94,7 @@ class _BalanceCard extends StatelessWidget {
         ),
       ],
     );
-    return Container(
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        border: Border.all(color: AppColors.line),
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return InfoCard(
       child: Column(
         children: [
           line('Solde', wallet.balance),
