@@ -16,6 +16,7 @@ ProviderContainer createTestContainer({
   Duration latency = Duration.zero,
   DateTime Function()? clock,
   String initialLocation = WorkerPaths.explore,
+  String? session = 'u1',
 }) {
   final container = ProviderContainer(
     overrides: [
@@ -23,6 +24,7 @@ ProviderContainer createTestContainer({
         latency: latency,
         clock: clock ?? () => fixedNow,
         mapTiles: false,
+        session: session,
       ),
       initialLocationProvider.overrideWithValue(initialLocation),
       ...overrides,
@@ -42,6 +44,7 @@ Future<ProviderContainer> pumpWorkerApp(
   Duration latency = Duration.zero,
   DateTime Function()? clock,
   String initialLocation = WorkerPaths.explore,
+  String? session = 'u1',
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -50,6 +53,7 @@ Future<ProviderContainer> pumpWorkerApp(
     latency: latency,
     clock: clock,
     initialLocation: initialLocation,
+    session: session,
   );
   beforePump?.call(container);
   await tester.pumpWidget(

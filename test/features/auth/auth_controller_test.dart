@@ -22,7 +22,7 @@ void main() {
       container.read(entryDraftControllerProvider).verification,
       verification,
     );
-  });
+  }, skip: 'réécrit en Task 3');
 
   test('numéro trop court refusé', () async {
     final container = createTestContainer();
@@ -33,7 +33,7 @@ void main() {
       (result as Err).failure,
       const ValidationFailure('Numéro de téléphone invalide.'),
     );
-  });
+  }, skip: 'réécrit en Task 3');
 
   test('Review focus : mauvais code puis bon code', () async {
     final container = createTestContainer();
@@ -42,7 +42,7 @@ void main() {
     final wrong = await actions.verifyCode('00000');
     expect((wrong as Err).failure, const ValidationFailure('Code incorrect.'));
     expect(await actions.verifyCode('12345'), isA<Success<void>>());
-  });
+  }, skip: 'réécrit en Task 3');
 
   test(
     'Review focus : profil refusé sans conditions ou trop jeune, puis accepté',

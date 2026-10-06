@@ -25,12 +25,26 @@ class _SeedTime {
 }
 
 /// Base de démonstration fidèle aux planches B01–B17.
-FakeDatabase seedDatabase(DateTime now) {
+FakeDatabase seedDatabase(DateTime now, {String? sessionUserId = 'u1'}) {
   final t = _SeedTime(now);
-  final db = FakeDatabase(currentUserId: 'u1');
+  final db = FakeDatabase(sessionUserId: sessionUserId);
 
   db.users['u1'] = {
     'id': 'u1',
+    'email': 'executant@demo.bj',
+    'password': 'demo123',
+    'role': 'worker',
+    'worker': {
+      'rating': 4.7,
+      'reviewsCount': 11,
+      'missionsCount': 14,
+      'reliability': 96,
+      'absences': 0,
+      'skills': ['Flyers', 'Informatique'],
+      'pitch': 'Ponctuel, à l’aise avec le public.',
+      'memberSince': t.ago(const Duration(days: 300)),
+      'verified': true,
+    },
     'firstName': 'Rodrigue',
     'lastName': 'K.',
     'city': 'Abomey-Calavi',
@@ -42,6 +56,92 @@ FakeDatabase seedDatabase(DateTime now) {
       'holderName': 'Rodrigue K.',
     },
   };
+
+  db.users['u2'] = {
+    'id': 'u2',
+    'email': 'executant2@demo.bj',
+    'password': 'demo123',
+    'firstName': 'Sènami',
+    'lastName': 'O.',
+    'city': 'Abomey-Calavi',
+    'lat': 6.4500,
+    'lng': 2.3500,
+    'role': 'worker',
+    'payoutAccount': {
+      'operator': 'Moov Money',
+      'maskedNumber': '01 66 •• •• 12',
+      'holderName': 'Sènami O.',
+    },
+    'worker': {
+      'rating': 4.9,
+      'reviewsCount': 22,
+      'missionsCount': 31,
+      'reliability': 98,
+      'absences': 0,
+      'skills': ['Saisie', 'Événements'],
+      'pitch': 'Expérience en saisie et accueil.',
+      'memberSince': t.ago(const Duration(days: 420)),
+      'verified': true,
+    },
+  };
+  db.users['u3'] = {
+    'id': 'u3',
+    'email': null,
+    'password': null,
+    'firstName': 'Ganiou',
+    'lastName': 'A.',
+    'city': 'Godomey',
+    'lat': 6.4200,
+    'lng': 2.3400,
+    'role': 'worker',
+    'payoutAccount': {
+      'operator': 'MTN MoMo',
+      'maskedNumber': '01 51 •• •• 08',
+      'holderName': 'Ganiou A.',
+    },
+    'worker': {
+      'rating': null,
+      'reviewsCount': 0,
+      'missionsCount': 0,
+      'reliability': null,
+      'absences': 0,
+      'skills': <String>[],
+      'pitch': 'Disponible tout de suite.',
+      'memberSince': t.ago(const Duration(days: 6)),
+      'verified': true,
+    },
+  };
+  db.users['u10'] = {
+    'id': 'u10',
+    'email': 'annonceur@demo.bj',
+    'password': 'demo123',
+    'firstName': 'Mireille',
+    'lastName': 'A.',
+    'city': 'Abomey-Calavi',
+    'lat': 6.4520,
+    'lng': 2.3480,
+    'role': 'poster',
+    'payoutAccount': {
+      'operator': 'MTN MoMo',
+      'maskedNumber': '01 90 •• •• 77',
+      'holderName': 'Mireille A.',
+    },
+  };
+  db.posters['u10'] = {
+    'id': 'u10',
+    'displayName': 'Mireille A.',
+    'initials': 'MA',
+    'verified': true,
+    'reliable': true,
+    'city': 'Abomey-Calavi',
+    'memberSince': t.ago(const Duration(days: 120)),
+    'rating': 4.7,
+    'reviewsCount': 6,
+    'paidMissions': 4,
+    'avgValidationHours': 5,
+    'reviews': <Json>[],
+  };
+  db.wallets['u10'] = {'balance': 200000, 'blocked': <String, int>{}};
 
   db.posters['p1'] = {
     'id': 'p1',
@@ -640,7 +740,8 @@ FakeDatabase seedDatabase(DateTime now) {
     'missionTitle': title,
     'posterName': posterName,
     'validatedAt': t.ago(ago),
-    'commissionLabel': '[à définir]',
+    'workerId': 'u1',
+    'commissionLabel': 'Aucune (démo)',
     'accountLabel': 'MTN MoMo · •• 45',
     'reference': reference,
     'status': 'paid',
@@ -702,6 +803,7 @@ FakeDatabase seedDatabase(DateTime now) {
   for (final alert in <Json>[
     {
       'id': 'al1',
+      'ownerId': 'u1',
       'keyword': null,
       'category': 'Informatique',
       'zone': 'Abomey-Calavi · 10 km',
@@ -710,6 +812,7 @@ FakeDatabase seedDatabase(DateTime now) {
     },
     {
       'id': 'al2',
+      'ownerId': 'u1',
       'keyword': null,
       'category': 'Événement, Flyers',
       'zone': 'Cotonou et Calavi',
@@ -718,6 +821,7 @@ FakeDatabase seedDatabase(DateTime now) {
     },
     {
       'id': 'al3',
+      'ownerId': 'u1',
       'keyword': 'plomberie',
       'category': null,
       'zone': '5 km autour de moi',

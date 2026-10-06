@@ -13,12 +13,16 @@ List<Override> appOverrides({
   Duration latency = const Duration(milliseconds: 400),
   DateTime Function() clock = DateTime.now,
   bool mapTiles = true,
+  String? session,
 }) {
   return [
     clockProvider.overrideWithValue(clock),
     apiClientProvider.overrideWith(
-      (ref) =>
-          FakeApiClient(seedDatabase(clock()), clock: clock, latency: latency),
+      (ref) => FakeApiClient(
+        seedDatabase(clock(), sessionUserId: session),
+        clock: clock,
+        latency: latency,
+      ),
     ),
     locationServiceProvider.overrideWithValue(const SimulatedLocationService()),
     if (!mapTiles) mapTilesEnabledProvider.overrideWithValue(false),
