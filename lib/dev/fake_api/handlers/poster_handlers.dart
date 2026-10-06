@@ -23,7 +23,7 @@ Json _ownApplication(FakeDatabase db, String? id) {
   if (application == null ||
       mission == null ||
       mission['posterId'] != db.currentUserId) {
-    throw const ApiException(404, 'Candidature introuvable.');
+    throw _notFound;
   }
   return application;
 }
@@ -58,6 +58,11 @@ Iterable<Json> _activeAssignmentsOf(FakeDatabase db, String missionId) => db
     .assignments
     .values
     .where((a) => a['missionId'] == missionId && a['status'] != 'cancelled');
+
+/// Montant brut versé pour une place : le taux pour `flat`/`daily`,
+/// taux × durée pour `hourly`. Bloqué à la publication × places.
+int slotAmountFor(String payUnit, int payAmount, int durationMin) =>
+    payUnit == 'hourly' ? (payAmount * durationMin / 60).round() : payAmount;
 
 int? _int(Object? value) => value is num ? value.toInt() : null;
 
@@ -183,9 +188,11 @@ Object? publishMission(FakeDatabase db, FakeRequest request) {
   }
   final durationMin = _int(body['durationMin']) ?? 0;
   final payUnit = body['payUnit'] as String? ?? 'flat';
-  final total = payUnit == 'hourly'
-      ? (payAmount * durationMin * slots / 60).round()
-      : payAmount * slots;
+  if (payUnit == 'hourly' && durationMin <= 0) {
+    throw const ApiException(422, 'Indiquez la durée.');
+  }
+  final slotAmount = slotAmountFor(payUnit, payAmount, durationMin);
+  final total = slotAmount * slots;
   final wallet = _wallet(db);
   if (total > _available(wallet)) {
     throw ApiException(
@@ -208,6 +215,7 @@ Object? publishMission(FakeDatabase db, FakeRequest request) {
     'startAt': startAt.toUtc().toIso8601String(),
     'durationMin': durationMin,
     'pay': {'amount': payAmount, 'type': payUnit},
+    'slotAmount': slotAmount,
     'slotsTotal': slots,
     'slotsFree': slots,
     'posterId': userId,

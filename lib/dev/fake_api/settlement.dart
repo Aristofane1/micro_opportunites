@@ -37,7 +37,16 @@ void payAssignment(FakeDatabase db, Json assignment, DateTime now) {
     wallet['balance'] = (wallet['balance'] as int) - amount;
     final blocked = wallet['blocked'] as Map<String, int>;
     final left = (blocked[missionId] ?? 0) - amount;
-    blocked[missionId] = left < 0 ? 0 : left;
+    if (left < 0) {
+      throw StateError(
+        'Montant bloqué insuffisant pour $missionId : $amount à verser.',
+      );
+    }
+    if (left == 0) {
+      blocked.remove(missionId);
+    } else {
+      blocked[missionId] = left;
+    }
   }
   final worker = db.users[assignment['workerId']]!;
   final account = worker['payoutAccount'] as Json;

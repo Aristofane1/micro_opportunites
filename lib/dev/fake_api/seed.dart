@@ -249,6 +249,7 @@ FakeDatabase seedDatabase(DateTime now, {String? sessionUserId = 'u1'}) {
     'startAt': startAt,
     'durationMin': durationMin,
     'pay': {'amount': pay, 'type': 'flat'},
+    'slotAmount': pay,
     'slotsTotal': slotsTotal,
     'slotsFree': slotsFree,
     'posterId': posterId,

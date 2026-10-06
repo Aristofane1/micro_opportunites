@@ -96,7 +96,7 @@ Object? confirmOffer(FakeDatabase db, FakeRequest request) {
     'status': 'confirmed',
     'startAt': mission['startAt'],
     'durationMin': mission['durationMin'],
-    'payAmount': (mission['pay'] as Json)['amount'],
+    'payAmount': mission['slotAmount'],
     'city': mission['city'],
     'district': private['district'],
     'address': private['address'],

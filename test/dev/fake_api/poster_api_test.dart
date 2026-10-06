@@ -25,7 +25,12 @@ Future<ApiException> error(Future<Object?> call) async {
   fail('exception attendue');
 }
 
-Map<String, Object?> draft({int pay = 5000, int slots = 2}) => {
+Map<String, Object?> draft({
+  int pay = 5000,
+  int slots = 2,
+  String payUnit = 'flat',
+  int durationMin = 180,
+}) => {
   'title': 'Aide déménagement',
   'category': 'other',
   'description': 'Porter des cartons.',
@@ -35,14 +40,14 @@ Map<String, Object?> draft({int pay = 5000, int slots = 2}) => {
   'lat': 6.4490,
   'lng': 2.3560,
   'startAt': fixedNow.add(const Duration(days: 2)).toIso8601String(),
-  'durationMin': 180,
+  'durationMin': durationMin,
   'payAmount': pay,
-  'payUnit': 'flat',
+  'payUnit': payUnit,
   'slots': slots,
   'applyDeadline': fixedNow.add(const Duration(days: 1)).toIso8601String(),
 };
 
-int available() => api.db.wallets['u10']!['balance'] as int;
+int balance() => api.db.wallets['u10']!['balance'] as int;
 
 void main() {
   setUp(() {
@@ -135,11 +140,11 @@ void main() {
       );
 
       await loginAs('annonceur@demo.bj');
-      final balanceBefore = available();
+      final balanceBefore = balance();
       final validated =
           await api.post('/assignments/${assignment['id']}/validate') as Map;
       expect(validated['attendance'], 'validated');
-      expect(available(), balanceBefore - 5000);
+      expect(balance(), balanceBefore - 5000);
       expect((api.db.wallets['u10']!['blocked'] as Map)[id] ?? 0, 0);
 
       await loginAs('executant@demo.bj');
@@ -186,11 +191,11 @@ void main() {
     'Review focus : versement automatique après 48 h, une seule fois',
     () async {
       await loginAs('annonceur@demo.bj');
-      final before = available();
+      final before = balance();
       clock.now = clock.now.add(const Duration(hours: 48));
       await api.get('/me/missions');
       await api.get('/me/wallet');
-      expect(available(), before - 8000);
+      expect(balance(), before - 8000);
       expect(
         api.db.payouts.values.where((p) => p['assignmentId'] == 'm21'),
         hasLength(1),
@@ -200,7 +205,7 @@ void main() {
 
   test('contestation : rien n’est versé', () async {
     await loginAs('annonceur@demo.bj');
-    final before = available();
+    final before = balance();
     final contested =
         await api.post(
               '/assignments/m21/contest',
@@ -210,7 +215,7 @@ void main() {
     expect(contested['attendance'], 'contested');
     clock.now = clock.now.add(const Duration(hours: 72));
     await api.get('/me/wallet');
-    expect(available(), before);
+    expect(balance(), before);
   });
 
   test(
@@ -233,4 +238,71 @@ void main() {
     final e = await error(api.post('/missions/m21/cancel'));
     expect(e.message, 'Impossible d’annuler : la mission a commencé.');
   });
+
+  test(
+    'Review focus : mission à l’heure, bloqué = versé = taux × durée',
+    () async {
+      await loginAs('annonceur@demo.bj');
+      final mission =
+          await api.post(
+                '/missions',
+                body: draft(pay: 1000, slots: 1, payUnit: 'hourly'),
+              )
+              as Map;
+      final id = mission['id'] as String;
+      expect(mission['blockedAmount'], 3000);
+
+      await loginAs('executant@demo.bj');
+      final application =
+          await api.post('/missions/$id/applications', body: {'message': ''})
+              as Map;
+      await loginAs('annonceur@demo.bj');
+      await api.post('/applications/${application['id']}/offer');
+      await loginAs('executant@demo.bj');
+      final confirmed =
+          await api.post('/applications/${application['id']}/confirm') as Map;
+      final assignmentId = confirmed['assignmentId'];
+      await api.post(
+        '/assignments/$assignmentId/check-in',
+        body: {'lat': 6.4491, 'lng': 2.3560},
+      );
+      await api.post(
+        '/assignments/$assignmentId/check-out',
+        body: {'note': 'Fait', 'photos': <String>[]},
+      );
+
+      await loginAs('annonceur@demo.bj');
+      final before = balance();
+      await api.post('/assignments/$assignmentId/validate');
+      expect(balance(), before - 3000);
+      expect(
+        (api.db.wallets['u10']!['blocked'] as Map).containsKey(id),
+        isFalse,
+      );
+      final payout = api.db.payouts.values.singleWhere(
+        (p) => p['assignmentId'] == assignmentId,
+      );
+      expect(payout['amount'], 3000);
+    },
+  );
+
+  test('Review focus : mission à l’heure sans durée → 422', () async {
+    await loginAs('annonceur@demo.bj');
+    final e = await error(
+      api.post('/missions', body: draft(payUnit: 'hourly', durationMin: 0)),
+    );
+    expect((e.statusCode, e.message), (422, 'Indiquez la durée.'));
+  });
+
+  test(
+    'Review focus : retenir ou refuser le candidat d’un autre annonceur → 404',
+    () async {
+      await loginAs('annonceur@demo.bj');
+      for (final action in ['offer', 'reject']) {
+        // a3 : candidature de u1 sur m4, mission de p1.
+        final e = await error(api.post('/applications/a3/$action'));
+        expect((e.statusCode, e.message), (404, 'Mission introuvable.'));
+      }
+    },
+  );
 }
