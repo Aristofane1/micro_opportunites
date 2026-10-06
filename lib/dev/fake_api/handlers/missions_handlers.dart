@@ -29,6 +29,7 @@ DateTime _beninDay(DateTime instant) {
 
 Object? listMissions(FakeDatabase db, FakeRequest request) {
   final user = db.currentUser;
+  final userId = user['id'];
   final query = request.query;
   final km = int.tryParse(query['km'] ?? '') ?? 5;
   final categories = (query['cat'] ?? '')
@@ -44,6 +45,7 @@ Object? listMissions(FakeDatabase db, FakeRequest request) {
   final items =
       db.missions.values.where((m) {
         if (m['status'] != 'published') return false;
+        if (m['posterId'] == userId) return false;
         if (city != null) {
           if (m['city'] != city) return false;
         } else {
@@ -92,7 +94,10 @@ Object? listMissions(FakeDatabase db, FakeRequest request) {
 
 Object? listCities(FakeDatabase db, FakeRequest request) {
   final byCity = <String, List<Json>>{};
-  for (final m in db.missions.values.where((m) => m['status'] == 'published')) {
+  final userId = db.currentUserId;
+  for (final m in db.missions.values.where(
+    (m) => m['status'] == 'published' && m['posterId'] != userId,
+  )) {
     byCity.putIfAbsent(m['city'] as String, () => []).add(m);
   }
   final user = db.currentUser;

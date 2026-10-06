@@ -73,6 +73,7 @@ Json assignmentJson(FakeDatabase db, Json assignment) {
   );
   return {
     ...assignment,
+    'contestReason': assignment['contestReason'],
     'distanceKm': double.parse(km.toStringAsFixed(1)),
     'travelMinutes': (km / 15 * 60).ceil().clamp(1, 600),
   };

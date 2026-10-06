@@ -11,7 +11,7 @@ Object? getEarnings(FakeDatabase db, FakeRequest request) {
   )) {
     final status = switch (a['status']) {
       'confirmed' || 'in_progress' => 'reserved',
-      'submitted' => 'awaiting_validation',
+      'submitted' || 'contested' => 'awaiting_validation',
       _ => null,
     };
     if (status == null) continue;

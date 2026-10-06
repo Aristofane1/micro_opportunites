@@ -29,6 +29,12 @@ Object? applyToMission(FakeDatabase db, FakeRequest request) {
   if (mission == null || mission['status'] != 'published') {
     throw const ApiException(404, 'Cette mission n’est plus disponible.');
   }
+  if (mission['posterId'] == db.currentUserId) {
+    throw const ApiException(
+      422,
+      'Vous ne pouvez pas postuler à votre propre mission.',
+    );
+  }
   if ((mission['slotsFree'] as int) <= 0) {
     throw const ApiException(409, 'Cette mission est complète.');
   }
