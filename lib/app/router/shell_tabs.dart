@@ -7,6 +7,7 @@ import 'package:micro_opportunites/app/router/routes/earnings_routes.dart';
 import 'package:micro_opportunites/app/router/routes/missions_routes.dart';
 import 'package:micro_opportunites/core/assets/app_icons.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_navigation_bar.dart';
+import 'package:micro_opportunites/app/router/routes/poster_routes.dart';
 
 class ShellTab {
   const ShellTab({
@@ -65,16 +66,19 @@ final workerTabs = <ShellTab>[
   ),
 ];
 
-const posterTabs = <ShellTab>[
+final posterTabs = <ShellTab>[
   ShellTab(
     path: AppRoutes.posterMissions,
     label: 'Mes missions',
     icon: AppIcons.missions,
+    builder: buildPosterMissionsTab,
+    routes: posterMissionsTabRoutes,
   ),
   ShellTab(
     path: AppRoutes.posterPublish,
     label: 'Publier',
     icon: AppIcons.publish,
+    builder: buildPublishTab,
   ),
   ShellTab(
     path: AppRoutes.posterPayments,
