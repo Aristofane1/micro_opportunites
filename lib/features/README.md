@@ -40,55 +40,56 @@ features/<nom>/
   `parentNavigatorKey: rootNavigatorKey`.
 - Après tout changement d'annotation : `dart run build_runner build`.
 
-## Données : aujourd'hui fictives, demain l'API
+## Données : Supabase (RPC), faux serveur pour les tests
 
 ```
 Page → Contrôleur (@riverpod) → Repository → RemoteDataSource → ApiClient
-                                                                 ├─ FakeApiClient (lib/dev/fake_api)
-                                                                 └─ client HTTP (à écrire)
+                                                                 ├─ FakeApiClient (test/support/fake_backend, tests seulement)
+                                                                 └─ SupabaseApiClient (app/backend : Auth, Storage, RPC)
 ```
 
+- Port `ApiClient` (`core/network`) ; adaptateur Supabase dans
+  `app/backend/supabase_api_client.dart` (Auth, Storage, RPC). La logique
+  métier est en SQL, dans `supabase/migrations`.
 - Chaque source distante appelle des routes REST (`GET /missions`, `POST
   /applications/:id/confirm`…) et parse du JSON avec des modèles
   `json_serializable` convertis en entités (`toEntity()`).
-- Le faux serveur (`lib/dev/fake_api`) répond aux mêmes routes avec des
+- Le faux serveur (`test/support/fake_backend`, utilisé par les tests) répond aux mêmes routes avec des
   données de démonstration et applique les règles (candidature unique,
   check-in à moins de 200 m, gains…).
-- Brancher l'API : écrire un `HttpApiClient implements ApiClient`, puis le
-  fournir dans `app/bootstrap.dart` à la place de `FakeApiClient`. Rien d'autre
-  ne change. `app/bootstrap.dart` fournit aussi `locationServiceProvider`
-  (position simulée aujourd'hui, geolocator demain).
+- L'app réelle fournit `apiClientProvider` via l'adaptateur Supabase
+  (`app/backend`) ; les tests le remplacent par `FakeApiClient`.
+  `app/bootstrap.dart` fournit `locationServiceProvider` (geolocator ; les
+  tests utilisent le simulateur).
 - Après une écriture réussie, les contrôleurs d'action incrémentent
   `dataRevisionProvider` : toutes les listes qui le surveillent se rechargent.
 
 ### Dette de contrat API
 
-1. Les photos de check-out sont envoyées comme chemins locaux : la vraie API
-   aura besoin d'une méthode d'upload sur `ApiClient` (ou d'un port média).
-2. Les alertes échangent des chaînes d'affichage françaises pour
-   catégorie/zone/jours : la vraie API exigera des codes structurés (valeur
-   `apiValue` de la catégorie, rayon/ville, ensemble de jours).
+- Les alertes échangent des chaînes d'affichage françaises pour
+  catégorie/zone/jours : une API plus stricte exigera des codes structurés
+  (valeur `apiValue` de la catégorie, rayon/ville, ensemble de jours).
 
 ## Features
 
-| Feature | Écrans | Statut |
+| Feature | Écrans | Données |
 |---|---|---|
-| account | salutation | fait (données fictives) |
-| missions | B01 Explorer, B02 Carte, B03 Filtres, B04 Recherche, B05 Détail, B17 Profil annonceur | fait |
-| applications | B06 Postuler, B07 Envoyée, B08 Mes candidatures, B09 Offre | fait |
-| assignments | B10 Confirmée, B11 En cours, B12 Signaler la fin, B13 Attente de validation | fait |
-| earnings | B14 Gains, B15 Reçu | fait |
-| alerts | B16 Mes alertes | fait |
-| onboarding | A01 Splash, A02–A04 Présentation | fait (fusion branche onboarding) |
-| auth | A05 Téléphone, A06 Code SMS, A07 Infos, A08 Pièce, A09 Photo (simulée), A11 Vérification | fait (faux serveur) |
-| preferences | A13 Profil de départ, A14 Autorisations (affichage) | fait |
-| annonceur | C01 Mes missions, C02–C04 Publier en 3 étapes, C07 Mission publiée, C08 Gérer, C09 Candidats, C10 Profil candidat, C11 Suivi du jour, C12 Valider, C13 Contester, C14 Annuler, C15 Paiements (C05/C06 retirés) | fait (faux serveur) |
-| A10 selfie · A12 refus KYC · profile · payment · chat · reviews · notifications · safety | modules A, D, E | à venir |
+| account | salutation | Supabase (RPC) |
+| missions | B01 Explorer, B02 Carte, B03 Filtres, B04 Recherche, B05 Détail, B17 Profil annonceur | Supabase (RPC) |
+| applications | B06 Postuler, B07 Envoyée, B08 Mes candidatures, B09 Offre | Supabase (RPC) |
+| assignments | B10 Confirmée, B11 En cours, B12 Signaler la fin, B13 Attente de validation | Supabase (RPC) |
+| earnings | B14 Gains, B15 Reçu | Supabase (RPC) |
+| alerts | B16 Mes alertes | Supabase (RPC) |
+| onboarding | A01 Splash, A02–A04 Présentation | locales (la reprise au lancement est composée par `app/`) |
+| auth | A05 E-mail, A07 Infos, A08 Pièce, A09 Photos (recto, verso, selfie), A11 Vérification | Supabase Auth (connexion, inscription, déconnexion) + RPC (profil, pièce d'identité) + Storage (photos de la pièce) |
+| preferences | A13 Profil de départ, A14 Autorisations (affichage) | locales (le choix du rôle est enregistré par `app/`) |
+| annonceur | C01 Mes missions, C02–C04 Publier en 3 étapes, C07 Mission publiée, C08 Gérer, C09 Candidats, C10 Profil candidat, C11 Suivi du jour, C12 Valider, C13 Contester, C14 Annuler, C15 Paiements (C05/C06 retirés) | Supabase (RPC) |
+| A12 refus KYC · profile · payment · chat · reviews · notifications · safety | modules A, D, E | à venir |
 
 ### Comptes de démo
 
 Mot de passe `demo123` : `executant@demo.bj` (Rodrigue),
 `executant2@demo.bj` (Sènami), `annonceur@demo.bj` (Mireille, solde 200 000 FCFA).
-Le faux serveur applique les règles annonceur : argent bloqué à la
+Le faux serveur (tests) et les fonctions SQL appliquent les règles annonceur : argent bloqué à la
 publication, adresse précise visible après confirmation, versement à la
 validation, débloquage à l'annulation.

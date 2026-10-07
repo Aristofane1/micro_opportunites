@@ -2,7 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+import '../../support/fake_backend/fake_api_client.dart';
 import 'package:micro_opportunites/features/account/presentation/controllers/current_user_controller.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_filters.dart';

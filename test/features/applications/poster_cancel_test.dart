@@ -1,11 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_database.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_routing.dart';
-import 'package:micro_opportunites/dev/fake_api/handlers/applications_handlers.dart';
-import 'package:micro_opportunites/dev/fake_api/handlers/poster_handlers.dart';
+import '../../support/fake_backend/fake_api_client.dart';
+import '../../support/fake_backend/fake_database.dart';
+import '../../support/fake_backend/fake_routing.dart';
+import '../../support/fake_backend/handlers/applications_handlers.dart';
+import '../../support/fake_backend/handlers/poster_handlers.dart';
 
 import '../../helpers/pump_worker_app.dart';
 import '../../helpers/test_clock.dart';

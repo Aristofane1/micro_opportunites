@@ -1,12 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
+
+import '../../support/fake_backend/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 import '../../helpers/test_clock.dart';
 
 void main() {
+  testWidgets('B06 sans pièce d’identité : bouton vers A08', (tester) async {
+    final container = await pumpWorkerApp(
+      tester,
+      beforePump: (container) =>
+          (container.read(apiClientProvider) as FakeApiClient).db.users['u1']!
+              .remove('kyc'),
+    );
+    await tester.tap(find.text('Distribution de flyers au carrefour'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Postuler'));
+    await tester.pumpAndSettle();
+    expect(find.text('Envoyer ma pièce d’identité'), findsNothing);
+    await tester.tap(find.text('Envoyer ma candidature'));
+    await tester.pumpAndSettle();
+    expect(find.text('Envoyer ma pièce d’identité'), findsOneWidget);
+    await tester.tap(find.text('Envoyer ma pièce d’identité'));
+    await tester.pumpAndSettle();
+    // Ouverte par-dessus la candidature (push) : retour possible.
+    expect(
+      container
+          .read(appRouterProvider)
+          .routerDelegate
+          .currentConfiguration
+          .last
+          .matchedLocation,
+      EntryPaths.idDocument,
+    );
+    expect(find.text('Votre pièce d\'identité'), findsOneWidget);
+  });
+
   testWidgets('B05 → B06 → B07 → B08 : postuler puis suivre', (tester) async {
     await pumpWorkerApp(tester);
     await tester.tap(find.text('Distribution de flyers au carrefour'));

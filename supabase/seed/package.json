@@ -1,0 +1,13 @@
+{
+  "name": "micro-opportunites-seed",
+  "private": true,
+  "type": "module",
+  "description": "Comptes et données de démonstration sur Supabase.",
+  "scripts": {
+    "seed": "node seed.mjs",
+    "seed:reset": "node seed.mjs --reset"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.2"
+  }
+}

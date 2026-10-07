@@ -111,7 +111,7 @@ final class AssignmentActionsProvider
   AssignmentActions create() => AssignmentActions();
 }
 
-String _$assignmentActionsHash() => r'add3ce7f4c06aa79a44d7904f65cd8f22ae27b4b';
+String _$assignmentActionsHash() => r'904827ee10f2a75fea838a8865d1f5d54a9e2fe0';
 
 /// `keepAlive` : sans écouteur, l'état serait libéré avant la fin de l'appel.
 

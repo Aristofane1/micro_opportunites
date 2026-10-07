@@ -187,11 +187,13 @@ class _IdDocumentPageState extends ConsumerState<IdDocumentPage> {
               color: isSelected ? AppColors.green : Colors.grey.shade400,
             ),
             const SizedBox(width: 16),
-            Text(
-              title,
-              style: TextStyle(
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                color: isSelected ? AppColors.green : Colors.black87,
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  color: isSelected ? AppColors.green : Colors.black87,
+                ),
               ),
             ),
           ],

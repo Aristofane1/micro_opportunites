@@ -5,10 +5,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/app.dart';
 import 'package:micro_opportunites/app/role/active_role.dart';
 import 'package:micro_opportunites/app/role/active_role_provider.dart';
-import 'package:micro_opportunites/app/bootstrap.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
+import 'package:micro_opportunites/core/geo/location_service.dart';
+import 'package:micro_opportunites/core/geo/map_tiles.dart';
+import 'package:micro_opportunites/core/media/photo_picker.dart';
+import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
+import 'package:micro_opportunites/core/time/clock.dart';
 
+import '../support/fake_backend/fake_api_client.dart';
+import '../support/fake_backend/seed.dart';
+import '../support/fake_backend/simulated_location_service.dart';
+
+import 'fake_photo_picker.dart';
 import 'test_clock.dart';
 
 /// Conteneur Riverpod de test : faux serveur sans latence, horloge figée,
@@ -20,15 +29,22 @@ ProviderContainer createTestContainer({
   String initialLocation = WorkerPaths.explore,
   String? session = 'u1',
   ActiveRole role = ActiveRole.worker,
+  LocationService locationService = const SimulatedLocationService(),
+  PhotoPicker? photoPicker,
 }) {
   final container = ProviderContainer(
     overrides: [
-      ...appOverrides(
-        latency: latency,
-        clock: clock ?? () => fixedNow,
-        mapTiles: false,
-        session: session,
+      clockProvider.overrideWithValue(clock ?? () => fixedNow),
+      apiClientProvider.overrideWith(
+        (ref) => FakeApiClient(
+          seedDatabase((clock ?? () => fixedNow)(), sessionUserId: session),
+          clock: clock ?? () => fixedNow,
+          latency: latency,
+        ),
       ),
+      locationServiceProvider.overrideWithValue(locationService),
+      photoPickerProvider.overrideWithValue(photoPicker ?? FakePhotoPicker()),
+      mapTilesEnabledProvider.overrideWithValue(false),
       initialLocationProvider.overrideWithValue(initialLocation),
       if (role != ActiveRole.worker)
         activeRoleProvider.overrideWith(() => _FixedRole(role)),
@@ -51,6 +67,7 @@ Future<ProviderContainer> pumpWorkerApp(
   String initialLocation = WorkerPaths.explore,
   String? session = 'u1',
   ActiveRole role = ActiveRole.worker,
+  PhotoPicker? photoPicker,
 }) async {
   tester.view.physicalSize = size;
   tester.view.devicePixelRatio = 1;
@@ -61,6 +78,7 @@ Future<ProviderContainer> pumpWorkerApp(
     initialLocation: initialLocation,
     session: session,
     role: role,
+    photoPicker: photoPicker,
   );
   beforePump?.call(container);
   await tester.pumpWidget(

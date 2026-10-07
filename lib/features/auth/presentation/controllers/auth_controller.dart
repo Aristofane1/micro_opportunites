@@ -55,8 +55,10 @@ class AuthActions extends _$AuthActions {
       () => _repository.submitKyc(
         documentType: draft.documentType,
         countryCode: draft.countryCode,
-        frontCaptured: draft.frontCaptured,
-        backCaptured: draft.backCaptured,
+        frontPath: draft.frontPath,
+        // Le verso d'un passeport n'est jamais envoyé.
+        backPath: draft.documentType == 'passport' ? null : draft.backPath,
+        selfiePath: draft.selfiePath,
       ),
     );
   }

@@ -25,8 +25,9 @@ abstract interface class AuthRepository {
   Future<Result<KycState>> submitKyc({
     required String documentType,
     required String countryCode,
-    required bool frontCaptured,
-    required bool backCaptured,
+    required String? frontPath,
+    required String? backPath,
+    required String? selfiePath,
   });
 
   Future<Result<KycState>> fetchKycState();

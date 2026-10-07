@@ -42,7 +42,7 @@ final class EntryDraftControllerProvider
 }
 
 String _$entryDraftControllerHash() =>
-    r'3dce3e7a158eeb116726e52ac06d800b0ad26661';
+    r'dca92bec44b099d8c8a8fdee2667b5a43c044399';
 
 abstract class _$EntryDraftController extends $Notifier<EntryDraft> {
   EntryDraft build();

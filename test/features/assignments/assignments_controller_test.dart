@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/error/result.dart';
+import 'package:micro_opportunites/core/geo/location_service.dart';
 import 'package:micro_opportunites/features/assignments/data/assignments_providers.dart';
 import 'package:micro_opportunites/features/assignments/domain/entities/assignment.dart';
 import 'package:micro_opportunites/features/assignments/presentation/controllers/assignments_controller.dart';
@@ -56,4 +59,46 @@ void main() {
       AssignmentStatus.cancelled,
     );
   });
+
+  group('check-in : échec de localisation', () {
+    Future<void> expectCheckInErr(Object thrown, Failure expected) async {
+      final container = createTestContainer(
+        locationService: _ThrowingLocation(thrown),
+      );
+      final confirmed = await container.read(assignmentProvider('as1').future);
+      final result = await container
+          .read(assignmentActionsProvider.notifier)
+          .checkIn(confirmed);
+      final failure = (result as Err<Assignment>).failure;
+      expect(failure, isA<ValidationFailure>());
+      expect(failure.message, expected.message);
+      final after = await container.read(assignmentProvider('as1').future);
+      expect(after.status, AssignmentStatus.confirmed);
+    }
+
+    test('une Failure est renvoyée telle quelle', () {
+      return expectCheckInErr(
+        const ValidationFailure('Localisation refusée.'),
+        const ValidationFailure('Localisation refusée.'),
+      );
+    });
+
+    test('un délai dépassé devient un message clair', () {
+      return expectCheckInErr(
+        TimeoutException('gps'),
+        const ValidationFailure(
+          'Activez la localisation pour faire le check-in.',
+        ),
+      );
+    });
+  });
+}
+
+class _ThrowingLocation implements LocationService {
+  _ThrowingLocation(this._thrown);
+
+  final Object _thrown;
+
+  @override
+  Future<GeoPoint> currentPosition({GeoPoint? expected}) async => throw _thrown;
 }

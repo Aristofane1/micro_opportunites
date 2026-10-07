@@ -4,15 +4,30 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'entry_draft_controller.freezed.dart';
 part 'entry_draft_controller.g.dart';
 
-/// Ce que l'utilisateur a saisi pendant le parcours d'entrée.
+/// Prises de vue de la vérification d'identité.
+enum KycShot {
+  front,
+  back,
+  selfie;
+
+  /// Étapes dans l'ordre : recto, verso (sauf passeport), puis selfie.
+  static List<KycShot> stepsFor(String documentType) =>
+      documentType == 'passport'
+      ? const [front, selfie]
+      : const [front, back, selfie];
+}
+
+/// Ce que l'utilisateur a saisi pendant le parcours d'entrée. Les photos sont
+/// des chemins de fichiers locaux.
 @freezed
 abstract class EntryDraft with _$EntryDraft {
   const factory EntryDraft({
     @Default(true) bool creatingAccount,
     @Default('id_card') String documentType,
     @Default('BJ') String countryCode,
-    @Default(false) bool frontCaptured,
-    @Default(false) bool backCaptured,
+    String? frontPath,
+    String? backPath,
+    String? selfiePath,
   }) = _EntryDraft;
 }
 
@@ -24,15 +39,19 @@ class EntryDraftController extends _$EntryDraftController {
   void setCreatingAccount(bool value) =>
       state = state.copyWith(creatingAccount: value);
 
+  /// Nouvelle pièce : les photos déjà prises sont oubliées.
   void setDocument(String documentType, String countryCode) =>
       state = state.copyWith(
         documentType: documentType,
         countryCode: countryCode,
-        frontCaptured: false,
-        backCaptured: false,
+        frontPath: null,
+        backPath: null,
+        selfiePath: null,
       );
 
-  void markCaptured({required bool front}) => state = front
-      ? state.copyWith(frontCaptured: true)
-      : state.copyWith(backCaptured: true);
+  void setPhoto(KycShot shot, String path) => state = switch (shot) {
+    KycShot.front => state.copyWith(frontPath: path),
+    KycShot.back => state.copyWith(backPath: path),
+    KycShot.selfie => state.copyWith(selfiePath: path),
+  };
 }

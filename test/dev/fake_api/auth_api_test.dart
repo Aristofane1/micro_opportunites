@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
-import 'package:micro_opportunites/dev/fake_api/seed.dart';
+import '../../support/fake_backend/fake_api_client.dart';
+import '../../support/fake_backend/seed.dart';
 
 import '../../helpers/test_clock.dart';
 
@@ -140,8 +140,9 @@ void main() {
       body: {
         'documentType': 'id_card',
         'countryCode': 'BJ',
-        'frontCaptured': true,
-        'backCaptured': true,
+        'frontPath': '/tmp/front.jpg',
+        'backPath': '/tmp/back.jpg',
+        'selfiePath': '/tmp/selfie.jpg',
       },
     );
     expect(((await api.get('/auth/kyc')) as Map)['status'], 'pending');
@@ -151,5 +152,108 @@ void main() {
       body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
     );
     expect(((await api.get('/auth/kyc')) as Map)['status'], 'none');
+  });
+
+  test('KYC : recto et selfie toujours, verso sauf passeport', () async {
+    final api = client();
+    await api.post(
+      '/auth/signup',
+      body: {'email': 'kyc@demo.bj', 'password': 'secret1'},
+    );
+    Future<ApiException> submit(Map<String, Object?> body) =>
+        error(api.post('/auth/kyc', body: body));
+    const photos = {
+      'frontPath': '/tmp/front.jpg',
+      'backPath': '/tmp/back.jpg',
+      'selfiePath': '/tmp/selfie.jpg',
+    };
+    for (final missing in ['frontPath', 'backPath']) {
+      final e = await submit({
+        'documentType': 'id_card',
+        'countryCode': 'BJ',
+        ...photos,
+        missing: null,
+      });
+      expect(
+        (e.statusCode, e.message),
+        (422, 'Photographiez le recto et le verso.'),
+        reason: missing,
+      );
+    }
+    final noSelfie = await submit({
+      'documentType': 'passport',
+      'countryCode': 'BJ',
+      'frontPath': '/tmp/front.jpg',
+    });
+    expect(noSelfie.message, 'Prenez un selfie pour vérifier votre identité.');
+    final noSelfieCard = await submit({
+      'documentType': 'id_card',
+      'countryCode': 'BJ',
+      ...photos,
+      'selfiePath': null,
+    });
+    expect(
+      noSelfieCard.message,
+      'Prenez un selfie pour vérifier votre identité.',
+    );
+    final unknown = await submit({
+      'documentType': 'permis',
+      'countryCode': 'BJ',
+      ...photos,
+    });
+    expect(unknown.message, 'Type de pièce inconnu.');
+    final noCountry = await submit({
+      'documentType': 'id_card',
+      'countryCode': ' ',
+      ...photos,
+    });
+    expect(noCountry.message, 'Indiquez le pays de la pièce.');
+    expect(((await api.get('/auth/kyc')) as Map)['status'], 'none');
+    final passport =
+        await api.post(
+              '/auth/kyc',
+              body: {
+                'documentType': 'passport',
+                'countryCode': 'BJ',
+                'frontPath': '/tmp/front.jpg',
+                'selfiePath': '/tmp/selfie.jpg',
+              },
+            )
+            as Map;
+    expect(passport['status'], 'pending');
+  });
+
+  test('comptes de démo : pièce d’identité déjà vérifiée', () async {
+    final kyc = await client(session: 'u1').get('/auth/kyc') as Map;
+    expect(kyc['status'], 'verified');
+  });
+
+  test('postuler sans pièce d’identité est refusé', () async {
+    final api = client();
+    await api.post(
+      '/auth/signup',
+      body: {'email': 'sans-piece@demo.bj', 'password': 'secret1'},
+    );
+    final e = await error(
+      api.post('/missions/m1/applications', body: {'message': 'Dispo'}),
+    );
+    expect(
+      (e.statusCode, e.message),
+      (422, 'Envoyez votre pièce d’identité avant de postuler.'),
+    );
+    await api.post(
+      '/auth/kyc',
+      body: {
+        'documentType': 'id_card',
+        'countryCode': 'BJ',
+        'frontPath': '/tmp/front.jpg',
+        'backPath': '/tmp/back.jpg',
+        'selfiePath': '/tmp/selfie.jpg',
+      },
+    );
+    final application =
+        await api.post('/missions/m1/applications', body: {'message': 'Dispo'})
+            as Map;
+    expect(application['status'], 'pending');
   });
 }

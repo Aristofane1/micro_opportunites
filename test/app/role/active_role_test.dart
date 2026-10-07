@@ -6,7 +6,7 @@ import 'package:micro_opportunites/app/role/role_switcher.dart';
 
 import 'package:flutter/material.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+import '../../support/fake_backend/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 
