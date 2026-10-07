@@ -1,3 +1,4 @@
+import 'package:micro_opportunites/core/error/failure.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/geo/location_service.dart';
 import 'package:micro_opportunites/core/network/data_revision.dart';
@@ -23,14 +24,23 @@ class AssignmentActions extends _$AssignmentActions {
 
   Future<Result<Assignment>> checkIn(Assignment assignment) {
     return _run(() async {
-      final position = await ref
-          .read(locationServiceProvider)
-          .currentPosition(
-            expected: (
-              latitude: assignment.latitude,
-              longitude: assignment.longitude,
-            ),
-          );
+      final GeoPoint position;
+      try {
+        position = await ref
+            .read(locationServiceProvider)
+            .currentPosition(
+              expected: (
+                latitude: assignment.latitude,
+                longitude: assignment.longitude,
+              ),
+            );
+      } on Failure catch (failure) {
+        return Err(failure);
+      } on Exception {
+        return const Err(
+          ValidationFailure('Activez la localisation pour faire le check-in.'),
+        );
+      }
       return _repository.checkIn(
         assignment.id,
         latitude: position.latitude,

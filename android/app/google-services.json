@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "706302252431",
+    "project_id": "micro-opportunities",
+    "storage_bucket": "micro-opportunities.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706302252431:android:7f4cea180f6dc1cec0e7fa",
+        "android_client_info": {
+          "package_name": "app.micro.opportunities"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL1WxWQ2pj-LFSvm8dEAEoANA3Eulrjdk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

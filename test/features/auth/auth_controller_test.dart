@@ -90,22 +90,24 @@ void main() {
     },
   );
 
-  test('KYC : recto et verso exigés, puis en attente', () async {
+  test('KYC : recto, verso et selfie exigés, puis en attente', () async {
     final container = createTestContainer();
     final actions = container.read(authActionsProvider.notifier);
+    final draft = container.read(entryDraftControllerProvider.notifier)
+      ..setDocument('id_card', 'BJ')
+      ..setPhoto(KycShot.front, '/tmp/front.jpg')
+      ..setPhoto(KycShot.selfie, '/tmp/selfie.jpg');
     final missing = await actions.submitKyc();
     expect(
       (missing as Err).failure,
       const ValidationFailure('Photographiez le recto et le verso.'),
     );
-    container.read(entryDraftControllerProvider.notifier)
-      ..setDocument('passport', 'BJ')
-      ..markCaptured(front: true)
-      ..markCaptured(front: false);
+    draft.setPhoto(KycShot.back, '/tmp/back.jpg');
     final captured = container.read(entryDraftControllerProvider);
-    expect(captured.frontCaptured, isTrue);
-    expect(captured.backCaptured, isTrue);
-    expect(captured.documentType, 'passport');
+    expect(captured.frontPath, '/tmp/front.jpg');
+    expect(captured.backPath, '/tmp/back.jpg');
+    expect(captured.selfiePath, '/tmp/selfie.jpg');
+    expect(captured.documentType, 'id_card');
     final submitted = await actions.submitKyc();
     expect((submitted as Success<KycState>).value.status, KycStatus.pending);
     expect(
@@ -146,4 +148,23 @@ void main() {
       expect(accepted, isA<Success<UserProfile>>());
     },
   );
+
+  test('changer de pièce oublie les photos déjà prises', () {
+    final container = createTestContainer();
+    container.read(entryDraftControllerProvider.notifier)
+      ..setPhoto(KycShot.front, '/tmp/front.jpg')
+      ..setPhoto(KycShot.back, '/tmp/back.jpg')
+      ..setPhoto(KycShot.selfie, '/tmp/selfie.jpg')
+      ..setDocument('passport', 'BJ');
+    final draft = container.read(entryDraftControllerProvider);
+    expect(draft.frontPath, isNull);
+    expect(draft.backPath, isNull);
+    expect(draft.selfiePath, isNull);
+    expect(KycShot.stepsFor('passport'), [KycShot.front, KycShot.selfie]);
+    expect(KycShot.stepsFor('id_card'), [
+      KycShot.front,
+      KycShot.back,
+      KycShot.selfie,
+    ]);
+  });
 }

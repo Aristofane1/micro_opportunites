@@ -1,17 +1,52 @@
-# micro_opportunites
+# MicroOpportunités
 
-MicroOpportunités — missions rémunérées près de chez soi.
+Application Flutter de missions rémunérées près de chez soi, au Bénin : un exécutant
+trouve une mission, postule, la réalise et est payé ; un annonceur publie une mission,
+choisit ses candidats et valide le travail. Les données passent par Supabase (Auth,
+Storage, fonctions RPC en SQL).
 
-## Getting Started
+## Prérequis
 
-This project is a starting point for a Flutter application.
+Flutter 3.41.1, géré avec [fvm](https://fvm.app) :
 
-A few resources to get you started if this is your first Flutter project:
+```bash
+fvm install 3.41.1
+fvm use 3.41.1
+fvm flutter pub get
+```
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+(Sans fvm, utiliser directement un Flutter 3.41.1.)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Configuration
+
+L’app lit l’URL du projet Supabase et sa clé publique (anon) au lancement :
+
+```bash
+cp env/example.json env/dev.json
+```
+
+puis remplir `SUPABASE_URL` et `SUPABASE_ANON_KEY` dans `env/dev.json`. Ce fichier est
+ignoré par git : ne jamais le commiter. La clé `service_role` n’entre jamais dans l’app.
+
+## Lancer
+
+```bash
+fvm flutter run --dart-define-from-file=env/dev.json
+```
+
+## Tests
+
+```bash
+fvm flutter analyze
+fvm flutter test
+```
+
+Les tests utilisent un faux serveur en mémoire (`test/support/fake_backend`) qui applique
+les mêmes règles que les fonctions SQL.
+
+## Documentation
+
+- [supabase/README.md](supabase/README.md) : migrations, droits, tests pgTAP et données
+  de démo.
+- [lib/features/README.md](lib/features/README.md) : architecture des features, règles de
+  couches et liste des écrans.

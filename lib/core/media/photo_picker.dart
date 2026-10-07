@@ -6,8 +6,9 @@ part 'photo_picker.g.dart';
 enum PhotoSource { camera, gallery }
 
 /// Choix d'une photo ; renvoie le chemin local ou `null` si annulé.
+/// [frontCamera] demande la caméra frontale (selfie).
 abstract interface class PhotoPicker {
-  Future<String?> pick(PhotoSource source);
+  Future<String?> pick(PhotoSource source, {bool frontCamera = false});
 }
 
 class ImagePickerPhotoPicker implements PhotoPicker {
@@ -17,13 +18,16 @@ class ImagePickerPhotoPicker implements PhotoPicker {
   final ImagePicker _picker;
 
   @override
-  Future<String?> pick(PhotoSource source) async {
+  Future<String?> pick(PhotoSource source, {bool frontCamera = false}) async {
     final file = await _picker.pickImage(
       source: source == PhotoSource.camera
           ? ImageSource.camera
           : ImageSource.gallery,
       maxWidth: 1600,
       imageQuality: 80,
+      preferredCameraDevice: frontCamera
+          ? CameraDevice.front
+          : CameraDevice.rear,
     );
     return file?.path;
   }

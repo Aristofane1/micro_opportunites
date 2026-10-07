@@ -6,7 +6,7 @@ import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/poster_paths.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_button.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+import '../../support/fake_backend/fake_api_client.dart';
 import 'package:micro_opportunites/features/annonceur/presentation/controllers/mission_draft_controller.dart';
 import 'package:micro_opportunites/features/missions/domain/entities/mission_category.dart';
 

@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
-import 'package:micro_opportunites/dev/fake_api/seed.dart';
-import 'package:micro_opportunites/dev/fake_api/settlement.dart';
+import '../../support/fake_backend/fake_api_client.dart';
+import '../../support/fake_backend/seed.dart';
+import '../../support/fake_backend/settlement.dart';
 
 import '../../helpers/test_clock.dart';
 
@@ -328,6 +328,16 @@ void main() {
         body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
       );
       await api.post('/me/role', body: {'role': 'worker'});
+      // Postuler exige une pièce d’identité envoyée.
+      await api.post(
+        '/auth/kyc',
+        body: {
+          'documentType': 'passport',
+          'countryCode': 'BJ',
+          'frontPath': '/tmp/front.jpg',
+          'selfiePath': '/tmp/selfie.jpg',
+        },
+      );
       await api.post(
         '/missions/m20/applications',
         body: {'message': 'Je débute, très motivé.'},

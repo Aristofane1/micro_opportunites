@@ -49,14 +49,16 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Result<KycState>> submitKyc({
     required String documentType,
     required String countryCode,
-    required bool frontCaptured,
-    required bool backCaptured,
+    required String? frontPath,
+    required String? backPath,
+    required String? selfiePath,
   }) => guardResult(
     () async => (await _remote.submitKyc({
       'documentType': documentType,
       'countryCode': countryCode,
-      'frontCaptured': frontCaptured,
-      'backCaptured': backCaptured,
+      'frontPath': frontPath,
+      'backPath': backPath,
+      'selfiePath': selfiePath,
     })).toEntity(),
   );
 

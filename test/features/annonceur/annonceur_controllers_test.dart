@@ -106,6 +106,16 @@ void main() {
       body: {'email': 'nouveau@demo.bj', 'password': 'secret1'},
     );
     await api.post('/me/role', body: {'role': 'worker'});
+    // Postuler exige une pièce d’identité envoyée.
+    await api.post(
+      '/auth/kyc',
+      body: {
+        'documentType': 'passport',
+        'countryCode': 'BJ',
+        'frontPath': '/tmp/front.jpg',
+        'selfiePath': '/tmp/selfie.jpg',
+      },
+    );
     await api.post(
       '/missions/m20/applications',
       body: {'message': 'Je débute, très motivé.'},

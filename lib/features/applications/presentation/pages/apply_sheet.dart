@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:micro_opportunites/core/error/result.dart';
 import 'package:micro_opportunites/core/formatting/dates.dart';
 import 'package:micro_opportunites/core/formatting/money.dart';
+import 'package:micro_opportunites/core/routing/entry_paths.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
 import 'package:micro_opportunites/core/theme/app_colors.dart';
 import 'package:micro_opportunites/core/theme/app_radius.dart';
@@ -15,6 +16,9 @@ import 'package:micro_opportunites/core/ui/widgets/app_toast.dart';
 import 'package:micro_opportunites/core/ui/widgets/async_value_view.dart';
 import 'package:micro_opportunites/features/applications/domain/entities/apply_target.dart';
 import 'package:micro_opportunites/features/applications/presentation/controllers/applications_controller.dart';
+
+/// Refus du serveur quand la pièce d'identité n'a pas été envoyée.
+const kycRequiredMessage = 'Envoyez votre pièce d’identité avant de postuler.';
 
 /// Feuille « Postuler » (B06), ouverte comme une route.
 class ApplySheet extends ConsumerStatefulWidget {
@@ -28,6 +32,9 @@ class ApplySheet extends ConsumerStatefulWidget {
 
 class _ApplySheetState extends ConsumerState<ApplySheet> {
   final _message = TextEditingController();
+
+  /// La candidature a été refusée faute de pièce d'identité.
+  bool _needsKyc = false;
 
   @override
   void dispose() {
@@ -44,6 +51,7 @@ class _ApplySheetState extends ConsumerState<ApplySheet> {
       case Success():
         context.pushReplacement(WorkerPaths.applicationSent(target.posterName));
       case Err(:final failure):
+        setState(() => _needsKyc = failure.message == kycRequiredMessage);
         showAppToast(context, failure.message);
     }
   }
@@ -130,6 +138,14 @@ class _ApplySheetState extends ConsumerState<ApplySheet> {
                   ),
                 ],
               ),
+              if (_needsKyc) ...[
+                const SizedBox(height: 10),
+                AppButton(
+                  label: 'Envoyer ma pièce d’identité',
+                  variant: AppButtonVariant.secondary,
+                  onPressed: () => context.push(EntryPaths.idDocument),
+                ),
+              ],
             ],
           ),
         ),

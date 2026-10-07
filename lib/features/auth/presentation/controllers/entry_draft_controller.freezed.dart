@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EntryDraft {
 
- bool get creatingAccount; String get documentType; String get countryCode; bool get frontCaptured; bool get backCaptured;
+ bool get creatingAccount; String get documentType; String get countryCode; String? get frontPath; String? get backPath; String? get selfiePath;
 /// Create a copy of EntryDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $EntryDraftCopyWith<EntryDraft> get copyWith => _$EntryDraftCopyWithImpl<EntryDr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EntryDraft&&(identical(other.creatingAccount, creatingAccount) || other.creatingAccount == creatingAccount)&&(identical(other.documentType, documentType) || other.documentType == documentType)&&(identical(other.countryCode, countryCode) || other.countryCode == countryCode)&&(identical(other.frontCaptured, frontCaptured) || other.frontCaptured == frontCaptured)&&(identical(other.backCaptured, backCaptured) || other.backCaptured == backCaptured));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EntryDraft&&(identical(other.creatingAccount, creatingAccount) || other.creatingAccount == creatingAccount)&&(identical(other.documentType, documentType) || other.documentType == documentType)&&(identical(other.countryCode, countryCode) || other.countryCode == countryCode)&&(identical(other.frontPath, frontPath) || other.frontPath == frontPath)&&(identical(other.backPath, backPath) || other.backPath == backPath)&&(identical(other.selfiePath, selfiePath) || other.selfiePath == selfiePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,creatingAccount,documentType,countryCode,frontCaptured,backCaptured);
+int get hashCode => Object.hash(runtimeType,creatingAccount,documentType,countryCode,frontPath,backPath,selfiePath);
 
 @override
 String toString() {
-  return 'EntryDraft(creatingAccount: $creatingAccount, documentType: $documentType, countryCode: $countryCode, frontCaptured: $frontCaptured, backCaptured: $backCaptured)';
+  return 'EntryDraft(creatingAccount: $creatingAccount, documentType: $documentType, countryCode: $countryCode, frontPath: $frontPath, backPath: $backPath, selfiePath: $selfiePath)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $EntryDraftCopyWith<$Res>  {
   factory $EntryDraftCopyWith(EntryDraft value, $Res Function(EntryDraft) _then) = _$EntryDraftCopyWithImpl;
 @useResult
 $Res call({
- bool creatingAccount, String documentType, String countryCode, bool frontCaptured, bool backCaptured
+ bool creatingAccount, String documentType, String countryCode, String? frontPath, String? backPath, String? selfiePath
 });
 
 
@@ -62,14 +62,15 @@ class _$EntryDraftCopyWithImpl<$Res>
 
 /// Create a copy of EntryDraft
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? creatingAccount = null,Object? documentType = null,Object? countryCode = null,Object? frontCaptured = null,Object? backCaptured = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? creatingAccount = null,Object? documentType = null,Object? countryCode = null,Object? frontPath = freezed,Object? backPath = freezed,Object? selfiePath = freezed,}) {
   return _then(_self.copyWith(
 creatingAccount: null == creatingAccount ? _self.creatingAccount : creatingAccount // ignore: cast_nullable_to_non_nullable
 as bool,documentType: null == documentType ? _self.documentType : documentType // ignore: cast_nullable_to_non_nullable
 as String,countryCode: null == countryCode ? _self.countryCode : countryCode // ignore: cast_nullable_to_non_nullable
-as String,frontCaptured: null == frontCaptured ? _self.frontCaptured : frontCaptured // ignore: cast_nullable_to_non_nullable
-as bool,backCaptured: null == backCaptured ? _self.backCaptured : backCaptured // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,frontPath: freezed == frontPath ? _self.frontPath : frontPath // ignore: cast_nullable_to_non_nullable
+as String?,backPath: freezed == backPath ? _self.backPath : backPath // ignore: cast_nullable_to_non_nullable
+as String?,selfiePath: freezed == selfiePath ? _self.selfiePath : selfiePath // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -154,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool creatingAccount,  String documentType,  String countryCode,  bool frontCaptured,  bool backCaptured)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool creatingAccount,  String documentType,  String countryCode,  String? frontPath,  String? backPath,  String? selfiePath)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EntryDraft() when $default != null:
-return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontCaptured,_that.backCaptured);case _:
+return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontPath,_that.backPath,_that.selfiePath);case _:
   return orElse();
 
 }
@@ -175,10 +176,10 @@ return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool creatingAccount,  String documentType,  String countryCode,  bool frontCaptured,  bool backCaptured)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool creatingAccount,  String documentType,  String countryCode,  String? frontPath,  String? backPath,  String? selfiePath)  $default,) {final _that = this;
 switch (_that) {
 case _EntryDraft():
-return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontCaptured,_that.backCaptured);case _:
+return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontPath,_that.backPath,_that.selfiePath);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -195,10 +196,10 @@ return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool creatingAccount,  String documentType,  String countryCode,  bool frontCaptured,  bool backCaptured)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool creatingAccount,  String documentType,  String countryCode,  String? frontPath,  String? backPath,  String? selfiePath)?  $default,) {final _that = this;
 switch (_that) {
 case _EntryDraft() when $default != null:
-return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontCaptured,_that.backCaptured);case _:
+return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that.frontPath,_that.backPath,_that.selfiePath);case _:
   return null;
 
 }
@@ -210,14 +211,15 @@ return $default(_that.creatingAccount,_that.documentType,_that.countryCode,_that
 
 
 class _EntryDraft implements EntryDraft {
-  const _EntryDraft({this.creatingAccount = true, this.documentType = 'id_card', this.countryCode = 'BJ', this.frontCaptured = false, this.backCaptured = false});
+  const _EntryDraft({this.creatingAccount = true, this.documentType = 'id_card', this.countryCode = 'BJ', this.frontPath, this.backPath, this.selfiePath});
   
 
 @override@JsonKey() final  bool creatingAccount;
 @override@JsonKey() final  String documentType;
 @override@JsonKey() final  String countryCode;
-@override@JsonKey() final  bool frontCaptured;
-@override@JsonKey() final  bool backCaptured;
+@override final  String? frontPath;
+@override final  String? backPath;
+@override final  String? selfiePath;
 
 /// Create a copy of EntryDraft
 /// with the given fields replaced by the non-null parameter values.
@@ -229,16 +231,16 @@ _$EntryDraftCopyWith<_EntryDraft> get copyWith => __$EntryDraftCopyWithImpl<_Ent
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EntryDraft&&(identical(other.creatingAccount, creatingAccount) || other.creatingAccount == creatingAccount)&&(identical(other.documentType, documentType) || other.documentType == documentType)&&(identical(other.countryCode, countryCode) || other.countryCode == countryCode)&&(identical(other.frontCaptured, frontCaptured) || other.frontCaptured == frontCaptured)&&(identical(other.backCaptured, backCaptured) || other.backCaptured == backCaptured));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EntryDraft&&(identical(other.creatingAccount, creatingAccount) || other.creatingAccount == creatingAccount)&&(identical(other.documentType, documentType) || other.documentType == documentType)&&(identical(other.countryCode, countryCode) || other.countryCode == countryCode)&&(identical(other.frontPath, frontPath) || other.frontPath == frontPath)&&(identical(other.backPath, backPath) || other.backPath == backPath)&&(identical(other.selfiePath, selfiePath) || other.selfiePath == selfiePath));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,creatingAccount,documentType,countryCode,frontCaptured,backCaptured);
+int get hashCode => Object.hash(runtimeType,creatingAccount,documentType,countryCode,frontPath,backPath,selfiePath);
 
 @override
 String toString() {
-  return 'EntryDraft(creatingAccount: $creatingAccount, documentType: $documentType, countryCode: $countryCode, frontCaptured: $frontCaptured, backCaptured: $backCaptured)';
+  return 'EntryDraft(creatingAccount: $creatingAccount, documentType: $documentType, countryCode: $countryCode, frontPath: $frontPath, backPath: $backPath, selfiePath: $selfiePath)';
 }
 
 
@@ -249,7 +251,7 @@ abstract mixin class _$EntryDraftCopyWith<$Res> implements $EntryDraftCopyWith<$
   factory _$EntryDraftCopyWith(_EntryDraft value, $Res Function(_EntryDraft) _then) = __$EntryDraftCopyWithImpl;
 @override @useResult
 $Res call({
- bool creatingAccount, String documentType, String countryCode, bool frontCaptured, bool backCaptured
+ bool creatingAccount, String documentType, String countryCode, String? frontPath, String? backPath, String? selfiePath
 });
 
 
@@ -266,14 +268,15 @@ class __$EntryDraftCopyWithImpl<$Res>
 
 /// Create a copy of EntryDraft
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? creatingAccount = null,Object? documentType = null,Object? countryCode = null,Object? frontCaptured = null,Object? backCaptured = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? creatingAccount = null,Object? documentType = null,Object? countryCode = null,Object? frontPath = freezed,Object? backPath = freezed,Object? selfiePath = freezed,}) {
   return _then(_EntryDraft(
 creatingAccount: null == creatingAccount ? _self.creatingAccount : creatingAccount // ignore: cast_nullable_to_non_nullable
 as bool,documentType: null == documentType ? _self.documentType : documentType // ignore: cast_nullable_to_non_nullable
 as String,countryCode: null == countryCode ? _self.countryCode : countryCode // ignore: cast_nullable_to_non_nullable
-as String,frontCaptured: null == frontCaptured ? _self.frontCaptured : frontCaptured // ignore: cast_nullable_to_non_nullable
-as bool,backCaptured: null == backCaptured ? _self.backCaptured : backCaptured // ignore: cast_nullable_to_non_nullable
-as bool,
+as String,frontPath: freezed == frontPath ? _self.frontPath : frontPath // ignore: cast_nullable_to_non_nullable
+as String?,backPath: freezed == backPath ? _self.backPath : backPath // ignore: cast_nullable_to_non_nullable
+as String?,selfiePath: freezed == selfiePath ? _self.selfiePath : selfiePath // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

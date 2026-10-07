@@ -5,7 +5,7 @@ import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/network/api_exception.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
 import 'package:micro_opportunites/core/ui/widgets/app_button.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+import '../../support/fake_backend/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 
@@ -107,9 +107,12 @@ void main() {
   ) async {
     await pumpWorkerApp(
       tester,
+      // Explorer attend la position de l'appareil avant sa requête : l'erreur
+      // vise donc explicitement la liste des missions.
       beforePump: (container) =>
-          (container.read(apiClientProvider) as FakeApiClient).nextError =
-              const ApiException(0, 'hors-ligne'),
+          (container.read(apiClientProvider) as FakeApiClient)
+            ..nextError = const ApiException(0, 'hors-ligne')
+            ..nextErrorPath = '/missions',
     );
     expect(find.text(const NetworkFailure().message), findsOneWidget);
     await tester.tap(find.text('Réessayer'));

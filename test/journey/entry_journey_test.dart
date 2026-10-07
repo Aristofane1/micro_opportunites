@@ -41,9 +41,13 @@ void main() {
     await _tap(tester, find.textContaining('J\'accepte les Conditions'));
     await _tap(tester, find.text('Continuer'));
 
-    // A08 → A09 recto/verso → A11 (indicateur animé : jamais pumpAndSettle sur A11)
+    // A08 → A09 recto, verso, selfie → A11 (indicateur animé : jamais
+    // pumpAndSettle sur A11)
     await _tap(tester, find.text('Photographier le recto'));
     await _tap(tester, find.byKey(const Key('camera.shutter')));
+    expect(find.text('Photographier le verso'), findsOneWidget);
+    await _tap(tester, find.byKey(const Key('camera.shutter')));
+    expect(find.text('Prenez un selfie'), findsOneWidget);
     await tester.tap(find.byKey(const Key('camera.shutter')));
     await tester.pump(const Duration(seconds: 1));
     await tester.pump(const Duration(seconds: 1));

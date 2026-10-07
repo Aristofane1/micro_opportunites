@@ -24,7 +24,9 @@ abstract class UserProfile with _$UserProfile {
 
 enum KycStatus {
   none('none'),
-  pending('pending');
+  pending('pending'),
+  verified('verified'),
+  rejected('rejected');
 
   const KycStatus(this.apiValue);
 

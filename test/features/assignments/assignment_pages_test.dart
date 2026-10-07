@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:micro_opportunites/app/router/app_router.dart';
 import 'package:micro_opportunites/core/network/api_client_provider.dart';
 import 'package:micro_opportunites/core/routing/worker_paths.dart';
-import 'package:micro_opportunites/dev/fake_api/fake_api_client.dart';
+import '../../support/fake_backend/fake_api_client.dart';
 
 import '../../helpers/pump_worker_app.dart';
 

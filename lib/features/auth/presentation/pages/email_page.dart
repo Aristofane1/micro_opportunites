@@ -10,11 +10,11 @@ import 'package:micro_opportunites/features/auth/presentation/controllers/entry_
 
 /// A05 : e-mail et mot de passe, création de compte ou connexion.
 /// [onSignedIn] est fourni par l'app : après une connexion, elle décide de
-/// la suite selon le rôle du compte.
+/// la suite (règle de reprise commune avec le splash).
 class EmailPage extends ConsumerStatefulWidget {
   const EmailPage({super.key, required this.onSignedIn});
 
-  final void Function(BuildContext context, Account account) onSignedIn;
+  final Future<void> Function(BuildContext context, Account account) onSignedIn;
 
   @override
   ConsumerState<EmailPage> createState() => _EmailPageState();
@@ -25,7 +25,12 @@ class _EmailPageState extends ConsumerState<EmailPage> {
   final TextEditingController _passwordController = TextEditingController();
   String? _error;
 
+  /// Connexion réussie, l'app décide encore de la suite : le bouton reste
+  /// bloqué pour éviter une seconde connexion.
+  bool _resuming = false;
+
   Future<void> _submit() async {
+    if (_resuming) return;
     final email = _emailController.text.trim();
     final password = _passwordController.text;
     if (email.isEmpty) {
@@ -47,10 +52,13 @@ class _EmailPageState extends ConsumerState<EmailPage> {
         setState(() => _error = null);
         if (creating) {
           context.push(EntryPaths.profile);
-        } else if (value.role == null) {
-          context.go(EntryPaths.usage);
         } else {
-          widget.onSignedIn(context, value);
+          setState(() => _resuming = true);
+          try {
+            await widget.onSignedIn(context, value);
+          } finally {
+            if (mounted) setState(() => _resuming = false);
+          }
         }
       case Err(:final failure):
         setState(() => _error = failure.message);
@@ -67,7 +75,7 @@ class _EmailPageState extends ConsumerState<EmailPage> {
   @override
   Widget build(BuildContext context) {
     final creating = ref.watch(entryDraftControllerProvider).creatingAccount;
-    final loading = ref.watch(authActionsProvider).isLoading;
+    final loading = ref.watch(authActionsProvider).isLoading || _resuming;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,

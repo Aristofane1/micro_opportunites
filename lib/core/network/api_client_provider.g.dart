@@ -9,19 +9,19 @@ part of 'api_client_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Point unique de choix du client API. Surchargé au démarrage par
-/// `app/bootstrap.dart` (faux serveur aujourd'hui, HTTP demain).
+/// `main.dart` (Supabase) ou par les tests (faux serveur).
 
 @ProviderFor(apiClient)
 final apiClientProvider = ApiClientProvider._();
 
 /// Point unique de choix du client API. Surchargé au démarrage par
-/// `app/bootstrap.dart` (faux serveur aujourd'hui, HTTP demain).
+/// `main.dart` (Supabase) ou par les tests (faux serveur).
 
 final class ApiClientProvider
     extends $FunctionalProvider<ApiClient, ApiClient, ApiClient>
     with $Provider<ApiClient> {
   /// Point unique de choix du client API. Surchargé au démarrage par
-  /// `app/bootstrap.dart` (faux serveur aujourd'hui, HTTP demain).
+  /// `main.dart` (Supabase) ou par les tests (faux serveur).
   ApiClientProvider._()
     : super(
         from: null,
@@ -55,4 +55,4 @@ final class ApiClientProvider
   }
 }
 
-String _$apiClientHash() => r'12a2a1bac64b02c9ad28c304367bd1e501082c5e';
+String _$apiClientHash() => r'09f01daf881cdcc3eff649547071fa7dc02658a9';
